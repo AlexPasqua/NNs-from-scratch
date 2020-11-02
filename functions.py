@@ -1,7 +1,6 @@
 import numpy as np
 
 
-class Activation_Functions:
     """
     Contains utility activation functions and their respective derivatives
     """
@@ -11,7 +10,7 @@ class Activation_Functions:
 
     ########################## Sigmoid Activation Function ###############################
 
-    def sigmoid(self, x):
+    def sigmoid(x):
         """
         Computes the sigmoid function of the inputs received by the unit;
         ||| sigm_fun(x)= 1/[1+exp(-x)] |||
@@ -19,10 +18,9 @@ class Activation_Functions:
         :param x: net -> input's weighted sum
         :return: output of the unit
         """
-        sigm_fun = 1. / 1. + np.exp(-x)
-        return sign_fun
+        return 1. / (1. + np.exp(-x))
 
-    def sigmoid_deriv(self, x):
+    def sigmoid_deriv(x):
         """
         Computes the derivative of the sigmoid function;
         ||| sigm_fun(x)' = sigm_fun*(1-sigm_fun) |||
@@ -30,8 +28,7 @@ class Activation_Functions:
         :param x: net -> input's weighted sum
         :return: derivative of the sigmoid function
         """
-        sigm_fun = 1. / 1. + np.exp(-x)
-        return np.diag(sigm_fun * (1 - sigm_fun))
+        return np.diag(sigmoid(x) * (1 - sigmoid(x)))
 
     ############################# SoftMax Activation Function ###########################
 
@@ -82,6 +79,5 @@ class Activation_Functions:
             return 1
 
 
-
-
-# TO BE COMPLETED
+if __name__ == '__main__':
+    # TODO: aggiungi test qui, tipo print(sigmoid(5)) e vedi se il valore è giusto
