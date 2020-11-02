@@ -62,4 +62,5 @@ def relu_deriv(x):
 
 
 if __name__ == '__main__':
-    # TODO: aggiungi test qui, tipo print(sigmoid(5)) e vedi se il valore è giusto
+    # TODO: aggiungi test qui
+    print(sigmoid(1))
