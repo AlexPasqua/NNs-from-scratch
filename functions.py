@@ -18,7 +18,7 @@ def sigmoid_deriv(x):
     :param x: net -> input's weighted sum
     :return: derivative of the sigmoid in x
     """
-    return np.diag(sigmoid(x) * (1 - sigmoid(x)))
+    return sigmoid(x) * (1 - sigmoid(x))
 
 
 def softmax(x):
@@ -63,4 +63,5 @@ def relu_deriv(x):
 
 if __name__ == '__main__':
     # TODO: aggiungi test qui
-    print(sigmoid(1))
+    print(f"Sigmoid(1): {sigmoid(1)}")
+    print(f"Derivative of sigmoid(1): {sigmoid_deriv(1)}")
