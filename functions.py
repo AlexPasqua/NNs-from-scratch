@@ -21,26 +21,6 @@ def sigmoid_deriv(x):
     return sigmoid(x) * (1 - sigmoid(x))
 
 
-def softmax(x):
-    """
-    Computes the softmax function of the input received by the unit:
-
-    :param x: net -> input's weighted sum
-    :return: softmax of x
-    """
-    return np.exp(x - np.max(x))
-
-
-def softmax_deriv(x): #TODO: to be completed
-    """
-    Computes the derivative of the softmax function:
-
-    :param x: net -> input's weighted sum
-    :return: derivative of the softmax in x
-    """
-    softmax_fun = np.exp(x - np.max(x))
-
-
 def relu(x):
     """
     Computes the ReLU function:
@@ -65,3 +45,4 @@ if __name__ == '__main__':
     # TODO: aggiungi test qui
     print(f"Sigmoid(1): {sigmoid(1)}")
     print(f"Derivative of sigmoid(1): {sigmoid_deriv(1)}")
+    print(f"Softmax(1): {softmax(1)}")
