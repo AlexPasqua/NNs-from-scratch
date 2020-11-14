@@ -32,7 +32,8 @@ jobs:
         with:
           requirements: requirements.txt
       
-      - run: |
+      - name: Run scripts functions.py, network.py
+        run: |
           python3 functions.py
-          python3 network.py          
-          
+          python3 network.py
+      
