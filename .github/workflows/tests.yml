@@ -19,10 +19,20 @@ jobs:
     
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      - name: tests
-        run: |
-          echo running script functions.py...
+      - uses: actions/checkout@v2
+        
+      # Setup Python 3.x
+      - uses: actions/setup-python@v2 # Setup Python
+        with:
+          python-version: '3.x'
+          architecture: 'x64'
+      
+      # pip
+      - uses: BSFishy/pip-action@v1
+        with:
+          requirements: requirements.txt
+      
+      - run: |
           python3 functions.py
-          echo running script network.py...
-          python3 network.py
+          python3 network.py          
           
