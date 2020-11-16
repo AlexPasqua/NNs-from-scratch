@@ -41,8 +41,24 @@ def relu_deriv(x):
     return 0 if x <= 0 else 1
 
 
+class Function:
+    def __init__(self, func, deriv, name):
+        self.func = func
+        self.deriv = deriv
+        self.name = name
+
+
+# Objects that can be used many times just using their attributes (func, deriv)
+Sigmoid = Function(sigmoid, sigmoid_deriv, 'Sigmoid')
+ReLU = Function(relu, relu_deriv, 'ReLU')
+
+functions = {
+    'relu': ReLU,
+    'sigmoid': Sigmoid
+}
+
+
 if __name__ == '__main__':
-    # TODO: aggiungi test qui
     print(f"Sigmoid(1): {sigmoid(1)}")
     print(f"Derivative of sigmoid(1): {sigmoid_deriv(1)}")
     print(f"ReLU(1): {relu(1)}")

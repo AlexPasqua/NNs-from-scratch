@@ -1,4 +1,5 @@
 import numpy as np
+from src.functions import *
 
 
 class Unit:
@@ -10,10 +11,11 @@ class Unit:
     Attributes:
         w: weights vector
         b: bias
+        act_func: activation function
         net: weighted sum of the unit's inputs
     """
 
-    def __init__(self, w, b):
+    def __init__(self, w, b, act):
         """
         Constructor
         :param w: vector of weights
@@ -21,6 +23,7 @@ class Unit:
         """
         self.w = w
         self.b = b
+        self.act = act
 
     def net(self, inp):
         """
@@ -29,16 +32,15 @@ class Unit:
         :return: weighted sum of the input + bias --> dot_product(weights * input) + bias
         """
         # weighted sum + bias
-        self.net = np.dot(inp, self.w) + self.b
+        return np.dot(inp, self.w) + self.b
 
-    def output(self):
+    def output(self, inp):
         """
         Computes activation function on the weighted sum of the input
         :return: unit's output
         """
         # compute activation function on weighted sum
-        # TODO: complete
-        return 0
+        return self.act.func(self.net(inp))
 
 
 class Layer:
@@ -66,7 +68,7 @@ class Layer:
         """
         outputs = []
         for unit in self.units:
-            outputs.append(unit.output())
+            outputs.append(unit.output(inp))
 
         return outputs
 
@@ -81,7 +83,7 @@ class Network:
         layers: list of net's layers ('Layer' objects)
     """
 
-    def __init__(self, input_dim, units_per_layer):
+    def __init__(self, input_dim, units_per_layer, acts):
         """
         Constructor
         :param input_dim: the input dimension
@@ -89,6 +91,8 @@ class Network:
         """
         units = []
         self.layers = []
+
+        # for each layer...
         for i in range(len(units_per_layer)):
             if i == 0:
                 units_weights_length = input_dim
@@ -99,27 +103,38 @@ class Network:
                 units.append(
                     Unit(
                         w=np.random.uniform(0., 1., units_weights_length),
-                        b=np.random.uniform(0., 1., 1)
+                        b=np.random.uniform(0., 1., 1),
+                        act=functions[acts]
                     )
                 )
 
             self.layers.append(Layer(units=units))
             units = []
 
-    def forward(self, input):
+    def forward(self, inp):
         """
         Performs a complete forward pass on the whole NN
-        :param input: net's input vector
+        :param inp: net's input vector
         :return: net's output
         """
-        layer_input = input
+        x = inp   # x represents the data through the network (output of a layer, input of the next layer)
         for layer in self.layers:
-            layer_input = layer.forward_pass(layer_input)
+            x = layer.forward_pass(x)
+        return x
 
-        return layer_input  # it's actually the net's output
+    def print_net(self):
+        print('Neural Network:')
+        for layer in self.layers:
+            print('  Layer:')
+            for unit in layer.units:
+                print(f"\tUnit:\n\t  weights: {unit.w}\n\t  bias: {unit.b}\n\t  activation function: {unit.act.name}")
+            print()
 
 
 if __name__ == '__main__':
-    input_dim = 9
-    net = Network(input_dim=input_dim, units_per_layer=[3, 2])
-    print(f"Net's output: {net.forward(np.random.randn(input_dim))}")
+    input_dim = 3
+    net = Network(input_dim=input_dim, units_per_layer=[1], acts='relu')
+    inpt = [2,2,2]
+    print(f"Input: {inpt}")
+    net.print_net()
+    print(f"Net's output: {net.forward(inpt)}")
