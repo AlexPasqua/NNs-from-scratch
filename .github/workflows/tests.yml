@@ -36,6 +36,5 @@ jobs:
       
       - name: Run scripts functions.py, network.py
         run: |
-          cd src/
-          python3 functions.py
-          python3 network.py
+          python3 src/functions.py
+          python3 src/network.py
