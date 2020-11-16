@@ -1,5 +1,5 @@
 import numpy as np
-from src.functions import *
+from functions import *
 
 
 class Unit:
