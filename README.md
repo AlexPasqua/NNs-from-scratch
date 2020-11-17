@@ -15,8 +15,7 @@ ML-project
 ```
 
 ## Quick start
-**Install Python:**<br>
-`sudo apt install python3`
+* Install Python: `sudo apt install python3`
 
 **Install pip:**<br>
 `sudo apt install --upgrade python3-pip`
