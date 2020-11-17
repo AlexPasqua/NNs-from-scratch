@@ -30,13 +30,8 @@ class Unit:
         :param inp: unit's input vector
         :return: weighted sum of the input + bias
         """
-        # return np.dot(inp, self.w) + self.b    # TODO: does not work, why?
+        return np.dot(inp, self.w) + self.b
 
-        # weighted sum + bias
-        weighted_sum = 0
-        for i in range(len(inp)):
-            weighted_sum += inp[i] * self.w[i]
-        return weighted_sum + self.b
 
     def output(self, inp):
         """
@@ -104,7 +99,7 @@ class Network:
                 units.append(
                     Unit(
                         w=np.random.uniform(0., 1., n_weights),
-                        b=np.random.uniform(0., 1., 1),
+                        b=np.random.randn() % 1.,
                         act=functions[acts[i]]
                     )
                 )
@@ -171,15 +166,17 @@ if __name__ == '__main__':
         type=str,
         help=f"List of activation function names, one for each layer. Names to be chosen among {list(functions.keys())}"
     )
+    parser.add_argument('--verbose', '-v', action='store_true')
     args = parser.parse_args()
 
     # All arguments are optional, but either they're all present or they're all None
     none_found = init_found = False
     for var in vars(args):
-        if vars(args)[var] is None:
-            none_found = True
-        else:
-            init_found = True
+        if var != 'verbose':
+            if vars(args)[var] is None:
+                none_found = True
+            else:
+                init_found = True
 
     if none_found and init_found:
         parser.error("All arguments are optional, but either they're all present or they're all None")
@@ -196,13 +193,14 @@ if __name__ == '__main__':
     # Create the net object
     if args.inputs is None:  # one check is enough because either all args are None or they're all not None
         net = Network()
-        net.print_net()
-        net.forward(verbose=True)
+        net.forward(verbose=args.verbose)
     else:
         net = Network(
             input_dim=args.input_dim,
             units_per_layer=args.units_per_layer,
             acts=args.act_funcs
         )
+        net.forward(args.inputs, verbose=args.verbose)
+
+    if args.verbose:
         net.print_net()
-        net.forward(args.inputs, verbose=True)
