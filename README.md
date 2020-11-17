@@ -25,7 +25,10 @@ Install requirements:<br>
 `python -m pip install --requirement requirements.txt`
 
 Create the NN and execute an inference:<br>
-`python src/network.py [--input_dim INPUT_DIM] [--inputs INPUTS] [--units_per_layer UNITS_PER_LAYER] [--act_funcs ACT_FUNCS]`<br>
+```
+python src/network.py [--input_dim INPUT_DIM] [--inputs INPUTS] [--units_per_layer UNITS_PER_LAYER] [--act_funcs ACT_FUNCS]
+```
+
 Arguments:
 * `INPUT_DIM`: integer representing the length of each data record
 * `INPUTS`: sequence of floats representing a single data record for inference
