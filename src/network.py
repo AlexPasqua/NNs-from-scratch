@@ -147,21 +147,28 @@ if __name__ == '__main__':
     parser.add_argument(
         '--input_dim',
         action='store',
+        type=int,
         help='The input dimension as number, e.g. 3 means input is an array of 3 elements'
     )
     parser.add_argument(
         '--inputs',
         action='store',
+        nargs='+',
+        type=int,
         help='Array of inputs. Length must be consistent with input dim'
     )
     parser.add_argument(
         '--units_per_layer',
         action='store',
+        nargs='+',
+        type=int,
         help='Array as long as the number of layers. Each item is the number of units for the i-th layer'
     )
     parser.add_argument(
-        '--activation_functions',
+        '--act_funcs',
         action='store',
+        nargs='+',
+        type=str,
         help="List of activation function names, one for each layer. Names to be chosen among {'relu', 'sigmoid'}"
     )
     args = parser.parse_args()
@@ -174,14 +181,19 @@ if __name__ == '__main__':
         if vars(args)[var] is not None:
             init_found = True
 
-        print(len(vars(args)['inputs']))
+        print(len(vars(args)['inputs']), args.input_dim)
 
     if none_found and init_found:
         parser.error("All arguments are optional, but either they're all present or they're all None")
 
-    # the 1st check is enough: at this point is an arg is not None, all are not None
-    if args.inputs is not None and args.input_dim != len(args.inputs):
-        parser.error("'inputs' vector must have a length equal to 'input_dim'")
+    # At this point if an arg is not None, all are not None
+    if args.inputs is not None:
+        # Check that lengths of arguments lists are consistent
+        if args.input_dim != len(args.inputs):
+            parser.error("'inputs' vector must have a length equal to 'input_dim'")
+
+        if len(args.units_per_layer) != len(args.act_funcs):
+            parser.error("'units_per_layer' vector and 'act_funcs' must have the same length")
 
     # Create the net object
     if args.inputs is None:  # one check is enough because either all args are None or they're all not None
@@ -192,7 +204,7 @@ if __name__ == '__main__':
         net = Network(
             input_dim=args.input_dim,
             units_per_layer=args.units_per_layer,
-            acts=args.activation_functions
+            acts=args.act_funcs
         )
         net.print_net()
-        net.forward(args.input, verbose=True)
+        net.forward(args.inputs, verbose=True)
