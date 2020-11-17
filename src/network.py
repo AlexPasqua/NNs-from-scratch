@@ -154,22 +154,22 @@ if __name__ == '__main__':
         '--inputs',
         action='store',
         nargs='+',
-        type=int,
-        help='Array of inputs. Length must be consistent with input dim'
+        type=float,
+        help='Array of inputs. Length must be consistent with input dim. e.g. --inputs 2 1.5 1.1'
     )
     parser.add_argument(
         '--units_per_layer',
         action='store',
         nargs='+',
         type=int,
-        help='Array as long as the number of layers. Each item is the number of units for the i-th layer'
+        help='Array as long as the number of layers. Each item is the number of units for the i-th layer e.g. 3 3 2'
     )
     parser.add_argument(
         '--act_funcs',
         action='store',
         nargs='+',
         type=str,
-        help="List of activation function names, one for each layer. Names to be chosen among {'relu', 'sigmoid'}"
+        help=f"List of activation function names, one for each layer. Names to be chosen among {list(functions.keys())}"
     )
     args = parser.parse_args()
 
@@ -178,15 +178,13 @@ if __name__ == '__main__':
     for var in vars(args):
         if vars(args)[var] is None:
             none_found = True
-        if vars(args)[var] is not None:
+        else:
             init_found = True
-
-        print(len(vars(args)['inputs']), args.input_dim)
 
     if none_found and init_found:
         parser.error("All arguments are optional, but either they're all present or they're all None")
 
-    # At this point if an arg is not None, all are not None
+    # At this point if an arg is not None, all are not None. So we check only one argument
     if args.inputs is not None:
         # Check that lengths of arguments lists are consistent
         if args.input_dim != len(args.inputs):
