@@ -165,19 +165,15 @@ if __name__ == '__main__':
         type=str,
         help=f"List of activation function names, one for each layer. Names to be chosen among {list(functions.keys())}"
     )
+    parser.add_argument('--verbose', '-v', action='store_true')
     args = parser.parse_args()
 
     # All arguments are optional, but either they're all present or they're all None
     if (
-        not all(vars(args)[arg] is None for arg in vars(args)) and
-        not all(vars(args)[arg] is not None for arg in vars(args))
+            not all(vars(args)[arg] is None for arg in vars(args) if arg != 'verbose') and
+            not all(vars(args)[arg] is not None for arg in vars(args) if arg != 'verbose')
     ):
         parser.error("All arguments are optional, but either they're all present or they're all None")
-
-    # Parsing argument --verbose
-    # It's done now because verbose is always not None and it creates problems to the previous if statement
-    parser.add_argument('--verbose', '-v', action='store_true')
-    args = parser.parse_args()
 
     # At this point if an arg is not None, all are not None. So we check only one argument
     if args.inputs is not None:
