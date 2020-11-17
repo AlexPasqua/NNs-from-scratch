@@ -32,7 +32,6 @@ class Unit:
         """
         return np.dot(inp, self.w) + self.b
 
-
     def output(self, inp):
         """
         Computes activation function on the weighted sum of the input
@@ -166,27 +165,25 @@ if __name__ == '__main__':
         type=str,
         help=f"List of activation function names, one for each layer. Names to be chosen among {list(functions.keys())}"
     )
-    parser.add_argument('--verbose', '-v', action='store_true')
     args = parser.parse_args()
 
     # All arguments are optional, but either they're all present or they're all None
-    none_found = init_found = False
-    for var in vars(args):
-        if var != 'verbose':
-            if vars(args)[var] is None:
-                none_found = True
-            else:
-                init_found = True
-
-    if none_found and init_found:
+    if (
+        not all(vars(args)[arg] is None for arg in vars(args)) and
+        not all(vars(args)[arg] is not None for arg in vars(args))
+    ):
         parser.error("All arguments are optional, but either they're all present or they're all None")
+
+    # Parsing argument --verbose
+    # It's done now because verbose is always not None and it creates problems to the previous if statement
+    parser.add_argument('--verbose', '-v', action='store_true')
+    args = parser.parse_args()
 
     # At this point if an arg is not None, all are not None. So we check only one argument
     if args.inputs is not None:
         # Check that lengths of arguments lists are consistent
         if args.input_dim != len(args.inputs):
             parser.error("'inputs' vector must have a length equal to 'input_dim'")
-
         if len(args.units_per_layer) != len(args.act_funcs):
             parser.error("'units_per_layer' vector and 'act_funcs' must have the same length")
 
