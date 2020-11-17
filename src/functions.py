@@ -102,12 +102,15 @@ ReLU = Function(relu, relu_deriv, 'ReLU')
 MSE = Function(mean_squared_error, mean_squared_error_deriv, 'mse')
 MEE = Function(mean_euclidean_error, mean_euclidean_error_deriv, 'mee')
 
+
 functions = {
     'relu': ReLU,
     'sigmoid': Sigmoid,
     'mse': MSE,
     'mee': MEE
 }
+
+
 
 if __name__ == '__main__':
     print(f"Sigmoid(1): {sigmoid(1)}")
@@ -126,6 +129,12 @@ if __name__ == '__main__':
     print(f"MSE_deriv:{mean_squared_error_deriv(y,y_pred)}")
     print(f"MEE:{mean_euclidean_error(y,y_pred)}")
     print(f"MEE_deriv:{mean_euclidean_error_deriv(y,y_pred)}")
+
+
+
+
+
+
 
 
 
