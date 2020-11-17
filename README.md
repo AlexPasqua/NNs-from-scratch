@@ -18,8 +18,8 @@ ML-project
 Install Python:<br>
 `sudo apt install python3`
 
-**Install pip:**<br>
+Install pip:<br>
 `sudo apt install --upgrade python3-pip`
 
-**Install requirements:**<br>
+Install requirements:<br>
 `python -m pip install --requirement requirements.txt`

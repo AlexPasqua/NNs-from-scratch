@@ -1,4 +1,5 @@
 import numpy as np
+import argparse
 from functions import *
 
 
@@ -83,7 +84,7 @@ class Network:
         layers: list of net's layers ('Layer' objects)
     """
 
-    def __init__(self, input_dim, units_per_layer, acts):
+    def __init__(self, input_dim=3, units_per_layer=(3, 2), acts=('relu', 'sigmoid')):
         """
         Constructor
         :param input_dim: the input dimension
@@ -111,16 +112,20 @@ class Network:
             self.layers.append(Layer(units=units))
             units = []
 
-    def forward(self, inp):
+    def forward(self, inp=(2, 2, 2), verbose=False):
         """
         Performs a complete forward pass on the whole NN
         :param inp: net's input vector
         :return: net's output
         """
+        if verbose:
+            print(f"Net's inputs: {inp}")
         # x represents the data through the network (output of a layer, input of the next layer)
         x = inp
         for layer in self.layers:
             x = layer.forward_pass(x)
+        if verbose:
+            print(f"Net's output: {x}")
         return x
 
     def print_net(self):
@@ -136,9 +141,58 @@ class Network:
 
 
 if __name__ == '__main__':
-    input_dim = 3
-    net = Network(input_dim=input_dim, units_per_layer=[2, 1], acts=['relu', 'sigmoid'])
-    inpt = [2, 2, 2]
-    print(f"Input: {inpt}")
-    net.print_net()
-    print(f"Net's output: {net.forward(inpt)}")
+    parser = argparse.ArgumentParser(
+        description='Creates a NN with specified topology, inputs and activation functions'
+    )
+    parser.add_argument(
+        '--input_dim',
+        action='store',
+        help='The input dimension as number, e.g. 3 means input is an array of 3 elements'
+    )
+    parser.add_argument(
+        '--inputs',
+        action='store',
+        help='Array of inputs. Length must be consistent with input dim'
+    )
+    parser.add_argument(
+        '--units_per_layer',
+        action='store',
+        help='Array as long as the number of layers. Each item is the number of units for the i-th layer'
+    )
+    parser.add_argument(
+        '--activation_functions',
+        action='store',
+        help="List of activation function names, one for each layer. Names to be chosen among {'relu', 'sigmoid'}"
+    )
+    args = parser.parse_args()
+
+    # All arguments are optional, but either they're all present or they're all None
+    none_found = init_found = False
+    for var in vars(args):
+        if vars(args)[var] is None:
+            none_found = True
+        if vars(args)[var] is not None:
+            init_found = True
+
+        print(len(vars(args)['inputs']))
+
+    if none_found and init_found:
+        parser.error("All arguments are optional, but either they're all present or they're all None")
+
+    # the 1st check is enough: at this point is an arg is not None, all are not None
+    if args.inputs is not None and args.input_dim != len(args.inputs):
+        parser.error("'inputs' vector must have a length equal to 'input_dim'")
+
+    # Create the net object
+    if args.inputs is None:  # one check is enough because either all args are None or they're all not None
+        net = Network()
+        net.print_net()
+        net.forward(verbose=True)
+    else:
+        net = Network(
+            input_dim=args.input_dim,
+            units_per_layer=args.units_per_layer,
+            acts=args.activation_functions
+        )
+        net.print_net()
+        net.forward(args.input, verbose=True)
