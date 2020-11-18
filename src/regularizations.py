@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def regularization(w,lambd,l_n):
+def regularization(w, lambd, l_n):
     """
     Computes the regularization
     :param w: weights vector
@@ -11,7 +11,7 @@ def regularization(w,lambd,l_n):
     """
 
     if l_n == 'l2':
-        return lambd  * np.sum(np.square(w))
+        return lambd * np.sum(np.square(w))
     elif l_n == 'l1':
         return lambd * np.sum(np.abs(w))
     else:
@@ -19,10 +19,7 @@ def regularization(w,lambd,l_n):
 
 
 if __name__ == '__main__':
-    w = ([1,0.2,-1])
+    w = ([1, 0.2, -1])
     print(f"Weights used for testing: {w}")
-    print(f"L2 regularization(lamb = 0.2): {regularization(w,0.2,'l2')}")
-    print(f"L1 regularization(lamb = 0.2): {regularization(w,0.2,'l1')}")
-    #print(f"Regularization error test with non valid param: {regularization(w,0.2,'l0')}")
-
-
+    print(f"L2 regularization(lamb = 0.2): {regularization(w, 0.2, 'l2')}")
+    print(f"L1 regularization(lamb = 0.2): {regularization(w, 0.2, 'l1')}")
