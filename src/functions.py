@@ -55,9 +55,6 @@ def mean_squared_error(predicted, target):
         raise Exception(f"Mismatching shapes in MSE: predictions shape: "
                         f"{predicted.shape} - targets shape {target.shape}")
 
-    #print(predicted - target)
-    #print(np.square(predicted - target))
-    #print(np.sum(np.square(predicted - target)))
     return np.sum(np.square(predicted - target)) / target.shape[0]
 
 
