@@ -67,6 +67,7 @@ def mean_squared_error_deriv(predicted, target):
     :param target: ndarray of shape (n, m) – Ground truth values for each of n examples
     :return: derivative of the mse (Mean Squared Error)
     """
+    # TODO: check!!!
     return predicted - target
 
 
@@ -91,6 +92,7 @@ def mean_euclidean_error_deriv(predicted, target):
     :param target: ndarray of shape (n, m) – Ground truth values for each of n examples
     :return: derivative of the mee (Mean Euclidean Error)
     """
+    # TODO: check!!!
     return (predicted - target) / np.linalg.norm(predicted - target)
 
 
@@ -126,12 +128,19 @@ if __name__ == '__main__':
 
     # Test loss functions
     print('\nArrays for testing loss functions:')
-    y_true = np.array([[1, 1, 0, 0], [0, 0, 0, 0]])
-    y_pred = np.array([[1, 0, 0, 1], [1, 1, 1, 1]])
+    y_true = np.array(
+        [[1, 1, 0, 0],
+         [0, 0, 0, 0]]
+    )
+    y_pred = np.array(
+        [[1, 0, 0, 1],
+         [1, 1, 1, 1]]
+    )
+
     print(f"target : {y_true}")
     print(f"predicted: {y_pred}\n")
     print('Loss functions test:')
     print(f"MSE:{mean_squared_error(y_pred, y_true)}")
-    print(f"MSE_deriv:{mean_squared_error_deriv(y_true, y_pred)}")
+    #print(f"MSE_deriv:{mean_squared_error_deriv(y_true, y_pred)}")
     print(f"MEE:{mean_euclidean_error(y_true, y_pred)}")
-    print(f"MEE_deriv:{mean_euclidean_error_deriv(y_true, y_pred)}")
+    #print(f"MEE_deriv:{mean_euclidean_error_deriv(y_true, y_pred)}")
