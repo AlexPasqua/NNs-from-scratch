@@ -50,6 +50,11 @@ def mean_squared_error(predicted, target):
     :param target: ndarray of shape (n, m) – Ground truth values for each of n examples
     :return: loss in terms of mse (Mean Squared Error)
     """
+    # Check shapes
+    if predicted.shape != target.shape:
+        raise Exception(f"Mismatching shapes in MSE: predictions shape: "
+                        f"{predicted.shape} - targets shape {target.shape}")
+
     return np.sum(np.square(predicted - target)) / target.shape[0]
 
 
@@ -126,7 +131,7 @@ if __name__ == '__main__':
     print(f"target : {y_true}")
     print(f"predicted: {y_pred}\n")
     print('Loss functions test:')
-    print(f"MSE:{mean_squared_error(y_true, y_pred)}")
+    print(f"MSE:{mean_squared_error(y_pred, y_true)}")
     print(f"MSE_deriv:{mean_squared_error_deriv(y_true, y_pred)}")
     print(f"MEE:{mean_euclidean_error(y_true, y_pred)}")
     print(f"MEE_deriv:{mean_euclidean_error_deriv(y_true, y_pred)}")
