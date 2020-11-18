@@ -54,7 +54,7 @@ ReLU = Function(relu, relu_deriv, 'ReLU')
 
 functions = {
     'relu': ReLU,
-    'sigmoid': Sigmoid,
+    'sigmoid': Sigmoid
 }
 
 if __name__ == '__main__':
