@@ -55,6 +55,9 @@ def mean_squared_error(predicted, target):
         raise Exception(f"Mismatching shapes in MSE: predictions shape: "
                         f"{predicted.shape} - targets shape {target.shape}")
 
+    #print(predicted - target)
+    #print(np.square(predicted - target))
+    #print(np.sum(np.square(predicted - target)))
     return np.sum(np.square(predicted - target)) / target.shape[0]
 
 
@@ -126,8 +129,8 @@ if __name__ == '__main__':
 
     # Test loss functions
     print('\nArrays for testing loss functions:')
-    y_true = np.array([1, 1, 0, 0])
-    y_pred = np.array([1, 0, 0, 1])
+    y_true = np.array([[1, 1, 0, 0], [0, 0, 0, 0]])
+    y_pred = np.array([[1, 0, 0, 1], [1, 1, 1, 1]])
     print(f"target : {y_true}")
     print(f"predicted: {y_pred}\n")
     print('Loss functions test:')
