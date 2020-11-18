@@ -41,52 +41,52 @@ def relu_deriv(x):
     return 0 if x <= 0 else 1
 
 
-def mean_squared_error(y_hat, y):
+def mean_squared_error(predicted, target):
     """
     Computes the mean squared error between
     the target vector and the output predicted by the net
 
-    :param y_hat: ndarray of shape (n, m) – Predictions for the n examples
-    :param y: ndarray of shape (n, m) – Ground truth values for each of n examples
+    :param predicted: ndarray of shape (n, m) – Predictions for the n examples
+    :param target: ndarray of shape (n, m) – Ground truth values for each of n examples
     :return: loss in terms of mse (Mean Squared Error)
     """
-    return np.sum(np.square(y_hat - y)) / y.shape[0]
+    return np.sum(np.square(predicted - target)) / target.shape[0]
 
 
-def mean_squared_error_deriv(y_hat, y):
+def mean_squared_error_deriv(predicted, target):
     """
     Computes the derivative of the mean squared error between
     the target vector and the output predicted by the net
 
-    :param y_hat: ndarray of shape (n, m) – Predictions for the n examples
-    :param y: ndarray of shape (n, m) – Ground truth values for each of n examples
+    :param predicted: ndarray of shape (n, m) – Predictions for the n examples
+    :param target: ndarray of shape (n, m) – Ground truth values for each of n examples
     :return: derivative of the mse (Mean Squared Error)
     """
-    return y_hat - y
+    return predicted - target
 
 
-def mean_euclidean_error(y_hat, y):
+def mean_euclidean_error(predicted, target):
     """
     Computes the Mean Euclidean Error between
     the target vector and the output predicted by the net
 
-    :param y_hat: ndarray of shape (n, m) – Predictions for the n examples
-    :param y: ndarray of shape (n, m) – Ground truth values for each of n examples
+    :param predicted: ndarray of shape (n, m) – Predictions for the n examples
+    :param target: ndarray of shape (n, m) – Ground truth values for each of n examples
     :return: loss in term of mee (Mean Euclidean Error)
     """
-    return np.linalg.norm(y_hat - y) / y.shape[0]
+    return np.linalg.norm(predicted - target) / target.shape[0]
 
 
-def mean_euclidean_error_deriv(y_hat, y):
+def mean_euclidean_error_deriv(predicted, target):
     """
     Computes the derivative of the Mean Euclidean Error between
     the target vector and the output predicted by the net
 
-    :param y_hat: ndarray of shape (n, m) – Predictions for the n examples
-    :param y: ndarray of shape (n, m) – Ground truth values for each of n examples
+    :param predicted: ndarray of shape (n, m) – Predictions for the n examples
+    :param target: ndarray of shape (n, m) – Ground truth values for each of n examples
     :return: derivative of the mee (Mean Euclidean Error)
     """
-    return (y_hat - y) / np.linalg.norm(y_hat - y)
+    return (predicted - target) / np.linalg.norm(predicted - target)
 
 
 class Function:
@@ -121,12 +121,12 @@ if __name__ == '__main__':
 
     # Test loss functions
     print('\nArrays for testing loss functions:')
-    y = np.array([1, 1, 0, 0])
+    y_true = np.array([1, 1, 0, 0])
     y_pred = np.array([1, 0, 0, 1])
-    print(f"target : {y}")
+    print(f"target : {y_true}")
     print(f"predicted: {y_pred}\n")
     print('Loss functions test:')
-    print(f"MSE:{mean_squared_error(y, y_pred)}")
-    print(f"MSE_deriv:{mean_squared_error_deriv(y, y_pred)}")
-    print(f"MEE:{mean_euclidean_error(y, y_pred)}")
-    print(f"MEE_deriv:{mean_euclidean_error_deriv(y, y_pred)}")
+    print(f"MSE:{mean_squared_error(y_true, y_pred)}")
+    print(f"MSE_deriv:{mean_squared_error_deriv(y_true, y_pred)}")
+    print(f"MEE:{mean_euclidean_error(y_true, y_pred)}")
+    print(f"MEE_deriv:{mean_euclidean_error_deriv(y_true, y_pred)}")
