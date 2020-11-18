@@ -50,7 +50,7 @@ def mean_squared_error(y_hat, y):
     :param y: ndarray of shape (n, m) – Ground truth values for each of n examples
     :return: loss in terms of mse (Mean Squared Error)
     """
-    return np.sum(np.square(y_hat-y)) / y.shape[0]
+    return np.sum(np.square(y_hat - y)) / y.shape[0]
 
 
 def mean_squared_error_deriv(y_hat, y):
@@ -102,7 +102,6 @@ ReLU = Function(relu, relu_deriv, 'ReLU')
 MSE = Function(mean_squared_error, mean_squared_error_deriv, 'mse')
 MEE = Function(mean_euclidean_error, mean_euclidean_error_deriv, 'mee')
 
-
 functions = {
     'relu': ReLU,
     'sigmoid': Sigmoid,
@@ -110,36 +109,24 @@ functions = {
     'mee': MEE
 }
 
-
-
 if __name__ == '__main__':
+    # Test activation functions
+    print("Activation functions test:")
     print(f"Sigmoid(1): {sigmoid(1)}")
     print(f"Derivative of sigmoid(1): {sigmoid_deriv(1)}")
     print(f"ReLU(1): {relu(1)}")
     print(f"ReLU(-3): {relu(-3)}")
     print(f"Derivative of ReLU(1): {relu_deriv(1)}")
     print(f"Derivative of ReLU(-3): {relu_deriv(-3)}")
+
+    # Test loss functions
     print('\nArrays for testing loss functions:')
-    y = np.array([1,1,0,0])
-    y_pred = np.array([1,0,0,1])
+    y = np.array([1, 1, 0, 0])
+    y_pred = np.array([1, 0, 0, 1])
     print(f"target : {y}")
     print(f"predicted: {y_pred}\n")
     print('Loss functions test:')
-    print(f"MSE:{mean_squared_error(y,y_pred)}")
-    print(f"MSE_deriv:{mean_squared_error_deriv(y,y_pred)}")
-    print(f"MEE:{mean_euclidean_error(y,y_pred)}")
-    print(f"MEE_deriv:{mean_euclidean_error_deriv(y,y_pred)}")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    print(f"MSE:{mean_squared_error(y, y_pred)}")
+    print(f"MSE_deriv:{mean_squared_error_deriv(y, y_pred)}")
+    print(f"MEE:{mean_euclidean_error(y, y_pred)}")
+    print(f"MEE_deriv:{mean_euclidean_error_deriv(y, y_pred)}")
