@@ -1,21 +1,29 @@
 import numpy as np
 
 
-def regularization(w, lambd, l_n):
+def lasso_l1(w, lambd):
+    return lambd * np.sum(np.abs(w))
+
+
+def ridge_l2(w, lambd):
+    return lambd * np.sum(np.square(w))
+
+
+def regularization(w, lambd, reg_type):
     """
     Computes the regularization
     :param w: weights vector
     :param lambd: regularization parameter (weight penalty)
-    :param l_n: type of regularization. "l2" = Ridge Regularization; "l1" = Lasso Regularization
+    :param reg_type: type of regularization. "l2" = Ridge Regularization; "l1" = Lasso Regularization
     :return: the regularization factor
     """
-
-    if l_n == 'l2':
-        return lambd * np.sum(np.square(w))
-    elif l_n == 'l1':
-        return lambd * np.sum(np.abs(w))
-    else:
-        raise ValueError("l_n should be either l1 or l2")
+    regularizations = {
+        'l1': lasso_l1,
+        'l2': ridge_l2
+    }
+    if reg_type not in regularizations:
+        raise Exception(f"Wrong regularization parameter: {reg_type} --> Chose among {list(regularizations.keys())}")
+    return regularizations[reg_type](w, lambd)
 
 
 if __name__ == '__main__':
