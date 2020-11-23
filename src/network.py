@@ -1,6 +1,6 @@
 import numpy as np
 import argparse
-from src.act_funcs import act_funcs
+from act_funcs import act_funcs
 
 
 class Unit:
@@ -163,7 +163,7 @@ if __name__ == '__main__':
         action='store',
         nargs='+',
         type=str,
-        help=f"List of activation function names, one for each layer. Names to be chosen among {list(functions.keys())}"
+        help=f"List of activation function names, one for each layer. Names to be chosen among {list(act_funcs.keys())}"
     )
     parser.add_argument('--verbose', '-v', action='store_true')
     args = parser.parse_args()
