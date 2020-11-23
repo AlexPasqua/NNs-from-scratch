@@ -1,6 +1,6 @@
 import numpy as np
 import argparse
-from functions import *
+from src.act_funcs import act_funcs
 
 
 class Unit:
@@ -85,8 +85,8 @@ class Network:
         :param units_per_layer: list of layers' sizes as number on units
         :param acts: list of activation function names (one for each layer)
         """
-        units = []
         self.layers = []
+        units = []
 
         # for each layer...
         for i in range(len(units_per_layer)):
@@ -99,7 +99,7 @@ class Network:
                     Unit(
                         w=np.random.uniform(0., 1., n_weights),
                         b=np.random.randn() % 1.,
-                        act=functions[acts[i]]
+                        act=act_funcs[acts[i]]
                     )
                 )
 
