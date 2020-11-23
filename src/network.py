@@ -109,6 +109,7 @@ class Network:
     def forward(self, inp=(2, 2, 2), verbose=False):
         """
         Performs a complete forward pass on the whole NN
+        :param verbose:
         :param inp: net's input vector
         :return: net's output
         """

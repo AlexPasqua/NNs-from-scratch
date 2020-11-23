@@ -2,7 +2,7 @@
 
 from abc import ABC, abstractmethod
 from network import Network
-from functions import functions
+from act_funcs import act_funcs
 
 
 class Optimizer(ABC):
@@ -19,7 +19,12 @@ class Optimizer(ABC):
 
     @abstractmethod
     def optimize(self):
-        pass
+        """
+        1) Calc the error through forward pass
+        2) Calc gradient of error --> partial derivs of error
+        3) Chain rule for every parameter
+        """
+
 
 
 # TODO: delete this class, it's just for testing. Once there are concrete optimizers it will be pointless
@@ -33,4 +38,10 @@ class TestingConcreteClass(Optimizer, ABC):
 
 
 if __name__ == '__main__':
-    opt = TestingConcreteClass(Network())
+    opt = TestingConcreteClass(
+        Network(
+            input_dim=2,
+            units_per_layer=[1],
+            acts=['relu']
+        )
+    )
