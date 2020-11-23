@@ -129,8 +129,8 @@ class Network:
     def compile(self, opt='testopt', loss='mse'):
         self.opt = optimizers[opt](self, loss)
 
-    def fit(self, inp):
-        self.opt.optimize(inp)
+    def fit(self, inp, target):
+        self.opt.optimize(inp, target)
 
     def print_net(self):
         """
@@ -205,7 +205,7 @@ if __name__ == '__main__':
         )
         # net.forward(args.inputs, verbose=args.verbose)
         net.compile()
-        net.fit(args.inputs)
+        net.fit(inp=np.array(args.inputs), target=np.array([0.25]))
 
     if args.verbose:
         net.print_net()

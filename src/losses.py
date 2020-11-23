@@ -12,6 +12,8 @@ def mean_squared_error(predicted, target):
     :return: loss in terms of mse (Mean Squared Error)
     """
     # Check shapes
+    predicted = np.array(predicted)
+    target = np.array(target)
     if predicted.shape != target.shape:
         raise Exception(f"Mismatching shapes in MSE: predictions shape: "
                         f"{predicted.shape} - targets shape {target.shape}")

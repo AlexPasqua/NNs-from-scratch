@@ -3,6 +3,7 @@
 from abc import ABC, abstractmethod
 from losses import losses
 from network import *
+import numpy as np
 
 
 class Optimizer(ABC):
@@ -29,10 +30,11 @@ class TestingConcreteClass(Optimizer, ABC):
     def __init__(self, nn, loss):
         super(TestingConcreteClass, self).__init__(nn, loss)
 
-    def optimize(self, inp):
+    def optimize(self, inp, target):
         print('optimize method')
-        net_outputs = self.nn.forward(inp)
-        print(net_outputs)
+        net_outputs = self.nn.forward(inp=inp)
+        error = self.loss.func(predicted=net_outputs, target=target)
+        #print(error)
 
 
 optimizers = {
