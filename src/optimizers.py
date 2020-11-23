@@ -29,9 +29,10 @@ class TestingConcreteClass(Optimizer, ABC):
     def __init__(self, nn, loss):
         super(TestingConcreteClass, self).__init__(nn, loss)
 
-    def optimize(self):
+    def optimize(self, inp):
         print('optimize method')
-        print(self.nn.forward())
+        net_outputs = self.nn.forward(inp)
+        print(net_outputs)
 
 
 optimizers = {

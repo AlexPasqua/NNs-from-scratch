@@ -80,15 +80,15 @@ class Network:
         layers: list of net's layers ('Layer' objects)
     """
 
-    def __init__(self, input_dim=3, units_per_layer=(3, 2), acts=('relu', 'sigmoid'), opt='testopt', loss='mse'):
+    def __init__(self, input_dim=3, units_per_layer=(3, 2), acts=('relu', 'sigmoid')):
         """
         Constructor
         :param input_dim: the input dimension
         :param units_per_layer: list of layers' sizes as number on units
         :param acts: list of activation function names (one for each layer)
         """
-        self.opt = optimizers[opt](self, loss)
         self.layers = []
+        self.opt = None
 
         units = []
         # for each layer...
@@ -126,8 +126,11 @@ class Network:
             print(f"Net's output: {x}")
         return x
 
-    def fit(self):
-        self.opt.optimize()
+    def compile(self, opt='testopt', loss='mse'):
+        self.opt = optimizers[opt](self, loss)
+
+    def fit(self, inp):
+        self.opt.optimize(inp)
 
     def print_net(self):
         """
@@ -200,9 +203,10 @@ if __name__ == '__main__':
             units_per_layer=args.units_per_layer,
             acts=args.act_funcs
         )
-        net.forward(args.inputs, verbose=args.verbose)
+        # net.forward(args.inputs, verbose=args.verbose)
+        net.compile()
+        net.fit(args.inputs)
 
     if args.verbose:
         net.print_net()
 
-    net.fit()
