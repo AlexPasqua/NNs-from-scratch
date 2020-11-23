@@ -12,17 +12,23 @@ class Optimizer(ABC):
     (check 'ABC' documentation for more info about abstract classes in Python)
     """
 
+    @abstractmethod
     def __init__(self, nn, loss):
         self.nn = nn
         self.loss = losses[loss]
 
     @abstractmethod
-    def optimize(self):
+    def optimize(self, inp, target):
         """
         1) Calc the error through forward pass
         2) Calc gradient of error --> partial derivs of error
         3) Chain rule for every parameter
         """
+        net_outputs = self.nn.forward(inp=inp)
+        error = self.loss.func(predicted=net_outputs, target=target)
+        deriv = self.loss.deriv(predicted=net_outputs, target=target)
+        print(f"Gradient of loss function: {deriv}")
+        # TODO: finish
 
 
 # TODO: delete this class, it's just for testing. Once there are concrete optimizers it will be pointless
@@ -31,12 +37,7 @@ class TestingConcreteClass(Optimizer, ABC):
         super(TestingConcreteClass, self).__init__(nn, loss)
 
     def optimize(self, inp, target):
-        print('optimize method')
-        net_outputs = self.nn.forward(inp=inp)
-        error = self.loss.func(predicted=net_outputs, target=target)
-        deriv = self.loss.deriv(predicted=net_outputs, target=target)
-        print(deriv)
-        # TODO: finish
+        Optimizer.optimize(self, inp=inp, target=target)
 
 
 optimizers = {
