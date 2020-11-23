@@ -1,21 +1,19 @@
 """ In this scripts are defined the optimizers used in the project """
 
 from abc import ABC, abstractmethod
-from network import Network
-from act_funcs import act_funcs
+from losses import losses
+from network import *
 
 
 class Optimizer(ABC):
     """
     Abstract class representing a generic optimizer
     (check 'ABC' documentation for more info about abstract classes in Python)
-
-    Attributes:
-        nn: Network object
     """
 
-    def __init__(self, nn):
+    def __init__(self, nn, loss):
         self.nn = nn
+        self.loss = losses[loss]
 
     @abstractmethod
     def optimize(self):
@@ -26,22 +24,19 @@ class Optimizer(ABC):
         """
 
 
-
 # TODO: delete this class, it's just for testing. Once there are concrete optimizers it will be pointless
 class TestingConcreteClass(Optimizer, ABC):
-    def __init__(self, nn):
-        super(TestingConcreteClass, self).__init__(nn)
-        self.nn.print_net()
+    def __init__(self, nn, loss):
+        super(TestingConcreteClass, self).__init__(nn, loss)
 
     def optimize(self):
         print('optimize method')
+        print(self.nn.forward())
 
+
+optimizers = {
+    'testopt': TestingConcreteClass
+}
 
 if __name__ == '__main__':
-    opt = TestingConcreteClass(
-        Network(
-            input_dim=2,
-            units_per_layer=[1],
-            acts=['relu']
-        )
-    )
+    opt = optimizers['testopt'](Network(), losses['mse'])

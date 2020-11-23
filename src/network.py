@@ -1,6 +1,8 @@
 import numpy as np
 import argparse
 from act_funcs import act_funcs
+from optimizers import *
+from losses import *
 
 
 class Unit:
@@ -78,16 +80,17 @@ class Network:
         layers: list of net's layers ('Layer' objects)
     """
 
-    def __init__(self, input_dim=3, units_per_layer=(3, 2), acts=('relu', 'sigmoid')):
+    def __init__(self, input_dim=3, units_per_layer=(3, 2), acts=('relu', 'sigmoid'), opt='testopt', loss='mse'):
         """
         Constructor
         :param input_dim: the input dimension
         :param units_per_layer: list of layers' sizes as number on units
         :param acts: list of activation function names (one for each layer)
         """
+        self.opt = optimizers[opt](self, loss)
         self.layers = []
-        units = []
 
+        units = []
         # for each layer...
         for i in range(len(units_per_layer)):
             # number of weights of the units in a certain layer
@@ -122,6 +125,9 @@ class Network:
         if verbose:
             print(f"Net's output: {x}")
         return x
+
+    def fit(self):
+        self.opt.optimize()
 
     def print_net(self):
         """
@@ -198,3 +204,5 @@ if __name__ == '__main__':
 
     if args.verbose:
         net.print_net()
+
+    net.fit()
