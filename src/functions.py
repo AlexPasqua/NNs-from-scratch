@@ -141,6 +141,6 @@ if __name__ == '__main__':
     print(f"predicted: {y_pred}\n")
     print('Loss functions test:')
     print(f"MSE:{mean_squared_error(y_pred, y_true)}")
-    #print(f"MSE_deriv:{mean_squared_error_deriv(y_true, y_pred)}")
+    # print(f"MSE_deriv:{mean_squared_error_deriv(y_true, y_pred)}")
     print(f"MEE:{mean_euclidean_error(y_true, y_pred)}")
-    #print(f"MEE_deriv:{mean_euclidean_error_deriv(y_true, y_pred)}")
+    # print(f"MEE_deriv:{mean_euclidean_error_deriv(y_true, y_pred)}")
