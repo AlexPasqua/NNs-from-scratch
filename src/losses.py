@@ -30,7 +30,8 @@ def mean_squared_error_deriv(predicted, target):
     :param target: ndarray of shape (n, m) – Ground truth values for each of n examples
     :return: derivative of the mse (Mean Squared Error)
     """
-    return 2 * np.sum(predicted - target) / target.shape[0]
+    # exponent 2 in the deriv becomes a multiplying constant and simplifies itself with the denominator of the func
+    return np.sum(predicted - target) / target.shape[0]
 
 
 

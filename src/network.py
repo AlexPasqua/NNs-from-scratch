@@ -205,7 +205,7 @@ if __name__ == '__main__':
         )
         # net.forward(args.inputs, verbose=args.verbose)
         net.compile()
-        net.fit(inp=np.array(args.inputs), target=np.array([0.25, 0.25]))
+        net.fit(inp=np.array(args.inputs), target=np.array([0.25]))
 
     if args.verbose:
         net.print_net()

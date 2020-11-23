@@ -36,6 +36,7 @@ class TestingConcreteClass(Optimizer, ABC):
         error = self.loss.func(predicted=net_outputs, target=target)
         deriv = self.loss.deriv(predicted=net_outputs, target=target)
         print(deriv)
+        # TODO: finish
 
 
 optimizers = {
