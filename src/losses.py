@@ -12,11 +12,13 @@ def mean_squared_error(predicted, target):
     :return: loss in terms of mse (Mean Squared Error)
     """
     # Check shapes
+    predicted = np.array(predicted)
+    target = np.array(target)
     if predicted.shape != target.shape:
         raise Exception(f"Mismatching shapes in MSE: predictions shape: "
                         f"{predicted.shape} - targets shape {target.shape}")
 
-    return np.sum(np.square(predicted - target)) / target.shape[0]
+    return np.sum(np.square(predicted - target)) / (target.shape[0] * 2)    # "* 2" is to make the gradient simpler
 
 
 def mean_squared_error_deriv(predicted, target):
@@ -28,8 +30,10 @@ def mean_squared_error_deriv(predicted, target):
     :param target: ndarray of shape (n, m) – Ground truth values for each of n examples
     :return: derivative of the mse (Mean Squared Error)
     """
-    # TODO: check!!!
-    return predicted - target
+    # exponent 2 in the deriv becomes a multiplying constant and simplifies itself with the denominator of the func
+    return np.sum(predicted - target) / target.shape[0]
+
+
 
 
 def mean_euclidean_error(predicted, target):

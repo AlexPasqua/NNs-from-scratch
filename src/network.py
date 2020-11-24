@@ -1,6 +1,8 @@
 import numpy as np
 import argparse
 from act_funcs import act_funcs
+from optimizers import *
+from losses import *
 
 
 class Unit:
@@ -86,8 +88,9 @@ class Network:
         :param acts: list of activation function names (one for each layer)
         """
         self.layers = []
-        units = []
+        self.opt = None
 
+        units = []
         # for each layer...
         for i in range(len(units_per_layer)):
             # number of weights of the units in a certain layer
@@ -109,6 +112,7 @@ class Network:
     def forward(self, inp=(2, 2, 2), verbose=False):
         """
         Performs a complete forward pass on the whole NN
+        :param verbose:
         :param inp: net's input vector
         :return: net's output
         """
@@ -121,6 +125,12 @@ class Network:
         if verbose:
             print(f"Net's output: {x}")
         return x
+
+    def compile(self, opt='testopt', loss='mse'):
+        self.opt = optimizers[opt](self, loss)
+
+    def fit(self, inp, target):
+        self.opt.optimize(inp, target)
 
     def print_net(self):
         """
@@ -165,23 +175,33 @@ if __name__ == '__main__':
         type=str,
         help=f"List of activation function names, one for each layer. Names to be chosen among {list(act_funcs.keys())}"
     )
+    parser.add_argument(
+        '--targets',
+        action='store',
+        nargs='+',
+        type=float,
+        help="The target outputs"
+    )
     parser.add_argument('--verbose', '-v', action='store_true')
     args = parser.parse_args()
 
     # All arguments are optional, but either they're all present or they're all None
     if (
-            not all(vars(args)[arg] is None for arg in vars(args) if arg != 'verbose') and
-            not all(vars(args)[arg] is not None for arg in vars(args) if arg != 'verbose')
+            not all(vars(args)[arg] is None for arg in vars(args) if arg not in ('verbose', 'targets')) and
+            not all(vars(args)[arg] is not None for arg in vars(args) if arg not in ('verbose', 'targets'))
     ):
         parser.error("All arguments are optional, but either they're all present or they're all None")
 
-    # At this point if an arg is not None, all are not None. So we check only one argument
+    # At this point if an arg is not None, all are not None (except targets & verbose). So we check only one argument
     if args.inputs is not None:
         # Check that lengths of arguments lists are consistent
         if args.input_dim != len(args.inputs):
             parser.error("'inputs' vector must have a length equal to 'input_dim'")
         if len(args.units_per_layer) != len(args.act_funcs):
             parser.error("'units_per_layer' vector and 'act_funcs' must have the same length")
+        if args.targets is not None:
+            if len(args.targets) != args.units_per_layer[-1]:
+                parser.error("the length of 'targets' vector must be equal to the number of units in the output layer")
 
     # Create the net object
     if args.inputs is None:  # one check is enough because either all args are None or they're all not None
@@ -193,7 +213,12 @@ if __name__ == '__main__':
             units_per_layer=args.units_per_layer,
             acts=args.act_funcs
         )
-        net.forward(args.inputs, verbose=args.verbose)
+        if args.targets is None:
+            net.forward(args.inputs, verbose=args.verbose)
+        else:
+            net.compile()
+            net.fit(inp=np.array(args.inputs), target=np.array(args.targets))
 
     if args.verbose:
         net.print_net()
+
