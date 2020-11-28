@@ -54,9 +54,9 @@ act_funcs = {
 if __name__ == '__main__':
     # Test activation functions
     print("Activation functions test:")
-    print(f"Sigmoid(1): {sigmoid(1)}")
-    print(f"Derivative of sigmoid(1): {sigmoid_deriv(1)}")
-    print(f"ReLU(1): {relu(1)}")
-    print(f"ReLU(-3): {relu(-3)}")
-    print(f"Derivative of ReLU(1): {relu_deriv(1)}")
-    print(f"Derivative of ReLU(-3): {relu_deriv(-3)}")
+    print(f"Sigmoid(1): {act_funcs['sigmoid'].func(1)}")
+    print(f"Derivative of sigmoid(1): {act_funcs['sigmoid'].deriv(1)}")
+    print(f"ReLU(1): {act_funcs['relu'].func(1)}")
+    print(f"ReLU(-3): {act_funcs['relu'].func(-3)}")
+    print(f"Derivative of ReLU(1): {act_funcs['relu'].deriv(1)}")
+    print(f"Derivative of ReLU(-3): {act_funcs['relu'].deriv(-3)}")

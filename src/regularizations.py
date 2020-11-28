@@ -22,12 +22,12 @@ def regularization(w, lambd, reg_type):
         'l2': ridge_l2
     }
     if reg_type not in regularizations:
-        raise Exception(f"Wrong regularization parameter: {reg_type} --> Chose among {list(regularizations.keys())}")
+        raise ValueError(f"Wrong regularization parameter: {reg_type} --> Chose among {list(regularizations.keys())}")
     return regularizations[reg_type](w, lambd)
 
 
 if __name__ == '__main__':
-    w = ([1, 0.2, -1])
+    w = [1, 0.2, -1]
     print(f"Weights used for testing: {w}")
     print(f"L2 regularization(lamb = 0.2): {regularization(w, 0.2, 'l2')}")
     print(f"L1 regularization(lamb = 0.2): {regularization(w, 0.2, 'l1')}")

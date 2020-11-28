@@ -1,6 +1,6 @@
 import numpy as np
 import argparse
-from act_funcs import act_funcs
+from activation_functions import act_funcs
 from optimizers import *
 from losses import *
 

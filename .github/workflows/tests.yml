@@ -10,6 +10,7 @@ on:
     - main
     - develop
     - update-tests*
+    - unit-tests*
   pull_request:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
@@ -50,14 +51,9 @@ jobs:
         with:
           requirements: requirements.txt
       
-      - name: Run script act_funcs.py
-        run: python src/act_funcs.py
-      
-      - name: Run script losses.py
-        run: python src/losses.py
-      
-      - name: Run script regularizations.py
-        run: python src/regularizations.py
+      - name: Run unit tests
+        run: |
+          cd src/
+          python -m unittest test_activation_functions.py
+          python -m unittest test_losses.py
         
-      - name : Run script network.py
-        run: python src/network.py
