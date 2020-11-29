@@ -56,4 +56,5 @@ jobs:
           cd src/
           python -m unittest test_activation_functions.py
           python -m unittest test_losses.py
+          python -m unittest test_regularizations.py
         
