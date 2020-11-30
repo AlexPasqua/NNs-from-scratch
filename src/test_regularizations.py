@@ -11,6 +11,7 @@ class TestRegularizations(unittest.TestCase):
 
     def test_ValueError(self):
         self.assertRaises(ValueError, regularization, self.w, 0.1, 'nonexistent_reg')
+        self.assertRaises(ValueError, regularization, self.w, -0.5, 'l1')
 
 
 if __name__ == '__main__':
