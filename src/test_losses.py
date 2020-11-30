@@ -19,10 +19,14 @@ class TestLosses(unittest.TestCase):
 
     def test_derivatives(self):
         self.assertEqual(losses['mse'].deriv(self.predicted, self.target), 2.)
+        self.assertAlmostEqual(losses['mee'].deriv(self.predicted, self.target), 0.8164965809277261)
 
     def test_exceptions(self):
         # test Exception raising with different shapes arrays
         self.assertRaises(Exception, losses['mse'].func, [0, 0], [0, 0, 0])
+        self.assertRaises(Exception, losses['mse'].deriv, [0, 0], [0, 0, 0])
+        self.assertRaises(Exception, losses['mee'].func, [0, 0], [0, 0, 0])
+        self.assertRaises(Exception, losses['mee'].deriv, [0, 0], [0, 0, 0])
 
 
 if __name__ == '__main__':

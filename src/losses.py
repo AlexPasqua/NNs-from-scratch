@@ -30,6 +30,9 @@ def mean_squared_error_deriv(predicted, target):
     :param target: ndarray of shape (n, m) – Ground truth values for each of n examples
     :return: derivative of the mse (Mean Squared Error)
     """
+    if predicted.shape != target.shape:
+        raise Exception(f"Mismatching shapes in MSE: predictions shape: "
+                        f"{predicted.shape} - targets shape {target.shape}")
     # exponent 2 in the deriv becomes a multiplying constant and simplifies itself with the denominator of the func
     return np.sum(predicted - target) / target.shape[0]
 
@@ -43,6 +46,9 @@ def mean_euclidean_error(predicted, target):
     :param target: ndarray of shape (n, m) – Ground truth values for each of n examples
     :return: loss in term of mee (Mean Euclidean Error)
     """
+    if predicted.shape != target.shape:
+        raise Exception(f"Mismatching shapes in MSE: predictions shape: "
+                        f"{predicted.shape} - targets shape {target.shape}")
     return np.linalg.norm(predicted - target) / target.shape[0]
 
 
@@ -55,8 +61,10 @@ def mean_euclidean_error_deriv(predicted, target):
     :param target: ndarray of shape (n, m) – Ground truth values for each of n examples
     :return: derivative of the mee (Mean Euclidean Error)
     """
-    # TODO: check!!!
-    return (predicted - target) / np.linalg.norm(predicted - target)
+    if predicted.shape != target.shape:
+        raise Exception(f"Mismatching shapes in MSE: predictions shape: "
+                        f"{predicted.shape} - targets shape {target.shape}")
+    return np.sum(predicted - target) / (target.shape[0] * np.linalg.norm(predicted - target))
 
 
 MSE = Function(mean_squared_error, mean_squared_error_deriv, 'mse')
@@ -84,5 +92,5 @@ if __name__ == '__main__':
     print('Loss functions test:')
     print(f"MSE:{losses['mse'].func(y_pred, y_true)}")
     print(f"MSE_deriv:{losses['mse'].deriv(y_pred, y_true)}")
-    print(f"MEE:{losses['mee'].func(y_true, y_pred)}")
-    # print(f"MEE_deriv:{losses['mee'].deriv(y_true, y_pred)}")
+    print(f"MEE:{losses['mee'].func(y_pred, y_true)}")
+    print(f"MEE_deriv:{losses['mee'].deriv(y_pred, y_true)}")
