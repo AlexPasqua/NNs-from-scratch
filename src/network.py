@@ -180,7 +180,7 @@ if __name__ == '__main__':
         action='store',
         nargs='+',
         type=float,
-        help="The target outputs"
+        help="The targ outputs"
     )
     parser.add_argument('--verbose', '-v', action='store_true')
     args = parser.parse_args()

@@ -5,7 +5,7 @@ from Function import DerivableFunction
 def squared_loss(predicted, target):
     """
     Computes the mean squared error between
-    the target vector and the output predicted by the net
+    the targ vector and the output pred by the net
 
     :param predicted: ndarray of shape (n, m) – Predictions for the n examples
     :param target: ndarray of shape (n, m) – Ground truth values for each of n examples
@@ -19,14 +19,14 @@ def squared_loss(predicted, target):
                         f"{predicted.shape} - targets shape {target.shape}")
 
     # MSE of the whole net would be
-    # np.sum(np.square(predicted - target)) / (target.shape[0] * 2)
-    return 0.5 * np.sum(np.square(predicted - target), axis=0)    # "0.5" is to make the gradient simpler
+    # np.sum(np.square(pred - targ)) / (targ.shape[0] * 2)
+    return 0.5 * np.square(predicted - target)    # "0.5" is to make the gradient simpler
 
 
 def squared_loss_deriv(predicted, target):
     """
     Computes the derivative of the mean squared error between
-    the target vector and the output predicted by the net
+    the targ vector and the output pred by the net
 
     :param predicted: ndarray of shape (n, m) – Predictions for the n examples
     :param target: ndarray of shape (n, m) – Ground truth values for each of n examples
@@ -50,18 +50,12 @@ losses = {
 if __name__ == '__main__':
     # Test loss functions
     print('\nArrays for testing loss functions:')
-    predicted = np.array(
-        [[1, 0, 0, 1],
-         [1, 1, 1, 1]]
-    )
-    target = np.array(
-        [[1, 1, 0, 0],
-         [0, 0, 0, 0]]
-    )
+    pred = [1, 0, 0, 1]
+    targ = [1, 1, 0, 0]
 
-    print(f"target:\n{target}")
-    print(f"predicted:\n{predicted}\n")
+    print(f"targ:\t{targ}")
+    print(f"pred:\t{pred}\n")
     print('Loss functions test:')
-    print(f"squared loss:{losses['squared'].func(predicted, target)}")
-    print(f"squared loss deriv:{losses['squared'].deriv(predicted, target)}")
+    print(f"squared loss:\t{losses['squared'].func(pred, targ)}")
+    print(f"squared loss deriv:\t{losses['squared'].deriv(pred, targ)}")
 
