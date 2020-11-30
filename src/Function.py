@@ -16,6 +16,9 @@ class Function:
         self.func = func
         self.name = name
 
+    def get_name(self):
+        return self.name
+
 
 class DerivableFunction(Function):
     """

@@ -25,6 +25,8 @@ class Unit:
         self.w = w
         self.b = b
         self.act = act
+        self.out = None
+        self.upstream_grad = []
 
     def net(self, inp):
         """
@@ -41,7 +43,17 @@ class Unit:
         :return: unit's output
         """
         # compute activation function on weighted sum
-        return self.act.func(self.net(inp))
+        self.out = self.act.func(self.net(inp))
+        return self.out
+
+    def get_activation(self):
+        return self.act
+
+    def get_weights(self):
+        return self.w
+
+    def get_out(self):
+        return self.out
 
 
 class Layer:
@@ -68,8 +80,13 @@ class Layer:
         outputs = []
         for unit in self.units:
             outputs.append(unit.output(inp))
-
         return outputs
+
+    def get_activation(self):
+        return self.units[0].get_activation()
+
+    def get_units(self):
+        return self.units
 
 
 class Network:
@@ -142,8 +159,9 @@ class Network:
             and each of its elements is the target for the i-th output unit
         """
         target = np.array(target)
-        if target.shape[1] != len(self.layers[-1].units):
-            raise Exception(f"Mismatching shapes --> target: {target.shape} ; output units: {len(self.layers[-1].units)}")
+        if len(target.shape) > 1:
+            if target.shape[1] != len(self.layers[-1].units):
+                raise Exception(f"Mismatching shapes --> target: {target.shape} ; output units: {len(self.layers[-1].units)}")
         self.opt.optimize(inp, target)
 
     def print_net(self):
