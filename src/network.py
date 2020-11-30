@@ -87,6 +87,12 @@ class Network:
         :param units_per_layer: list of layers' sizes as number on units
         :param acts: list of activation function names (one for each layer)
         """
+        if input_dim < 1 or any(el < 1 for el in units_per_layer):
+            raise ValueError("input_dim and every value in units_per_layer must be positive")
+        if len(units_per_layer) != len(acts):
+            raise Exception(f"Mismatching lengths --> len(units_per_layer) = {len(units_per_layer)} ; len(acts) = {len(acts)}")
+
+        self.input_dim = input_dim
         self.layers = []
         self.opt = None
 
@@ -96,16 +102,13 @@ class Network:
             # number of weights of the units in a certain layer
             n_weights = input_dim if i == 0 else len(self.layers[i - 1].units)
 
-            # for every unit in the current layer...
+            # for every unit in the current layer create layer's units
             for j in range(units_per_layer[i]):
                 units.append(
-                    Unit(
-                        w=np.random.uniform(0., 1., n_weights),
-                        b=np.random.randn() % 1.,
-                        act=act_funcs[acts[i]]
-                    )
+                    Unit(w=np.random.uniform(0., 1., n_weights),
+                         b=np.random.randn() % 1.,
+                         act=act_funcs[acts[i]])
                 )
-
             self.layers.append(Layer(units=units))
             units = []
 
@@ -116,6 +119,8 @@ class Network:
         :param inp: net's input vector
         :return: net's output
         """
+        if len(inp) != self.input_dim:
+            raise Exception(f"Mismatching lengths --> len(inp) = {len(inp)} ; input_sim = {self.input_dim}")
         if verbose:
             print(f"Net's inputs: {inp}")
         # x represents the data through the network (output of a layer, input of the next layer)
@@ -126,10 +131,19 @@ class Network:
             print(f"Net's output: {x}")
         return x
 
-    def compile(self, opt='sgd', loss='mse'):
+    def compile(self, opt='sgd', loss='squared'):
         self.opt = optimizers[opt](self, loss)
 
     def fit(self, inp, target):
+        """
+        Execute the training of the network
+        :param inp: inputs (training set)
+        :param target: list of arrays, each array corresponds to a pattern
+            and each of its elements is the target for the i-th output unit
+        """
+        target = np.array(target)
+        if target.shape[1] != len(self.layers[-1].units):
+            raise Exception(f"Mismatching shapes --> target: {target.shape} ; output units: {len(self.layers[-1].units)}")
         self.opt.optimize(inp, target)
 
     def print_net(self):
@@ -221,4 +235,3 @@ if __name__ == '__main__':
 
     if args.verbose:
         net.print_net()
-

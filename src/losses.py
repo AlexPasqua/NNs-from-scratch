@@ -15,7 +15,7 @@ def squared_loss(predicted, target):
     predicted = np.array(predicted)
     target = np.array(target)
     if predicted.shape != target.shape:
-        raise Exception(f"Mismatching shapes in MSE: predictions shape: "
+        raise Exception(f"Mismatching shapes in Squared Loss: predictions shape: "
                         f"{predicted.shape} - targets shape {target.shape}")
 
     # MSE of the whole net would be

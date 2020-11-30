@@ -5,8 +5,6 @@ from losses import losses
 from network import *
 import numpy as np
 
-from network import Network
-
 
 class Optimizer(ABC):
     """
@@ -33,7 +31,7 @@ class Optimizer(ABC):
         net_outputs = self.nn.forward(inp=inp)
         error = self.loss.func(predicted=net_outputs, target=target)
         deriv = self.loss.deriv(predicted=net_outputs, target=target)
-        print(f"Gradient of loss function: {deriv}")
+        print(f"{deriv}")
 
         # Chain rule
         # dE/dw = dE/d_out * d_out/d_net * d_net/d_w
@@ -58,5 +56,5 @@ optimizers = {
 }
 
 if __name__ == '__main__':
-    opt = optimizers['sgd'](Network(input_dim=3, units_per_layer=[1], acts=['relu']), 'mse')
-    opt.optimize(inp=[0, 0, 0], target=[1])
+    opt = optimizers['sgd'](Network(input_dim=3, units_per_layer=[3, 2], acts=['relu', 'relu']), 'squared')
+    opt.optimize(inp=[0, 0, 0], target=[1, 1])
