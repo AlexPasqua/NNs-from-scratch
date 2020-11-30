@@ -126,7 +126,7 @@ class Network:
             print(f"Net's output: {x}")
         return x
 
-    def compile(self, opt='testopt', loss='mse'):
+    def compile(self, opt='sgd', loss='mse'):
         self.opt = optimizers[opt](self, loss)
 
     def fit(self, inp, target):
