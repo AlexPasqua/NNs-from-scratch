@@ -37,7 +37,7 @@ class Optimizer(ABC):
             curr_layer = self.nn.layers[i]
             curr_act = curr_layer.get_activation()
             if i > 0:  # if there exist a previous layer
-                prev_layer = self.nn.layers[i-1]
+                prev_layer = self.nn.layers[i - 1]
                 # curr_inputs: inputs of the current layer's units (same for every unit in the current layer)
                 curr_inputs = [unit.get_out() for unit in prev_layer.get_units()]
                 # d_net: derivs of the weighted sum wrt the weights
@@ -61,8 +61,6 @@ class Optimizer(ABC):
 
             # recompute upstream gradient wrt units' weights
             upstream_grad = upstream_grad * [lg for lg in local_grads]
-
-
 
 
 class SGD(Optimizer, ABC):
