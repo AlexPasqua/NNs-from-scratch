@@ -12,7 +12,7 @@ class Initialization(ABC):
     def __init__(self, w_vals=(0.1,), b_val=(0.1,), type_of_reg=""):
         self.w = w_vals
         self.b = b_val
-        self.type = type_of_reg
+        self.__type = type_of_reg
 
     @property
     def w(self):
@@ -32,11 +32,9 @@ class Initialization(ABC):
 
     @b.setter
     def b(self, value):
+        if isinstance(value, list):
+            raise AttributeError("Parameter b (bias) must be a number, not a list")
         self.__b = value
-
-    @type.setter
-    def type(self, value):
-        self.__type = value
 
 
 class UniformInit(Initialization):
@@ -46,23 +44,12 @@ class UniformInit(Initialization):
         values = [val] * n_weights
         super().__init__(w_vals=values, b_val=val, type_of_reg='uniform')
 
-    @property
-    def w(self):
-        return super().w
-
-    @property
-    def b(self):
-        return super().b
-
-    @w.setter
-    def w(self, value):
-        # the following is equivalent to: Initialization.w.fset(self, value=value)
-        # PS: in this case the '__class__' after 'self' is necessary
-        super(UniformInit, self.__class__).w.fset(self, value)
-
-    @b.setter
-    def b(self, value):
-        super(UniformInit, self.__class__).b.fset(self, value)
+    # NOTE: in case it's necessary to have a setter in the subclass that calls the superclass' one:
+    # @w.setter
+    # def w(self, value):
+    #     # the following is equivalent to: Initialization.w.fset(self, value=value)
+    #     # PS: in this case the '__class__' after 'self' is necessary
+    #     super(UniformInit, self.__class__).w.fset(self, value)
 
 
 # TODO: create random one (use code commented in network)
@@ -78,7 +65,10 @@ if __name__ == '__main__':
     print(f"Weights: {init.w}")
     print(f"Bias: {init.b}\n")
 
-    init.w = 5
     print("Set weights = 5")
+    init.w = 5
     print(f"Weights: {init.w}")
     print(f"Bias: {init.b}\n")
+
+    init.type = 'hello'
+
