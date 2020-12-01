@@ -56,13 +56,15 @@ class UniformInit(Initialization):
 
 
 class RandomInit(Initialization):
-    def __init__(self, n_weights=1):
+    def __init__(self, n_weights=1, min=0., max=1.):
         if not isinstance(n_weights, int):
             raise AttributeError(f"Attribute n_weights must be a number, got {type(n_weights)}")
         if n_weights < 0:
             raise ValueError(f"Value of 'n_weights' must be >= 0. Received {n_weights}")
-        super().__init__(w_vals=np.random.uniform(0., 1., n_weights),
-                         b_val=np.random.randn() % 1.,
+        if min > max:
+            raise ValueError(f"'min' must be <= 'max'")
+        super().__init__(w_vals=np.random.uniform(min, max, n_weights),
+                         b_val=np.random.randn() % max,
                          type_of_reg='random')
 
 
