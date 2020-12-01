@@ -9,30 +9,51 @@ class Initialization(ABC):
     still it may be clearer to see in this form
     """
     @abstractmethod
-    def __init__(self):
-        self.w = 0.
-        self.b = 0.
-        self.type = ""
+    def __init__(self, w_vals=(0.1,), b_val=(0.1,)):
+        self.w = w_vals
+        self.b = b_val
 
-    def get_w(self):
-        return self.w
+    @property
+    def w(self):
+        return self.__w
 
-    def get_b(self):
-        return self.b
+    @property
+    def b(self):
+        return self.__b
 
-    def get_type(self):
-        return self.type
+    @w.setter
+    def w(self, value):
+        self.__w = value
+
+    @b.setter
+    def b(self, value):
+        self.__b = value
 
 
 class UniformInit(Initialization):
-    def __init__(self, value=0.1, n_weights=1):
-        self.w = [value] * n_weights
-        self.b = value
-        self.type = 'uniform'
+    def __init__(self, val=0.1, n_weights=1):
+        if n_weights < 0:
+            raise ValueError(f"Value of 'n_weights' must be >= 0. Received {n_weights}")
+        values = [val] * n_weights
+        super().__init__(w_vals=values, b_val=val)
 
-    def set_w(self, n_weights=1):
-        # self.b used as 'value' in the constructor method, they're equal
-        self.w = [self.b] * n_weights
+    @property
+    def w(self):
+        return super().w
+
+    @property
+    def b(self):
+        return super().b
+
+    @w.setter
+    def w(self, value):
+        # the following is equivalent to: Initialization.w.fset(self, value=value)
+        # PS: in this case the '__class__' after 'self' is necessary
+        super(UniformInit, self.__class__).w.fset(self, value)
+
+    @b.setter
+    def b(self, value):
+        super(UniformInit, self.__class__).b.fset(self, value)
 
 
 # TODO: create random one (use code commented in network)
@@ -43,7 +64,9 @@ inits = {
 }
 
 if __name__ == '__main__':
-    init = inits['uniform'](n_weights=3)
-    print(f"Initialization: {init.get_type()}")
-    print(f"Weights: {init.get_w()}")
-    print(f"Bias: {init.get_b()}")
+    init = inits['uniform'](n_weights=3, val=.5)
+    # print(f"Initialization: {init.type}")
+    print(f"Weights: {init.w}")
+    init.w = 5
+    print(f"Weights: {init.w}")
+    # print(f"Bias: {init.b}")

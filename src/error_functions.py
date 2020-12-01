@@ -8,7 +8,7 @@ def mean_euclidean_error(predicted, target):
     the targ vector and the output pred by the net
 
     :param predicted: ndarray of shape (n, m) – Predictions for the n examples
-    :param target: ndarray of shape (n, m) – Ground truth values for each of n examples
+    :param target: ndarray of shape (n, m) – Ground truth w_vals for each of n examples
     :return: loss in term of mee (Mean Euclidean Error)
     """
     if predicted.shape != target.shape:
@@ -23,7 +23,7 @@ def mean_euclidean_error(predicted, target):
 #     the targ vector and the output pred by the net
 #
 #     :param pred: ndarray of shape (n, m) – Predictions for the n examples
-#     :param targ: ndarray of shape (n, m) – Ground truth values for each of n examples
+#     :param targ: ndarray of shape (n, m) – Ground truth w_vals for each of n examples
 #     :return: derivative of the mee (Mean Euclidean Error)
 #     """
 #     if pred.shape != targ.shape:

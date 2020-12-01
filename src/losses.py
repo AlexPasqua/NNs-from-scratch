@@ -8,7 +8,7 @@ def squared_loss(predicted, target):
     the targ vector and the output pred by the net
 
     :param predicted: ndarray of shape (n, m) – Predictions for the n examples
-    :param target: ndarray of shape (n, m) – Ground truth values for each of n examples
+    :param target: ndarray of shape (n, m) – Ground truth w_vals for each of n examples
     :return: loss in terms of mse (Mean Squared Error)
     """
     # Check shapes
@@ -29,7 +29,7 @@ def squared_loss_deriv(predicted, target):
     the targ vector and the output pred by the net
 
     :param predicted: ndarray of shape (n, m) – Predictions for the n examples
-    :param target: ndarray of shape (n, m) – Ground truth values for each of n examples
+    :param target: ndarray of shape (n, m) – Ground truth w_vals for each of n examples
     :return: derivative of the mse (Mean Squared Error)
     """
     predicted = np.array(predicted)
