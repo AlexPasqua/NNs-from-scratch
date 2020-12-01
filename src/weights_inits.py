@@ -1,5 +1,6 @@
 """ Script that define different types of weights initializations """
 from abc import ABC, abstractmethod
+import numpy as np
 
 
 class Initialization(ABC):
@@ -39,6 +40,8 @@ class Initialization(ABC):
 
 class UniformInit(Initialization):
     def __init__(self, val=0.1, n_weights=1):
+        if not isinstance(n_weights, int):
+            raise AttributeError(f"Attribute n_weights must be a number, got {type(n_weights)}")
         if n_weights < 0:
             raise ValueError(f"Value of 'n_weights' must be >= 0. Received {n_weights}")
         values = [val] * n_weights
@@ -52,23 +55,30 @@ class UniformInit(Initialization):
     #     super(UniformInit, self.__class__).w.fset(self, value)
 
 
-# TODO: create random one (use code commented in network)
+class RandomInit(Initialization):
+    def __init__(self, n_weights=1):
+        if not isinstance(n_weights, int):
+            raise AttributeError(f"Attribute n_weights must be a number, got {type(n_weights)}")
+        if n_weights < 0:
+            raise ValueError(f"Value of 'n_weights' must be >= 0. Received {n_weights}")
+        super().__init__(w_vals=np.random.uniform(0., 1., n_weights),
+                         b_val=np.random.randn() % 1.,
+                         type_of_reg='random')
 
 
 inits = {
-    'uniform': UniformInit
+    'uniform': UniformInit,
+    'random': RandomInit
 }
 
 if __name__ == '__main__':
-    init = inits['uniform'](n_weights=3, val=.5)
-    print(f"Initialization: {init.type}")
-    print(f"Weights: {init.w}")
-    print(f"Bias: {init.b}\n")
+    unif = inits['uniform'](n_weights=3, val=.5)
+    print(f"Initialization: {unif.type}")
+    print(f"Weights: {unif.w}")
+    print(f"Bias: {unif.b}\n")
 
-    print("Set weights = 5")
-    init.w = 5
-    print(f"Weights: {init.w}")
-    print(f"Bias: {init.b}\n")
-
-    init.type = 'hello'
+    rand = inits['random'](n_weights=3)
+    print(f"Initialization: {rand.type}")
+    print(f"Weights: {rand.w}")
+    print(f"Bias: {rand.b}\n")
 
