@@ -9,9 +9,10 @@ class Initialization(ABC):
     still it may be clearer to see in this form
     """
     @abstractmethod
-    def __init__(self, w_vals=(0.1,), b_val=(0.1,)):
+    def __init__(self, w_vals=(0.1,), b_val=(0.1,), type_of_reg=""):
         self.w = w_vals
         self.b = b_val
+        self.type = type_of_reg
 
     @property
     def w(self):
@@ -21,6 +22,10 @@ class Initialization(ABC):
     def b(self):
         return self.__b
 
+    @property
+    def type(self):
+        return self.__type
+
     @w.setter
     def w(self, value):
         self.__w = value
@@ -29,13 +34,17 @@ class Initialization(ABC):
     def b(self, value):
         self.__b = value
 
+    @type.setter
+    def type(self, value):
+        self.__type = value
+
 
 class UniformInit(Initialization):
     def __init__(self, val=0.1, n_weights=1):
         if n_weights < 0:
             raise ValueError(f"Value of 'n_weights' must be >= 0. Received {n_weights}")
         values = [val] * n_weights
-        super().__init__(w_vals=values, b_val=val)
+        super().__init__(w_vals=values, b_val=val, type_of_reg='uniform')
 
     @property
     def w(self):
@@ -65,8 +74,11 @@ inits = {
 
 if __name__ == '__main__':
     init = inits['uniform'](n_weights=3, val=.5)
-    # print(f"Initialization: {init.type}")
+    print(f"Initialization: {init.type}")
     print(f"Weights: {init.w}")
+    print(f"Bias: {init.b}\n")
+
     init.w = 5
+    print("Set weights = 5")
     print(f"Weights: {init.w}")
-    # print(f"Bias: {init.b}")
+    print(f"Bias: {init.b}\n")
