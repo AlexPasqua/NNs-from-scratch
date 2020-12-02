@@ -6,18 +6,20 @@ class Function:
     Class representing a function
 
     Attributes:
-        func: function "pointer"
-            Represents the function itself
-
-        name: string
-            name of the function
+        func (function "pointer"): Represents the function itself
+        name (string): name of the function
     """
     def __init__(self, func, name):
-        self.func = func
-        self.name = name
+        self.__func = func
+        self.__name = name
 
-    def get_name(self):
-        return self.name
+    @property
+    def name(self):
+        return self.__name
+
+    @property
+    def func(self):
+        return self.__func
 
 
 class DerivableFunction(Function):
@@ -25,10 +27,13 @@ class DerivableFunction(Function):
     Class representing a function that we need the derivative of
 
     Attributes:
-        deriv: function "pointer"
-            Represents the derivative of the function
+        deriv ( function "pointer"): Represents the derivative of the function
     """
     def __init__(self, func, deriv, name):
         super(DerivableFunction, self).__init__(func=func, name=name)
-        self.deriv = deriv
+        self.__deriv = deriv
+
+    @property
+    def deriv(self):
+        return self.__deriv
 

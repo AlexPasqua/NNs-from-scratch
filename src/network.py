@@ -40,9 +40,9 @@ class Unit:
     def act(self):
         return self.__act
 
-    @property
-    def out(self):
-        return self.__out
+    # @property
+    # def out(self):
+    #     return self.__out
 
     def net(self, inp):
         """
@@ -60,7 +60,7 @@ class Unit:
         """
         # compute activation function on weighted sum
         self.__out = self.act.func(self.net(inp))
-        return self.out
+        return self.__out
 
 
 class Layer:
@@ -70,13 +70,25 @@ class Layer:
     Attributes:
         units: list of layer's units ('Unit' objects)
     """
-
     def __init__(self, units):
         """
         Constructor
         :param units: list on layer's units ('Unit' objects)
         """
-        self.units = units
+        units_acts = [u.act.name for u in units]
+        for act in units_acts[1:]:
+            if act != units_acts[0]:
+                raise ValueError("All units in a layer must have the same activation function")
+        self.__units = units
+        self.__act = units_acts[0]
+
+    @property
+    def units(self):
+        return self.__units
+
+    @property
+    def act(self):
+        return self.__act
 
     def forward_pass(self, inp):
         """
@@ -84,17 +96,8 @@ class Layer:
         :param inp: input vector
         :return: the vector of the current layer's soutputs
         """
-        outputs = []
-        for unit in self.units:
-            outputs.append(unit.output(inp))
-
+        outputs = [unit.output(inp) for unit in self.units]
         return outputs
-
-    def get_activation(self):
-        return self.units[0].get_activation()
-
-    def get_units(self):
-        return self.units
 
 
 class Network:
