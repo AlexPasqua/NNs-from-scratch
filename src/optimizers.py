@@ -17,21 +17,30 @@ class Optimizer(ABC):
     """
     @abstractmethod
     def __init__(self, nn, loss, lrn_rate=0.01):
-        self.nn = nn
-        self.loss = losses[loss]
-        self.lrn_rate = lrn_rate
+        self.__nn = nn
+        self.__loss = losses[loss]
+        self.__lrn_rate = lrn_rate
+
+
+    @property
+    def loss(self):
+        return self.__loss
+
+    @property
+    def lrn_rate(self):
+        return self.__lrn_rate
 
     def optimize(self, net_inp, target):
-        net_outputs = self.nn.forward(inp=net_inp)
+        net_outputs = self.__nn.forward(inp=net_inp)
         err = self.loss.func(predicted=net_outputs, target=target)
         d_err = self.loss.deriv(predicted=net_outputs, target=target)
 
         # Scanning the layers in a bottom-up fashion
-        for i in range(len(self.nn.layers) - 1, -1, -1):
-            curr_layer = self.nn.layers[i]
+        for i in range(len(self.__nn.layers) - 1, -1, -1):
+            curr_layer = self.__nn.layers[i]
             curr_act = curr_layer.act
             if i > 0:  # if there exist a previous layer
-                prev_layer = self.nn.layers[i - 1]
+                prev_layer = self.__nn.layers[i - 1]
                 # curr_inputs: inputs of the current layer's units (same for every unit in the current layer)
                 curr_inputs = [unit.get_out() for unit in prev_layer.units]
                 # d_net: derivs of the weighted sum wrt the weights
@@ -58,7 +67,6 @@ class Optimizer(ABC):
 
             # update weights
             curr_weights = [u.w for u in curr_layer.units]
-            print(curr_weights)
             # TODO: finish
 
 
