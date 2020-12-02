@@ -8,7 +8,7 @@ class TestWeightsInits(unittest.TestCase):
     min = 0.
     max = 1.
     unif_init = inits['uniform'](val=val_for_unif, n_weights=n_weights)
-    rand_init = inits['random'](n_weights=n_weights, min=min, max=max)
+    rand_init = inits['random'](n_weights=n_weights, lower_lim=min, upper_lim=max)
 
     def test_uniform_init(self):
         self.assertEqual(self.unif_init.type, 'uniform')

@@ -4,11 +4,6 @@ import numpy as np
 
 
 class Initialization(ABC):
-    """
-    This method (constructor) is unnecessary.
-    Attributes are initialized in the concrete subclasses, so other methods work anyway,
-    still it may be clearer to see in this form
-    """
     @abstractmethod
     def __init__(self, w_vals=(0.1,), b_val=(0.1,), type_of_reg=""):
         self.w = w_vals
@@ -40,12 +35,16 @@ class Initialization(ABC):
 
 class UniformInit(Initialization):
     def __init__(self, val=0.1, n_weights=1):
+        self.__check_attributes(n_weights)
+        values = [val] * n_weights
+        super().__init__(w_vals=values, b_val=val, type_of_reg='uniform')
+
+    @staticmethod
+    def __check_attributes(n_weights):
         if not isinstance(n_weights, int):
             raise AttributeError(f"Attribute n_weights must be a number, got {type(n_weights)}")
         if n_weights < 0:
             raise ValueError(f"Value of 'n_weights' must be >= 0. Received {n_weights}")
-        values = [val] * n_weights
-        super().__init__(w_vals=values, b_val=val, type_of_reg='uniform')
 
     # NOTE: in case it's necessary to have a setter in the subclass that calls the superclass' one:
     # @w.setter
@@ -56,16 +55,20 @@ class UniformInit(Initialization):
 
 
 class RandomInit(Initialization):
-    def __init__(self, n_weights=1, min=0., max=1.):
+    def __init__(self, n_weights=1, lower_lim=0., upper_lim=1.):
+        self.__check_attributes(n_weights, lower_lim, upper_lim)
+        super().__init__(w_vals=np.random.uniform(lower_lim, upper_lim, n_weights),
+                         b_val=np.random.randn() % upper_lim,
+                         type_of_reg='random')
+
+    @staticmethod
+    def __check_attributes(n_weights, lower_lim, upper_lim):
         if not isinstance(n_weights, int):
             raise AttributeError(f"Attribute n_weights must be a number, got {type(n_weights)}")
         if n_weights < 0:
             raise ValueError(f"Value of 'n_weights' must be >= 0. Received {n_weights}")
-        if min > max:
+        if lower_lim > upper_lim:
             raise ValueError(f"'min' must be <= 'max'")
-        super().__init__(w_vals=np.random.uniform(min, max, n_weights),
-                         b_val=np.random.randn() % max,
-                         type_of_reg='random')
 
 
 inits = {
