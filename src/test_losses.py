@@ -4,14 +4,8 @@ from losses import losses
 
 
 class TestLosses(unittest.TestCase):
-    predicted = np.array(
-        [[1, 0, 0, 1],
-         [1, 1, 1, 1]]
-    )
-    target = np.array(
-        [[1, 1, 0, 0],
-         [0, 0, 0, 0]]
-    )
+    predicted = [1, 0, 0, 1]
+    target = [1, 1, 0, 0]
 
     def test_functions(self):
         self.assertEqual(losses['mse'].func(self.predicted, self.target), 1.5)

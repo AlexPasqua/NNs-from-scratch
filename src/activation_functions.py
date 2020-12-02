@@ -1,5 +1,5 @@
 import numpy as np
-from Function import Function
+from Function import DerivableFunction
 
 
 def sigmoid(x):
@@ -43,8 +43,8 @@ def relu_deriv(x):
 
 
 # Objects that can be used many times just using their attributes (func, deriv)
-Sigmoid = Function(sigmoid, sigmoid_deriv, 'Sigmoid')
-ReLU = Function(relu, relu_deriv, 'ReLU')
+Sigmoid = DerivableFunction(sigmoid, sigmoid_deriv, 'Sigmoid')
+ReLU = DerivableFunction(relu, relu_deriv, 'ReLU')
 
 act_funcs = {
     'relu': ReLU,
