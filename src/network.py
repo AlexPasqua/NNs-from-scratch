@@ -26,19 +26,19 @@ class Unit:
         self.b = b
         self.act = act
 
-    def get_weights(self):
+    def get_w(self):
         """
         Returns the hyper-parameter weights (w) of the Class Unit
         """
         return self.w
 
-    def get_bias(self):
+    def get_b(self):
         """
         Returns the hyper-parameter bias (b) of the Class Unit
         """
-        return self.w
+        return self.b
 
-    def get_activation(self):
+    def get_act(self):
         """
         Returns the hyper-parameter activation (act) of the Class Unit
         """
@@ -275,4 +275,3 @@ if __name__ == '__main__':
 
     if args.verbose:
         net.print_net()
-
