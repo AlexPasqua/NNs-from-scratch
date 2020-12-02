@@ -15,20 +15,18 @@ class Optimizer(ABC):
         nn: Neural Network --> 'Network' object
         loss: loss function --> 'Function' object
     """
-
     @abstractmethod
     def __init__(self, nn, loss):
         self.nn = nn
         self.loss = losses[loss]
 
-    @abstractmethod
-    def optimize(self, inp, target):
+    def optimize(self, net_inp, target):
         """
         1) Calc the error through forward pass
         2) Calc gradient of error --> partial derivs of error
         3) Chain rule for every parameter
         """
-        net_outputs = self.nn.forward(inp=inp)
+        net_outputs = self.nn.forward(inp=net_inp)
         err = self.loss.func(predicted=net_outputs, target=target)
         d_err = self.loss.deriv(predicted=net_outputs, target=target)
 
@@ -43,7 +41,7 @@ class Optimizer(ABC):
                 # d_net: derivs of the weighted sum wrt the weights
                 d_net = curr_inputs
             else:
-                d_net = inp
+                d_net = net_inp
 
             # derivs of units' output wrt units' weighted sum
             d_out = [curr_act.deriv(curr_unit.out) for curr_unit in curr_layer.get_units()]
@@ -67,12 +65,11 @@ class SGD(Optimizer, ABC):
     """
     Stochastic Gradient Descent
     """
-
     def __init__(self, nn, loss):
         super(SGD, self).__init__(nn, loss)
 
-    def optimize(self, inp, target):
-        Optimizer.optimize(self, inp=inp, target=target)
+    def optimize(self, net_inp, target):
+        Optimizer.optimize(self, net_inp=net_inp, target=target)
 
 
 optimizers = {
@@ -81,4 +78,4 @@ optimizers = {
 
 if __name__ == '__main__':
     opt = optimizers['sgd'](Network(input_dim=3, units_per_layer=[1], acts=['relu']), 'squared')
-    opt.optimize(inp=[0.1, 0.1, 0.1], target=[1])
+    opt.optimize(net_inp=[0.1, 0.1, 0.1], target=[1])

@@ -97,8 +97,7 @@ class Network:
     Attributes:
         layers: list of net's layers ('Layer' objects)
     """
-
-    def __init__(self, input_dim=3, units_per_layer=(3, 2), acts=('relu', 'sigmoid'), init='uniform', unif_value=0.1):
+    def __init__(self, input_dim=3, units_per_layer=(3, 2), acts=('relu', 'sigmoid')):
         """
         Constructor
         :param input_dim: the input dimension
@@ -113,25 +112,19 @@ class Network:
         self.input_dim = input_dim
         self.layers = []
         self.opt = None
-        if init == 'uniform':
-            self.initialization = inits[init](value=unif_value)
 
         units = []
         # for each layer...
         for i in range(len(units_per_layer)):
             # number of weights of the units in a certain layer
             n_weights = input_dim if i == 0 else len(self.layers[i - 1].units)
-            self.initialization.set_w(n_weights=n_weights)
 
             # for every unit in the current layer create layer's units
             for j in range(units_per_layer[i]):
                 units.append(
-                    Unit(w=self.initialization.get_w(),
-                         b=self.initialization.get_b(),
+                    Unit(w=np.random.uniform(0., 1., n_weights),
+                         b=np.random.randn() % 1.,
                          act=act_funcs[acts[i]])
-                    # Unit(w=np.random.uniform(0., 1., n_weights),
-                    #      b=np.random.randn() % 1.,
-                    #      act=act_funcs[acts[i]])
                 )
             self.layers.append(Layer(units=units))
             units = []
@@ -144,7 +137,7 @@ class Network:
         :return: net's output
         """
         if len(inp) != self.input_dim:
-            raise Exception(f"Mismatching lengths --> len(inp) = {len(inp)} ; input_sim = {self.input_dim}")
+            raise Exception(f"Mismatching lengths --> len(net_inp) = {len(inp)} ; input_sim = {self.input_dim}")
         if verbose:
             print(f"Net's inputs: {inp}")
         # x represents the data through the network (output of a layer, input of the next layer)
@@ -169,7 +162,7 @@ class Network:
         if len(target.shape) > 1:
             if target.shape[1] != len(self.layers[-1].units):
                 raise Exception(f"Mismatching shapes --> target: {target.shape} ; output units: {len(self.layers[-1].units)}")
-        self.opt.optimize(inp, target)
+        self.opt.optimize(net_inp=inp, target=target)
 
     def print_net(self):
         """
