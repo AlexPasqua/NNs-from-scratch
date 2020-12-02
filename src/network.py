@@ -26,39 +26,23 @@ class Unit:
         self.b = b
         self.act = act
 
-    def get_w(self):
+    def get_weights(self):
         """
-        Returns a dictionary of Class Unit, in which the key is the
-        hyper-parameter weight (w) and the corresponding values are the
-        current values of that hyper-parameter
-
+        Returns the hyper-parameter weights (w) of the Class Unit
         """
-        return {
-            "weight_values": self.w,
-        }
+        return self.w
 
-    def get_b(self):
+    def get_bias(self):
         """
-        Returns a dictionary of Class Unit, in which the key is the
-        hyper-parameter bias (b) and the corresponding values are the
-        current values of that hyper-parameter
-
+        Returns the hyper-parameter bias (b) of the Class Unit
         """
-        return {
-            "bias_values": self.w,
-        }
+        return self.w
 
-    def get_act(self):
+    def get_activation(self):
         """
-        Returns a dictionary of Class Unit, in which the key is the
-        hyper-parameter activation (act) and the corresponding values are the
-        current values of that hyper-parameter
-
+        Returns the hyper-parameter activation (act) of the Class Unit
         """
-        return {
-            "activation": self.act,
-        }
-
+        return self.act
 
     def net(self, inp):
         """
@@ -150,8 +134,9 @@ class Network:
     def get_params(self):
         """
             Returns a dictionary of the Class Network,
-            in which the keys are the hyper-parameters and the corresponding
-            value is the current value of that hyper-parameter
+            in which the keys {input_dim, units_per_layer, acts}
+            are the hyper-parameters, and the corresponding
+            values are the current values of that hyper-parameters
         """
 
         return {
@@ -163,15 +148,12 @@ class Network:
     def set_input_dim(self, input_dim):
         """
         Set the hyper-parameter input dimension of the Network
-        :param input_dim:
-        :return:
         """
         self.input_dim = input_dim
 
     def set_units_per_layer(self,units_per_layer):
         """
         Set the hyper-parameter units per layer of the Network
-
         """
         self.units_per_layer = units_per_layer
 
@@ -180,7 +162,6 @@ class Network:
         Set the types of activation function of the Network
         """
         self.acts = acts
-
 
     def forward(self, inp=(2, 2, 2), verbose=False):
         """
@@ -199,22 +180,11 @@ class Network:
             print(f"Net's output: {x}")
         return x
 
-    def set_verbose(self,verbose):
-        """
-        Set the parameter verbose of the .
-        True = print the values of the feedforward of the network
-        False = do not print the values of the feedforward of the network
-        """
-        self.verbose = verbose
-
-        #TODO: I'm not sure if we can change verbose externally by doing in this way. Needs to be checked!
-
     def compile(self, opt='testopt', loss='mse'):
         self.opt = optimizers[opt](self, loss)
 
     def fit(self, inp, target):
         self.opt.optimize(inp, target)
-
 
     def print_net(self):
         """
@@ -226,7 +196,6 @@ class Network:
             for unit in layer.units:
                 print(f"\tUnit:\n\t  weights: {unit.w}\n\t  bias: {unit.b}\n\t  activation function: {unit.act.name}")
             print()
-
 
 
 if __name__ == '__main__':
