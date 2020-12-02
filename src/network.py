@@ -26,6 +26,24 @@ class Unit:
         self.b = b
         self.act = act
 
+    def get_w(self):
+        """
+        Returns the hyper-parameter weights (w) of the Class Unit
+        """
+        return self.w
+
+    def get_b(self):
+        """
+        Returns the hyper-parameter bias (b) of the Class Unit
+        """
+        return self.b
+
+    def get_act(self):
+        """
+        Returns the hyper-parameter activation (act) of the Class Unit
+        """
+        return self.act
+
     def net(self, inp):
         """
         Performs weighted sum
@@ -87,6 +105,10 @@ class Network:
         :param units_per_layer: list of layers' sizes as number on units
         :param acts: list of activation function names (one for each layer)
         """
+
+        self.input_dim = input_dim
+        self.units_per_layer = units_per_layer
+        self.acts = acts
         self.layers = []
         self.opt = None
 
@@ -109,10 +131,42 @@ class Network:
             self.layers.append(Layer(units=units))
             units = []
 
+    def get_params(self):
+        """
+            Returns a dictionary of the Class Network,
+            in which the keys {input_dim, units_per_layer, acts}
+            are the hyper-parameters, and the corresponding
+            values are the current values of that hyper-parameters
+        """
+
+        return {
+            "input_dim": self.input_dim,
+            "units_per_layer": self.units_per_layer,
+            "acts": self.acts,
+        }
+
+    def set_input_dim(self, input_dim):
+        """
+        Set the hyper-parameter input dimension of the Network
+        """
+        self.input_dim = input_dim
+
+    def set_units_per_layer(self,units_per_layer):
+        """
+        Set the hyper-parameter units per layer of the Network
+        """
+        self.units_per_layer = units_per_layer
+
+    def set_acts(self, acts):
+        """
+        Set the types of activation function of the Network
+        """
+        self.acts = acts
+
     def forward(self, inp=(2, 2, 2), verbose=False):
         """
         Performs a complete forward pass on the whole NN
-        :param verbose:
+        :param verbose: if True it will print the intermediate results of the forward pass, else it will not be printed.
         :param inp: net's input vector
         :return: net's output
         """
@@ -221,4 +275,3 @@ if __name__ == '__main__':
 
     if args.verbose:
         net.print_net()
-
