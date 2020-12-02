@@ -4,6 +4,14 @@ import numpy as np
 
 
 class Initialization(ABC):
+    """
+    Abstract class representing a weights initialization
+
+    Attributes:
+        w (list): weights values
+        b (number): bias value
+        __type: string --> type of initialization (uniform, random, etc)
+    """
     @abstractmethod
     def __init__(self, w_vals=(0.1,), b_val=(0.1,), type_of_reg=""):
         self.w = w_vals
@@ -34,6 +42,7 @@ class Initialization(ABC):
 
 
 class UniformInit(Initialization):
+    """ Uniform initialization, all weights (and bias) with the same value """
     def __init__(self, val=0.1, n_weights=1):
         self.__check_attributes(n_weights)
         values = [val] * n_weights
@@ -55,6 +64,7 @@ class UniformInit(Initialization):
 
 
 class RandomInit(Initialization):
+    """ Random initialization, weights and bias get a random value bounded by params lower_lim and upper_lim """
     def __init__(self, n_weights=1, lower_lim=0., upper_lim=1.):
         self.__check_attributes(n_weights, lower_lim, upper_lim)
         super().__init__(w_vals=np.random.uniform(lower_lim, upper_lim, n_weights),
