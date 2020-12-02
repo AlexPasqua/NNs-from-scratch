@@ -2,7 +2,7 @@ import numpy as np
 import argparse
 from activation_functions import act_funcs
 from optimizers import *
-from losses import *
+from losses import losses
 from weights_inits import inits
 
 
@@ -15,7 +15,6 @@ class Unit:
         b: bias
         act: activation function
     """
-
     def __init__(self, w, b, act):
         """
         Constructor

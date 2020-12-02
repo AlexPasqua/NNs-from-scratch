@@ -15,7 +15,6 @@ class Optimizer(ABC):
         nn: Neural Network --> 'Network' object
         loss: loss function --> 'Function' object
     """
-
     @abstractmethod
     def __init__(self, nn, loss, lrn_rate=0.01):
         self.nn = nn
@@ -23,11 +22,6 @@ class Optimizer(ABC):
         self.lrn_rate = lrn_rate
 
     def optimize(self, net_inp, target):
-        """
-        1) Calc the error through forward pass
-        2) Calc gradient of error --> partial derivs of error
-        3) Chain rule for every parameter
-        """
         net_outputs = self.nn.forward(inp=net_inp)
         err = self.loss.func(predicted=net_outputs, target=target)
         d_err = self.loss.deriv(predicted=net_outputs, target=target)
@@ -69,10 +63,7 @@ class Optimizer(ABC):
 
 
 class SGD(Optimizer, ABC):
-    """
-    Stochastic Gradient Descent
-    """
-
+    """ Stochastic Gradient Descent """
     def __init__(self, nn, loss, lrn_rate=0.01):
         super(SGD, self).__init__(nn, loss, lrn_rate)
 
