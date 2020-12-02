@@ -209,7 +209,7 @@ class Network:
         return x
 
     def compile(self, opt='sgd', loss='squared', lrn_rate=0.01):
-        self.opt = optimizers[opt](nn=self, loss=loss, lrn_rate=lrn_rate)
+        self.__opt = optimizers[opt](nn=self, loss=loss, lrn_rate=lrn_rate)
 
     def fit(self, inp, target):
         """
@@ -222,7 +222,7 @@ class Network:
         if len(target.shape) > 1:
             if target.shape[1] != len(self.layers[-1].units):
                 raise Exception(f"Mismatching shapes --> target: {target.shape} ; output units: {len(self.layers[-1].units)}")
-        self.opt.optimize(net_inp=inp, target=target)
+        self.__opt.optimize(net_inp=inp, target=target)
 
     def print_net(self):
         """
