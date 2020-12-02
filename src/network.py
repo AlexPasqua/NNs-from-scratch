@@ -22,29 +22,27 @@ class Unit:
         :param b: bias (number)
         :param act: activation function --> 'Function' obj (see 'functions.py')
         """
-        self.w = w
-        self.b = b
-        self.act = act
-        self.out = None
-        self.upstream_grad = []
+        self.__w = w
+        self.__b = b
+        self.__act = act
+        self.__out = None
+        self.__upstream_grad = []
 
-    def get_w(self):
-        """
-        Returns the hyper-parameter weights (w) of the Class Unit
-        """
-        return self.w
+    @property
+    def w(self):
+        return self.__w
 
-    def get_b(self):
-        """
-        Returns the hyper-parameter bias (b) of the Class Unit
-        """
-        return self.b
+    @property
+    def b(self):
+        return self.__b
 
-    def get_act(self):
-        """
-        Returns the hyper-parameter activation (act) of the Class Unit
-        """
-        return self.act
+    @property
+    def act(self):
+        return self.__act
+
+    @property
+    def out(self):
+        return self.__out
 
     def net(self, inp):
         """
@@ -61,16 +59,7 @@ class Unit:
         :return: unit's output
         """
         # compute activation function on weighted sum
-        self.out = self.act.func(self.net(inp))
-        return self.out
-
-    def get_activation(self):
-        return self.act
-
-    def get_weights(self):
-        return self.w
-
-    def get_out(self):
+        self.__out = self.act.func(self.net(inp))
         return self.out
 
 
