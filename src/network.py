@@ -148,8 +148,8 @@ class Network:
             print(f"Net's output: {x}")
         return x
 
-    def compile(self, opt='sgd', loss='squared'):
-        self.opt = optimizers[opt](self, loss)
+    def compile(self, opt='sgd', loss='squared', lrn_rate=0.01):
+        self.opt = optimizers[opt](nn=self, loss=loss, lrn_rate=lrn_rate)
 
     def fit(self, inp, target):
         """

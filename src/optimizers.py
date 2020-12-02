@@ -15,10 +15,12 @@ class Optimizer(ABC):
         nn: Neural Network --> 'Network' object
         loss: loss function --> 'Function' object
     """
+
     @abstractmethod
-    def __init__(self, nn, loss):
+    def __init__(self, nn, loss, lrn_rate=0.01):
         self.nn = nn
         self.loss = losses[loss]
+        self.lrn_rate = lrn_rate
 
     def optimize(self, net_inp, target):
         """
@@ -30,7 +32,7 @@ class Optimizer(ABC):
         err = self.loss.func(predicted=net_outputs, target=target)
         d_err = self.loss.deriv(predicted=net_outputs, target=target)
 
-        # Scanning the layers bottom-up
+        # Scanning the layers in a bottom-up fashion
         for i in range(len(self.nn.layers) - 1, -1, -1):
             curr_layer = self.nn.layers[i]
             curr_act = curr_layer.get_activation()
@@ -60,13 +62,19 @@ class Optimizer(ABC):
             # recompute upstream gradient wrt units' weights
             upstream_grad = upstream_grad * [lg for lg in local_grads]
 
+            # update weights
+            curr_weights = [u.w for u in curr_layer.get_units()]
+            print(curr_weights)
+            # TODO: finish
+
 
 class SGD(Optimizer, ABC):
     """
     Stochastic Gradient Descent
     """
-    def __init__(self, nn, loss):
-        super(SGD, self).__init__(nn, loss)
+
+    def __init__(self, nn, loss, lrn_rate=0.01):
+        super(SGD, self).__init__(nn, loss, lrn_rate)
 
     def optimize(self, net_inp, target):
         Optimizer.optimize(self, net_inp=net_inp, target=target)
