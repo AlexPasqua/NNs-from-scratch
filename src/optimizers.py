@@ -29,18 +29,18 @@ class Optimizer(ABC):
         # Scanning the layers in a bottom-up fashion
         for i in range(len(self.nn.layers) - 1, -1, -1):
             curr_layer = self.nn.layers[i]
-            curr_act = curr_layer.get_activation()
+            curr_act = curr_layer.act
             if i > 0:  # if there exist a previous layer
                 prev_layer = self.nn.layers[i - 1]
                 # curr_inputs: inputs of the current layer's units (same for every unit in the current layer)
-                curr_inputs = [unit.get_out() for unit in prev_layer.get_units()]
+                curr_inputs = [unit.get_out() for unit in prev_layer.units]
                 # d_net: derivs of the weighted sum wrt the weights
                 d_net = curr_inputs
             else:
                 d_net = net_inp
 
             # derivs of units' output wrt units' weighted sum
-            d_out = [curr_act.deriv(curr_unit.out) for curr_unit in curr_layer.get_units()]
+            d_out = [curr_act.deriv(curr_unit.out) for curr_unit in curr_layer.units]
 
             # local gradients of each unit of the current layer
             local_grads = [d_out[j] * [d_net_i for d_net_i in d_net] for j in range(len(d_out))]
@@ -57,7 +57,7 @@ class Optimizer(ABC):
             upstream_grad = upstream_grad * [lg for lg in local_grads]
 
             # update weights
-            curr_weights = [u.w for u in curr_layer.get_units()]
+            curr_weights = [u.w for u in curr_layer.units]
             print(curr_weights)
             # TODO: finish
 
