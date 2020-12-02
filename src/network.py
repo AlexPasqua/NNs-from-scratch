@@ -140,9 +140,9 @@ class Network:
         """
 
         return {
-            "input_dimension": self.input_dim,
+            "input_dim": self.input_dim,
             "units_per_layer": self.units_per_layer,
-            "activation_functions": self.acts,
+            "acts": self.acts,
         }
 
     def set_input_dim(self, input_dim):
@@ -166,7 +166,7 @@ class Network:
     def forward(self, inp=(2, 2, 2), verbose=False):
         """
         Performs a complete forward pass on the whole NN
-        :param verbose:
+        :param verbose: if True it will print the intermediate results of the forward pass, else it will not be printed.
         :param inp: net's input vector
         :return: net's output
         """
