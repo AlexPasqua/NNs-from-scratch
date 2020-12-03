@@ -53,8 +53,8 @@ if __name__ == '__main__':
     pred = [1, 0, 0, 1]
     targ = [1, 1, 0, 0]
 
-    print(f"targ:\t{targ}")
     print(f"pred:\t{pred}\n")
+    print(f"targ:\t{targ}")
     print('Loss functions test:')
     print(f"squared loss:\t{losses['squared'].func(pred, targ)}")
     print(f"squared loss deriv:\t{losses['squared'].deriv(pred, targ)}")
