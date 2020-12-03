@@ -42,7 +42,7 @@ class Optimizer(ABC):
             if i > 0:  # if there exist a previous layer
                 prev_layer = self.__nn.layers[i - 1]
                 # curr_inputs: inputs of the current layer's units (same for every unit in the current layer)
-                curr_inputs = [unit.get_out() for unit in prev_layer.units]
+                curr_inputs = [unit.out for unit in prev_layer.units]
                 # d_net: derivs of the weighted sum wrt the weights
                 d_net = curr_inputs
             else:
@@ -59,7 +59,7 @@ class Optimizer(ABC):
 
             # TODO: complete this for more layers
             # upstream gradient on units' output
-            if i == 0:
+            if i == len(self.__nn.layers) - 1:
                 upstream_grad = d_err
 
             # recompute upstream gradient wrt units' weights
@@ -84,5 +84,5 @@ optimizers = {
 }
 
 if __name__ == '__main__':
-    opt = optimizers['sgd'](Network(input_dim=3, units_per_layer=[1], acts=['relu']), 'squared')
+    opt = optimizers['sgd'](Network(input_dim=3, units_per_layer=[1, 1], acts=['relu', 'relu']), 'squared')
     opt.optimize(net_inp=[0.1, 0.1, 0.1], target=[1])
