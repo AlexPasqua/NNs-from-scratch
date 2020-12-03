@@ -2,7 +2,7 @@ import numpy as np
 import argparse
 from activation_functions import act_funcs
 from optimizers import *
-from losses import *
+from losses import losses
 from weights_inits import inits
 
 
@@ -15,7 +15,6 @@ class Unit:
         b: bias
         act: activation function
     """
-
     def __init__(self, w, b, act):
         """
         Constructor
@@ -23,29 +22,27 @@ class Unit:
         :param b: bias (number)
         :param act: activation function --> 'Function' obj (see 'functions.py')
         """
-        self.w = w
-        self.b = b
-        self.act = act
-        self.out = None
-        self.upstream_grad = []
+        self.__w = w
+        self.__b = b
+        self.__act = act
+        self.__out = None
+        self.__upstream_grad = []
 
-    def get_w(self):
-        """
-        Returns the hyper-parameter weights (w) of the Class Unit
-        """
-        return self.w
+    @property
+    def w(self):
+        return self.__w
 
-    def get_b(self):
-        """
-        Returns the hyper-parameter bias (b) of the Class Unit
-        """
-        return self.b
+    @property
+    def b(self):
+        return self.__b
 
-    def get_act(self):
-        """
-        Returns the hyper-parameter activation (act) of the Class Unit
-        """
-        return self.act
+    @property
+    def act(self):
+        return self.__act
+
+    @property
+    def out(self):
+        return self.__out
 
     def net(self, inp):
         """
@@ -62,17 +59,8 @@ class Unit:
         :return: unit's output
         """
         # compute activation function on weighted sum
-        self.out = self.act.func(self.net(inp))
-        return self.out
-
-    def get_activation(self):
-        return self.act
-
-    def get_weights(self):
-        return self.w
-
-    def get_out(self):
-        return self.out
+        self.__out = self.act.func(self.net(inp))
+        return self.__out
 
 
 class Layer:
@@ -82,13 +70,25 @@ class Layer:
     Attributes:
         units: list of layer's units ('Unit' objects)
     """
-
     def __init__(self, units):
         """
         Constructor
         :param units: list on layer's units ('Unit' objects)
         """
-        self.units = units
+        units_acts = [u.act.name for u in units]
+        for act in units_acts[1:]:
+            if act != units_acts[0]:
+                raise ValueError("All units in a layer must have the same activation function")
+        self.__units = units
+        self.__act = self.__units[0].act
+
+    @property
+    def units(self):
+        return self.__units
+
+    @property
+    def act(self):
+        return self.__act
 
     def forward_pass(self, inp):
         """
@@ -96,17 +96,8 @@ class Layer:
         :param inp: input vector
         :return: the vector of the current layer's soutputs
         """
-        outputs = []
-        for unit in self.units:
-            outputs.append(unit.output(inp))
-
+        outputs = [unit.output(inp) for unit in self.units]
         return outputs
-
-    def get_activation(self):
-        return self.units[0].get_activation()
-
-    def get_units(self):
-        return self.units
 
 
 class Network:
@@ -116,7 +107,6 @@ class Network:
     Attributes:
         layers: list of net's layers ('Layer' objects)
     """
-
     def __init__(self, input_dim=3, units_per_layer=(3, 2), acts=('relu', 'sigmoid')):
         """
         Constructor
@@ -124,18 +114,18 @@ class Network:
         :param units_per_layer: list of layers' sizes as number on units
         :param acts: list of activation function names (one for each layer)
         """
-        if input_dim < 1 or any(el < 1 for el in units_per_layer):
+        if input_dim < 1 or any(n_units < 1 for n_units in units_per_layer):
             raise ValueError("input_dim and every value in units_per_layer must be positive")
         if len(units_per_layer) != len(acts):
             raise Exception(f"Mismatching lengths --> len(units_per_layer) = {len(units_per_layer)} ; len(acts) = {len(acts)}")
 
-        self.input_dim = input_dim
-        self.units_per_layer = units_per_layer
-        self.acts = acts
-        self.layers = []
-        self.opt = None
-
+        self.__input_dim = input_dim
+        self.__units_per_layer = units_per_layer
+        self.__acts = acts
+        self.__layers = []
+        self.__opt = None
         units = []
+
         # for each layer...
         for i in range(len(units_per_layer)):
             # number of weights of the units in a certain layer
@@ -152,37 +142,51 @@ class Network:
             self.layers.append(Layer(units=units))
             units = []
 
-    def get_params(self):
-        """
-            Returns a dictionary of the Class Network,
-            in which the keys {input_dim, units_per_layer, acts}
-            are the hyper-parameters, and the corresponding
-            values are the current values of that hyper-parameters
-        """
+    @property
+    def input_dim(self):
+        return self.__input_dim
 
+    @property
+    def units_per_layer(self):
+        return self.__units_per_layer
+
+    @property
+    def acts(self):
+        return self.__acts
+
+    @property
+    def layers(self):
+        return self.__layers
+
+    @property
+    def params(self):
+        """
+        Returns a dictionary in which the keys are the net's parameters' names,
+        and the corresponding values are the current values of those parameters
+        """
         return {
             "input_dim": self.input_dim,
             "units_per_layer": self.units_per_layer,
             "acts": self.acts,
         }
 
-    def set_input_dim(self, input_dim):
-        """
-        Set the hyper-parameter input dimension of the Network
-        """
-        self.input_dim = input_dim
-
-    def set_units_per_layer(self,units_per_layer):
-        """
-        Set the hyper-parameter units per layer of the Network
-        """
-        self.units_per_layer = units_per_layer
-
-    def set_acts(self, acts):
-        """
-        Set the types of activation function of the Network
-        """
-        self.acts = acts
+    # def set_input_dim(self, input_dim):
+    #     """
+    #     Set the hyper-parameter input dimension of the Network
+    #     """
+    #     self.input_dim = input_dim
+    #
+    # def set_units_per_layer(self,units_per_layer):
+    #     """
+    #     Set the hyper-parameter units per layer of the Network
+    #     """
+    #     self.units_per_layer = units_per_layer
+    #
+    # def set_acts(self, acts):
+    #     """
+    #     Set the types of activation function of the Network
+    #     """
+    #     self.acts = acts
 
     def forward(self, inp=(2, 2, 2), verbose=False):
         """
@@ -193,6 +197,7 @@ class Network:
         """
         if len(inp) != self.input_dim:
             raise Exception(f"Mismatching lengths --> len(net_inp) = {len(inp)} ; input_sim = {self.input_dim}")
+
         if verbose:
             print(f"Net's inputs: {inp}")
         # x represents the data through the network (output of a layer, input of the next layer)
@@ -204,7 +209,7 @@ class Network:
         return x
 
     def compile(self, opt='sgd', loss='squared', lrn_rate=0.01):
-        self.opt = optimizers[opt](nn=self, loss=loss, lrn_rate=lrn_rate)
+        self.__opt = optimizers[opt](nn=self, loss=loss, lrn_rate=lrn_rate)
 
     def fit(self, inp, target):
         """
@@ -217,7 +222,7 @@ class Network:
         if len(target.shape) > 1:
             if target.shape[1] != len(self.layers[-1].units):
                 raise Exception(f"Mismatching shapes --> target: {target.shape} ; output units: {len(self.layers[-1].units)}")
-        self.opt.optimize(net_inp=inp, target=target)
+        self.__opt.optimize(net_inp=inp, target=target)
 
     def print_net(self):
         """
