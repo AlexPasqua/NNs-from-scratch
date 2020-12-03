@@ -32,7 +32,7 @@ def mean_euclidean_error(predicted, target):
 #     return np.sum(pred - targ) / (targ.shape[0] * np.linalg.norm(pred - targ))
 
 
-MEE = Function(mean_euclidean_error, None, 'mee')
+MEE = Function(mean_euclidean_error, 'mee')
 err_funcs = {
     'mee': MEE
 }
