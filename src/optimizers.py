@@ -68,7 +68,9 @@ class Optimizer(ABC):
             # update weights
             curr_weights = [u.w for u in curr_layer.units]
             """
-            new_weights = current_weights - learning_rate * upstream_gradient_on_the_weights
+            new_weights = current_weights - learning_rate * delta_w
+            delta_w may be:
+                - upstream_gradient_on_the_weights
             """
             # TODO: finish
 
