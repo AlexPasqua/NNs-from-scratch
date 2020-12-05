@@ -45,12 +45,13 @@ class SGD(Optimizer, ABC):
         net_outputs = self.__nn.forward(inp=net_inp)
         err = self.loss.func(predicted=net_outputs, target=target)
 
-        # 1) per step
-        d_err = self.loss.deriv(predicted=net_outputs, target=target)
-        for i in reversed(range(len(self.__nn.layers))):
+        dErr_dOut = self.loss.deriv(predicted=net_outputs, target=target)
+        for i in reversed(range(len(self.__nn.layers) - 1)):
             curr_layer = self.__nn.layers[i]
+            netx_layer = self.__nn.layers[i + 1]
             curr_act = curr_layer.act
             d_out = [curr_act.deriv(u.net) for u in curr_layer.units]
+            dNet_dOut = [u.w for u in netx_layer.units]
 
             # short version of: d_net = [curr_inp] * len(curr_layer.units)
             # because the same inputs are sent to every unit in the current layer
@@ -69,7 +70,7 @@ class SGD(Optimizer, ABC):
 
             # if we're on the output layer
             if i == len(self.__nn.layers) - 1:
-                upstream_grad = d_err
+                upstream_grad = dErr_dOut
             else:
                 # TODO: complete in case we're not on the output layer
                 pass
@@ -79,11 +80,9 @@ class SGD(Optimizer, ABC):
             print(upstream_grad_new)
             break
 
-        # 2) formula finale diretta
-
         # net_outputs = self.__nn.forward(inp=net_inp)
         # err = self.loss.func(predicted=net_outputs, target=target)
-        # d_err = self.loss.deriv(predicted=net_outputs, target=target)
+        # dErr_dOut = self.loss.deriv(predicted=net_outputs, target=target)
         #
         # # Scanning the layers in a bottom-up fashion
         # for i in range(len(self.__nn.layers) - 1, -1, -1):
@@ -110,7 +109,7 @@ class SGD(Optimizer, ABC):
         #     # TODO: complete this for more layers
         #     # upstream gradient on units' output
         #     if i == len(self.__nn.layers) - 1:
-        #         upstream_grad = d_err
+        #         upstream_grad = dErr_dOut
         #
         #     # recompute upstream gradient wrt units' weights
         #     upstream_grad = upstream_grad * [lg for lg in local_grad]
@@ -130,5 +129,5 @@ optimizers = {
 }
 
 if __name__ == '__main__':
-    opt = optimizers['sgd'](Network(input_dim=3, units_per_layer=[3, 2], acts=['relu', 'relu']), 'squared')
+    opt = optimizers['sgd'](Network(input_dim=3, units_per_layer=[3, 3, 2], acts=['relu', 'relu', 'relu']), 'squared')
     opt.optimize(net_inp=[0.1, 0.1, 0.1], target=[1, 1])
