@@ -61,7 +61,18 @@ class SGD(Optimizer, ABC):
             # short version of: d_net = [curr_inp] * len(curr_layer.units)
             # because the same inputs are sent to every unit in the current layer
             d_net = curr_inp
-            local_grad = [d_out[j] * [d_net_i for d_net_i in d_net] for j in range(len(d_out))]
+            print(np.shape(d_err))
+            print(np.shape(d_out))
+            print(np.shape(d_net))
+
+            local_grad = []
+            for j in range(len(curr_layer.units)):
+                for k in range(len(curr_layer.units[j].w)):
+                    local_grad.append(d_out[j] * d_net[k])
+
+
+            print(local_grad)
+            # local_grad = [d_out[j] * [d_net_i for d_net_i in d_net] for j in range(len(d_out))]
             # equivalent to:
             #     # local_grad = []
             #     # local_grad.append([d_out[j] * d_net_i for j in range(len(d_out)) for d_net_i in d_net])
@@ -125,5 +136,5 @@ optimizers = {
 }
 
 if __name__ == '__main__':
-    opt = optimizers['sgd'](Network(input_dim=3, units_per_layer=[6, 2], acts=['relu', 'relu']), 'squared')
+    opt = optimizers['sgd'](Network(input_dim=3, units_per_layer=[3, 2], acts=['relu', 'relu']), 'squared')
     opt.optimize(net_inp=[0.1, 0.1, 0.1], target=[1, 1])
