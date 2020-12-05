@@ -1,5 +1,11 @@
 import numpy as np
 from Function import DerivableFunction
+from numbers import Number
+
+
+def check_is_number(x):
+    if not isinstance(x, Number):
+        raise AttributeError(f"Input of sigmoid must be a number. Got {type(x)}")
 
 
 def sigmoid(x):
@@ -9,6 +15,7 @@ def sigmoid(x):
     :param x: net -> input's weighted sum
     :return: sigmoid of x
     """
+    check_is_number(x)
     return 1. / (1. + np.exp(-x))
 
 
@@ -19,6 +26,7 @@ def sigmoid_deriv(x):
     :param x: net -> input's weighted sum
     :return: derivative of the sigmoid in x
     """
+    check_is_number(x)
     return sigmoid(x) * (1 - sigmoid(x))
 
 
@@ -29,6 +37,7 @@ def relu(x):
     :param x: net -> input's weighted sum
     :return: ReLU of x
     """
+    check_is_number(x)
     return np.maximum(0, x)
 
 
@@ -39,6 +48,7 @@ def relu_deriv(x):
     :param x: net-> input's weighted sum
     :return: derivative of the ReLU in x
     """
+    check_is_number(x)
     return 0 if x <= 0 else 1
 
 
