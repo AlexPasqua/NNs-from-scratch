@@ -25,6 +25,7 @@ class Unit:
         self.__w = w
         self.__b = b
         self.__act = act
+        self.__net = None
         self.__out = None
         self.__upstream_grad = []
 
@@ -44,13 +45,17 @@ class Unit:
     def out(self):
         return self.__out
 
-    def net(self, inp):
-        """
-        Performs weighted sum
-        :param inp: unit's input vector
-        :return: weighted sum of the input + bias
-        """
-        return np.dot(inp, self.w) + self.b
+    @property
+    def net(self):
+        return self.__net
+
+    # def net(self, inp):
+    #     """
+    #     Performs weighted sum
+    #     :param inp: unit's input vector
+    #     :return: weighted sum of the input + bias
+    #     """
+    #     return np.dot(inp, self.w) + self.b
 
     def output(self, inp):
         """
@@ -59,7 +64,8 @@ class Unit:
         :return: unit's output
         """
         # compute activation function on weighted sum
-        self.__out = self.act.func(self.net(inp))
+        self.__net = np.dot(inp, self.w) + self.b
+        self.__out = self.act.func(self.__net)
         return self.__out
 
 
@@ -92,7 +98,7 @@ class Layer:
         return self.__act
 
     @property
-    def output(self):
+    def outputs(self):
         return self.__outputs
 
     def forward_pass(self, inp):
