@@ -81,6 +81,7 @@ class Layer:
                 raise ValueError("All units in a layer must have the same activation function")
         self.__units = units
         self.__act = self.__units[0].act
+        self.__outputs = []
 
     @property
     def units(self):
@@ -90,14 +91,18 @@ class Layer:
     def act(self):
         return self.__act
 
+    @property
+    def output(self):
+        return self.__outputs
+
     def forward_pass(self, inp):
         """
         Performs the forward pass on the current layer
         :param inp: input vector
         :return: the vector of the current layer's soutputs
         """
-        outputs = [unit.output(inp) for unit in self.units]
-        return outputs
+        self.__outputs = [unit.output(inp) for unit in self.units]
+        return self.__outputs
 
 
 class Network:
