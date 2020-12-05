@@ -60,22 +60,14 @@ class SGD(Optimizer, ABC):
 
             # short version of: d_net = [curr_inp] * len(curr_layer.units)
             # because the same inputs are sent to every unit in the current layer
+            # e.g. instead of storing [1,2,3, 1,2,3, 1,2,3] we store [1, 2, 3] and we know it's "repeated"
             d_net = curr_inp
-            print(np.shape(d_err))
-            print(np.shape(d_out))
-            print(np.shape(d_net))
 
-            local_grad = []
-            for j in range(len(curr_layer.units)):
-                for k in range(len(curr_layer.units[j].w)):
-                    local_grad.append(d_out[j] * d_net[k])
-
-
-            print(local_grad)
-            # local_grad = [d_out[j] * [d_net_i for d_net_i in d_net] for j in range(len(d_out))]
+            local_grads = [d_out_j * [d_net_i for d_net_i in d_net] for d_out_j in d_out]
+            print(np.shape(local_grads))
             # equivalent to:
-            #     # local_grad = []
-            #     # local_grad.append([d_out[j] * d_net_i for j in range(len(d_out)) for d_net_i in d_net])
+            #     # local_grads = []
+            #     # local_grads.append([d_out[j] * d_net_i for j in range(len(d_out)) for d_net_i in d_net])
 
             # if we're on the output layer
             if i == len(self.__nn.layers) - 1:
