@@ -20,7 +20,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
-        python_version: [3.6, 3.7, 3.8, 3.9]
+        python_version: [3.7, 3.8, 3.9]
     
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -34,16 +34,16 @@ jobs:
           architecture: 'x64'
       
       # pip
-      - name: Get pip cache dir
-        id: pip-cache
-        run: echo "::set-output name=dir::$(pip cache dir)"
+      #- name: Get pip cache dir
+      #  id: pip-cache
+      #  run: echo "::set-output name=dir::$(pip cache dir)"
       
-      - name: pip cache
-        uses: actions/cache@v2
-        with:
-          path: ${{ steps.pip-cache.outputs.dir }}
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
-          restore-keys: ${{ runner.os }}-pip-
+      #- name: pip cache
+      #  uses: actions/cache@v2
+      #  with:
+      #    path: ${{ steps.pip-cache.outputs.dir }}
+      #    key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+      #    restore-keys: ${{ runner.os }}-pip-
        
       - name: Install requirements with pip
         uses: BSFishy/pip-action@v1
