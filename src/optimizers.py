@@ -52,19 +52,17 @@ class SGD(Optimizer, ABC):
             curr_act = curr_layer.act
             d_out = [curr_act.deriv(u.net) for u in curr_layer.units]
 
+            # short version of: d_net = [curr_inp] * len(curr_layer.units)
+            # because the same inputs are sent to every unit in the current layer
+            # e.g. instead of storing [1,2,3, 1,2,3, 1,2,3] we store [1, 2, 3] and we know it's "repeated"
             if i > 0:
                 prev_layer = self.__nn.layers[i - 1]
                 curr_inp = prev_layer.outputs
             else:
                 curr_inp = net_inp
-
-            # short version of: d_net = [curr_inp] * len(curr_layer.units)
-            # because the same inputs are sent to every unit in the current layer
-            # e.g. instead of storing [1,2,3, 1,2,3, 1,2,3] we store [1, 2, 3] and we know it's "repeated"
             d_net = curr_inp
 
             local_grads = [d_out_j * [d_net_i for d_net_i in d_net] for d_out_j in d_out]
-            print(np.shape(local_grads))
             # equivalent to:
             #     # local_grads = []
             #     # local_grads.append([d_out[j] * d_net_i for j in range(len(d_out)) for d_net_i in d_net])
@@ -72,10 +70,14 @@ class SGD(Optimizer, ABC):
             # if we're on the output layer
             if i == len(self.__nn.layers) - 1:
                 upstream_grad = d_err
-
-            # TODO: finish
             else:
+                # TODO: complete in case we're not on the output layer
                 pass
+
+            upstream_grad_new = [upstream_grad[j] * local_grads[j][k] for j in range(len(upstream_grad)) for k in range(len(local_grads[j]))]
+            print(np.shape(upstream_grad_new))
+            print(upstream_grad_new)
+            break
 
         # 2) formula finale diretta
 
