@@ -59,6 +59,7 @@ def tanh(x):
     :param x: net-> input's weighted sum
     :return: Tanh of x
     """
+    check_is_number(x)
     return math.tanh(x)
 
 
@@ -68,6 +69,7 @@ def tanh_deriv(x):
     :param x: net-> input's weighted sum
     :return: Tanh derivative of x
     """
+    check_is_number(x)
     return 1 - (math.tanh(x)) ** 2
 
 
