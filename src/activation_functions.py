@@ -73,15 +73,41 @@ def tanh_deriv(x):
     return 1 - (math.tanh(x))**2
 
 
+def threshold(x):
+    """
+    Computes the threshold activation function
+    :param x:net-> input's weighted sum
+    :return:Threshold function
+    """
+    check_is_number(x)
+    return 1 if x > 0 else 0
+
+
+def threshold_deriv(x):
+    """
+    Computes the derivative of the threshold activation function
+    :param x:net-> input's weighted sum
+    :return: Threshold function derivative
+    """
+    check_is_number(x)
+    return 0
+
+
+
+
+
+
 # Objects that can be used many times just using their attributes (func, deriv)
 Sigmoid = DerivableFunction(sigmoid, sigmoid_deriv, 'Sigmoid')
 ReLU = DerivableFunction(relu, relu_deriv, 'ReLU')
 Tanh = DerivableFunction(tanh, tanh_deriv, 'Tanh')
+Threshold = DerivableFunction(threshold, threshold_deriv, 'Threshold')
 
 act_funcs = {
     'relu': ReLU,
     'sigmoid': Sigmoid,
-    'tanh': Tanh
+    'tanh': Tanh,
+    'threshold': Threshold
 }
 
 if __name__ == '__main__':
@@ -95,3 +121,7 @@ if __name__ == '__main__':
     print(f"Derivative of ReLU(-3): {act_funcs['relu'].deriv(-3)}")
     print(f"Tanh(1): {act_funcs['tanh'].func(1)}")
     print(f"Derivative of tanh(1): {act_funcs['tanh'].deriv(1)}")
+    print(f"Threshold(-1.8): {act_funcs['threshold'].func(-1.8)}")
+    print(f"Threshold(0.5): {act_funcs['threshold'].func(0.5)}")
+    print(f"Derivative of threshold(1): {act_funcs['threshold'].deriv(1)}")
+
