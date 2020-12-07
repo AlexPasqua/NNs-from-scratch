@@ -1,6 +1,7 @@
 import numpy as np
 from Function import DerivableFunction
 from numbers import Number
+import math
 
 
 def check_is_number(x):
@@ -52,13 +53,35 @@ def relu_deriv(x):
     return 0 if x <= 0 else 1
 
 
+def tanh(x):
+    """
+    Computes the hyperbolic tangent function (tanh) of x
+    :param x: net-> input's weighted sum
+    :return: Tanh of x
+    """
+    check_is_number(x)
+    return math.tanh(x)
+
+
+def tanh_deriv(x):
+    """
+    Computes the derivative of the hyperbolic tangent function (tanh)
+    :param x: net-> input's weighted sum
+    :return: Tanh derivative of x
+    """
+    check_is_number(x)
+    return 1 - (math.tanh(x))**2
+
+
 # Objects that can be used many times just using their attributes (func, deriv)
 Sigmoid = DerivableFunction(sigmoid, sigmoid_deriv, 'Sigmoid')
 ReLU = DerivableFunction(relu, relu_deriv, 'ReLU')
+Tanh = DerivableFunction(tanh, tanh_deriv, 'Tanh')
 
 act_funcs = {
     'relu': ReLU,
-    'sigmoid': Sigmoid
+    'sigmoid': Sigmoid,
+    'tanh': Tanh
 }
 
 if __name__ == '__main__':
@@ -70,3 +93,5 @@ if __name__ == '__main__':
     print(f"ReLU(-3): {act_funcs['relu'].func(-3)}")
     print(f"Derivative of ReLU(1): {act_funcs['relu'].deriv(1)}")
     print(f"Derivative of ReLU(-3): {act_funcs['relu'].deriv(-3)}")
+    print(f"Tanh(1): {act_funcs['tanh'].func(1)}")
+    print(f"Derivative of tanh(1): {act_funcs['tanh'].deriv(1)}")
