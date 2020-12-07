@@ -7,13 +7,13 @@ class TestActivationFunctions(unittest.TestCase):
         self.assertAlmostEqual(act_funcs['sigmoid'].func(1.), 0.7310585786300049)
         self.assertEqual(act_funcs['relu'].func(2.), 2.)
         self.assertEqual(act_funcs['relu'].func(-3.), 0.)
-        self.assertEqual(act_funcs['tanh'].func(1.), 0.7615941559557649)
+        self.assertAlmostEqual(act_funcs['tanh'].func(1.), 0.7615941559557649)
 
     def test_derivatives(self):
         self.assertAlmostEqual(act_funcs['sigmoid'].deriv(1.), 0.19661193324148185)
         self.assertEqual(act_funcs['relu'].deriv(2.), 1.)
         self.assertEqual(act_funcs['relu'].deriv(-3.), 0.)
-        self.assertEqual(act_funcs['tanh'].deriv(1.), 0.41997434161402614)
+        self.assertAlmostEqual(act_funcs['tanh'].deriv(1.), 0.41997434161402614)
 
     def test_exceptions(self):
         # check many combination

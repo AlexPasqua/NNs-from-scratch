@@ -70,7 +70,7 @@ def tanh_deriv(x):
     :return: Tanh derivative of x
     """
     check_is_number(x)
-    return 1 - (math.tanh(x)) ** 2
+    return 1 - (math.tanh(x))**2
 
 
 # Objects that can be used many times just using their attributes (func, deriv)
