@@ -50,6 +50,8 @@ class SGD(Optimizer, ABC):
         dErr_dOut = self.loss.deriv(predicted=net_outputs, target=target)
         d_out = [output_act.deriv(u.net) for u in output_layer.units]
         dNet_dOut = [u.w[j] for u in output_layer.units for j in range(len(u.w))]
+
+        # scan all layers from the penultimate to the first
         for i in reversed(range(len(self.__nn.layers) - 1)):
             curr_layer = self.__nn.layers[i]
             next_layer = self.__nn.layers[i + 1]
@@ -60,9 +62,14 @@ class SGD(Optimizer, ABC):
                 dErr_dOut_new[j] = 0
                 offset = len(curr_layer.units)
                 for l in range(len(next_layer.units)):
+                    # print(dErr_dOut)
+                    # print(d_out)
+                    # print(dNet_dOut)
+                    # print(j, l)
+                    # print()
                     dErr_dOut_new[j] += dErr_dOut[l] * d_out[l] * dNet_dOut[offset * l + j]
             dErr_dOut = dErr_dOut_new
-            print(dErr_dOut)
+            break
 
 
             ########################################
@@ -73,35 +80,35 @@ class SGD(Optimizer, ABC):
 
                 # d_out = [curr_act.deriv(u.net) for u in curr_layer.units]
 
-            # deriv of net wrt the prev layer's outputs
-            # nextLayer_dNet_dOut = [u.w[j] for u in next_layer.units for j in range(len(u.w))]
-
-            # short version of: d_net = [curr_inp] * len(curr_layer.units)
-            # because the same inputs are sent to every unit in the current layer
-            # e.g. instead of storing [1,2,3, 1,2,3, 1,2,3] we store [1, 2, 3] and we know it's "repeated"
-            if i > 0:
-                prev_layer = self.__nn.layers[i - 1]
-                curr_inp = prev_layer.outputs
-            else:
-                curr_inp = net_inp
-            d_net = curr_inp
-
-            local_grads = [d_out_j * [d_net_i for d_net_i in d_net] for d_out_j in d_out]
-            # equivalent to:
-            #     # local_grads = []
-            #     # local_grads.append([d_out[j] * d_net_i for j in range(len(d_out)) for d_net_i in d_net])
-
-            # if we're on the output layer
-            if i == len(self.__nn.layers) - 1:
-                upstream_grad = dErr_dOut
-            else:
-                # TODO: complete in case we're not on the output layer
-                pass
-
-            upstream_grad_new = [upstream_grad[j] * local_grads[j][k] for j in range(len(upstream_grad)) for k in range(len(local_grads[j]))]
-            print(np.shape(upstream_grad_new))
-            print(upstream_grad_new)
-            break
+            # # deriv of net wrt the prev layer's outputs
+            # # nextLayer_dNet_dOut = [u.w[j] for u in next_layer.units for j in range(len(u.w))]
+            #
+            # # short version of: d_net = [curr_inp] * len(curr_layer.units)
+            # # because the same inputs are sent to every unit in the current layer
+            # # e.g. instead of storing [1,2,3, 1,2,3, 1,2,3] we store [1, 2, 3] and we know it's "repeated"
+            # if i > 0:
+            #     prev_layer = self.__nn.layers[i - 1]
+            #     curr_inp = prev_layer.outputs
+            # else:
+            #     curr_inp = net_inp
+            # d_net = curr_inp
+            #
+            # local_grads = [d_out_j * [d_net_i for d_net_i in d_net] for d_out_j in d_out]
+            # # equivalent to:
+            # #     # local_grads = []
+            # #     # local_grads.append([d_out[j] * d_net_i for j in range(len(d_out)) for d_net_i in d_net])
+            #
+            # # if we're on the output layer
+            # if i == len(self.__nn.layers) - 1:
+            #     upstream_grad = dErr_dOut
+            # else:
+            #     # TODO: complete in case we're not on the output layer
+            #     pass
+            #
+            # upstream_grad_new = [upstream_grad[j] * local_grads[j][k] for j in range(len(upstream_grad)) for k in range(len(local_grads[j]))]
+            # print(np.shape(upstream_grad_new))
+            # print(upstream_grad_new)
+            # break
 
         # net_outputs = self.__nn.forward(inp=net_inp)
         # err = self.loss.func(predicted=net_outputs, target=target)
