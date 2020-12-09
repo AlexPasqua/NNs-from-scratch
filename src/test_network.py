@@ -13,9 +13,12 @@ class TestNetwork(unittest.TestCase):
         self.assertRaises(Exception, net.fit, inp=(1, 1, 1), target=(1, 0, 1))
 
     def test_constructor(self):
+        activation = ['relu','sigmoid','tanh','threshold']
         # make sure a ValueError is raised when input_dim or units_per_layer are not positive
-        self.assertRaises(ValueError, Network, input_dim=-2, units_per_layer=[6, 2], acts=['relu', 'relu'])
-        self.assertRaises(ValueError, Network, input_dim=2, units_per_layer=[-4, 0], acts=['relu', 'relu'])
+        for act_i in activation:
+            for act_j in activation:
+                self.assertRaises(ValueError, Network, input_dim=-2, units_per_layer=[6, 2], acts=[act_i, act_j])
+                self.assertRaises(ValueError, Network, input_dim=2, units_per_layer=[-4, 0], acts=[act_i, act_j])
 
         #TODO: test ValueError if units in one layer have different act functions
 
