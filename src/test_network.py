@@ -6,19 +6,18 @@ class TestNetwork(unittest.TestCase):
     net = Network(input_dim=3, units_per_layer=[6, 2], acts=['relu', 'relu'])
     net.compile('sgd', 'squared', lrn_rate=0.01)
 
-    def test_ExceptionForward(self, net=net):
+    def test_forward(self, net=net):
         # make sure Exception is raised when there is a mismatch between input_dim and inp
         self.assertRaises(Exception, net.forward, inp=(1, 1))
         # make sure Exception is raised when there is a mismatch between targets and outputs
         self.assertRaises(Exception, net.fit, inp=(1, 1, 1), target=(1, 0, 1))
 
-    def test_ValueError(self):
+    def test_constructor(self):
         # make sure a ValueError is raised when input_dim or units_per_layer are not positive
         self.assertRaises(ValueError, Network, input_dim=-2, units_per_layer=[6, 2], acts=['relu', 'relu'])
         self.assertRaises(ValueError, Network, input_dim=2, units_per_layer=[-4, 0], acts=['relu', 'relu'])
 
         #TODO: test ValueError if units in one layer have different act functions
-        # This assignment was done with a private method I cannot access for testing
 
 
 if __name__ == '__main__':
