@@ -86,89 +86,14 @@ class SGD(Optimizer, ABC):
 
             # compute gradient of the error wrt this layer's weights
             if i > 0:
-                print("I'm here")
                 prev_layer = self.__nn.layers[i - 1]
                 dErr_dw = np.multiply(delta, prev_layer.outputs, dtype=np.float_)
+            else:
+                break
+                ########################################
+                # TODO: riprendi da qui
+                ########################################
             break
-
-            ########################################
-            # TODO: riprendi da qui
-            ########################################
-
-            # d_out = [curr_act.deriv(u.net) for u in curr_layer.units]
-
-            # # deriv of net wrt the prev layer's outputs
-            # # nextLayer_dNet_dOut = [u.w[j] for u in next_layer.units for j in range(len(u.w))]
-            #
-            # # short version of: d_net = [curr_inp] * len(curr_layer.units)
-            # # because the same inputs are sent to every unit in the current layer
-            # # e.g. instead of storing [1,2,3, 1,2,3, 1,2,3] we store [1, 2, 3] and we know it's "repeated"
-            # if i > 0:
-            #     prev_layer = self.__nn.layers[i - 1]
-            #     curr_inp = prev_layer.outputs
-            # else:
-            #     curr_inp = net_inp
-            # d_net = curr_inp
-            #
-            # local_grads = [d_out_j * [d_net_i for d_net_i in d_net] for d_out_j in d_out]
-            # # equivalent to:
-            # #     # local_grads = []
-            # #     # local_grads.append([d_out[j] * d_net_i for j in range(len(d_out)) for d_net_i in d_net])
-            #
-            # # if we're on the output layer
-            # if i == len(self.__nn.layers) - 1:
-            #     upstream_grad = dErr_dOut
-            # else:
-            #     # TODO: complete in case we're not on the output layer
-            #     pass
-            #
-            # upstream_grad_new = [upstream_grad[j] * local_grads[j][k] for j in range(len(upstream_grad)) for k in range(len(local_grads[j]))]
-            # print(np.shape(upstream_grad_new))
-            # print(upstream_grad_new)
-            # break
-
-        # net_outputs = self.__nn.forward(inp=net_inp)
-        # err = self.loss.func(predicted=net_outputs, target=target)
-        # dErr_dOut = self.loss.deriv(predicted=net_outputs, target=target)
-        #
-        # # Scanning the layers in a bottom-up fashion
-        # for i in range(len(self.__nn.layers) - 1, -1, -1):
-        #     curr_layer = self.__nn.layers[i]
-        #     curr_act = curr_layer.act
-        #     if i > 0:  # if there exist a previous layer
-        #         prev_layer = self.__nn.layers[i - 1]
-        #         # curr_inputs: inputs of the current layer's units (same for every unit in the current layer)
-        #         curr_inputs = [unit.out for unit in prev_layer.units]
-        #         # d_net: derivs of the weighted sum wrt the weights
-        #         d_net = curr_inputs
-        #     else:
-        #         d_net = net_inp
-        #
-        #     # derivs of units' output wrt units' weighted sum
-        #     d_out = [curr_act.deriv(curr_unit.out) for curr_unit in curr_layer.units]
-        #
-        #     # local gradients of each unit of the current layer
-        #     local_grad = [d_out[j] * [d_net_i for d_net_i in d_net] for j in range(len(d_out))]
-        #     # equivalent to:
-        #     # local_grad = []
-        #     # local_grad.append([d_out[j] * d_net_i for j in range(len(d_out)) for d_net_i in d_net])
-        #
-        #     # TODO: complete this for more layers
-        #     # upstream gradient on units' output
-        #     if i == len(self.__nn.layers) - 1:
-        #         upstream_grad = dErr_dOut
-        #
-        #     # recompute upstream gradient wrt units' weights
-        #     upstream_grad = upstream_grad * [lg for lg in local_grad]
-        #
-        #     # update weights
-        #     curr_weights = [u.w for u in curr_layer.units]
-        #     """
-        #     new_weights = current_weights - learning_rate * delta_w
-        #     delta_w may be:
-        #         - upstream_gradient_on_the_weights
-        #     """
-        #     # TODO: finish
 
 
 optimizers = {
