@@ -88,6 +88,12 @@ class SGD(Optimizer, ABC):
             # computer delta for the current layer
             delta = [np.dot(delta_next, [u.w[j] for u in next_layer.units]) for j in range(len(curr_layer.units))]
             delta = np.multiply(delta, d_out, dtype=np.float_)
+            # equivalent to:
+            # delta = np.zeros([len(curr_layer.units)])
+            # for j in range(len(curr_layer.units)):
+            #     for l in range(len(next_layer.units)):
+            #         delta[j] += next_layer.units[l].w[j] * delta_next[l]
+            #     delta[j] *= d_out[j]
 
             # compute gradient of the error wrt this layer's weights
             if i > 0:
