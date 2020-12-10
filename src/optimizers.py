@@ -89,10 +89,11 @@ class SGD(Optimizer, ABC):
                 prev_layer = self.__nn.layers[i - 1]
                 dErr_dw = np.multiply(delta, prev_layer.outputs, dtype=np.float_)
             else:
-                break
-                ########################################
-                # TODO: riprendi da qui
-                ########################################
+                dErr_dw = np.multiply(delta, net_inp, dtype=np.float_)
+
+            ########################################
+            # TODO: riprendi da qui
+            ########################################
             break
 
 
