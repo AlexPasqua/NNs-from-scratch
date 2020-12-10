@@ -60,6 +60,9 @@ class SGD(Optimizer, ABC):
         # it's normal mult because the vecs have the same dimension and they are 'numpy ndarray'
         delta_next = dErr_dOut * d_out
 
+        # will contain all the delta_w to update the weights
+        delta_w = [None] * len(self.__nn.layers)
+
         # scan all layers from the penultimate to the first
         for i in reversed(range(len(self.__nn.layers) - 1)):
             curr_layer = self.__nn.layers[i]
@@ -99,18 +102,28 @@ class SGD(Optimizer, ABC):
             #     delta[j] *= d_out[j]
 
             # compute gradient of the error wrt this layer's weights
-
             dErr_dw = np.zeros([len(curr_layer.units) * len(curr_layer_inputs)])
             offset = len(curr_layer_inputs)
             for j in range(len(curr_layer.units)):
                 for k in range(len(curr_layer_inputs)):
                     dErr_dw[k + j * offset] = curr_layer_inputs[k] * delta[j]
 
-            # weights update
-            delta_w = -dErr_dw
+            delta_w[i] = -dErr_dw
+
+        # weights update
+        for i in range(len(self.__nn.layers)):
+            curr_layer = self.__nn.layers[i]
+            if i == 0:
+                curr_layer_inputs = net_inp
+            else:
+                prev_layer = self.__nn.layers[i - 1]
+                curr_layer_inputs = prev_layer.outputs
+            offset = len(curr_layer_inputs)
             for j in range(len(curr_layer.units)):
                 for k in range(len(curr_layer.units[j].w)):
-                    curr_layer.units[j].w[k] += self.lrn_rate * delta_w[k + j * offset]
+                    # TODO: delta_w[-1] is None, there's no weight update for the last layer --> fix it
+                    if delta_w[i] is not None:
+                        curr_layer.units[j].w[k] += self.lrn_rate * delta_w[i][k + j * offset]
 
 
 optimizers = {
