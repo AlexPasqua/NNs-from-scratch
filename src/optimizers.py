@@ -75,12 +75,15 @@ class SGD(Optimizer, ABC):
                     # equivalent to: dErr_dOut_new[j] += dErr_dOut[l] * d_out[l] * dNet_dOut[offset * l + j]
                     dErr_dOut_new[j] += dErr_dOut[l] * d_out[l] * next_layer.units[l].w[j]
             dErr_dOut = dErr_dOut_new
-            return
 
             # take new d_out and d_net wrt the current layer (no more the next)
             curr_act = curr_layer.act
             d_out = [curr_act.deriv(u.net) for u in curr_layer.units]
-            d_net = [u.w[k] for u in curr_layer.units for k in range(len(u.w))]
+            if i > 0:
+                prev_layer = self.__nn.layers[i - 1]
+                d_net = prev_layer.outputs
+            else:
+                d_net = net_inp
 
             # computer delta for the current layer
             delta = [np.dot(delta_next, [u.w[j] for u in next_layer.units]) for j in range(len(curr_layer.units))]
