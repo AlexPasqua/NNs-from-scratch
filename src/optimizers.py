@@ -103,16 +103,12 @@ class SGD(Optimizer, ABC):
             dErr_dw = np.zeros([len(curr_layer.units) * len(curr_layer_inputs)])
             for j in range(len(curr_layer.units)):
                 for k in range(len(curr_layer_inputs)):
-                    print(j, k)
                     offset = len(curr_layer_inputs)
                     dErr_dw[k + j * offset] = curr_layer_inputs[k] * delta[j]
-            print(dErr_dw)
-            return
 
             # weights update
             delta_w = -dErr_dw
-            print(delta_w)
-            print(delta)
+
 
             ########################################
             # TODO: riprendi da qui

@@ -33,6 +33,10 @@ class Unit:
     def w(self):
         return self.__w
 
+    @w.setter
+    def w(self, value):
+        self.__w = value
+
     @property
     def b(self):
         return self.__b
