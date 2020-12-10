@@ -57,4 +57,5 @@ jobs:
           python -m unittest test_losses.py
           python -m unittest test_regularizations.py
           python -m unittest test_weights_inits.py
+          python -m unittest test_network.py
         
