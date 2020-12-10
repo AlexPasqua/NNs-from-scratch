@@ -72,8 +72,10 @@ class SGD(Optimizer, ABC):
                 offset = len(curr_layer.units)  # offset to select the right unit from the next layer
                 for l in range(len(next_layer.units)):
                     # dNet_dOut[offset * l + j]: weight (deriv of net wrt out) on the connection j --> l
-                    dErr_dOut_new[j] += dErr_dOut[l] * d_out[l] * dNet_dOut[offset * l + j]
+                    # equivalent to: dErr_dOut_new[j] += dErr_dOut[l] * d_out[l] * dNet_dOut[offset * l + j]
+                    dErr_dOut_new[j] += dErr_dOut[l] * d_out[l] * next_layer.units[l].w[j]
             dErr_dOut = dErr_dOut_new
+            return
 
             # take new d_out and d_net wrt the current layer (no more the next)
             curr_act = curr_layer.act
@@ -91,6 +93,11 @@ class SGD(Optimizer, ABC):
             else:
                 dErr_dw = np.multiply(delta, net_inp, dtype=np.float_)
 
+            # weights update
+            delta_w = -dErr_dw
+            print(delta_w)
+            print(delta)
+
             ########################################
             # TODO: riprendi da qui
             ########################################
@@ -102,5 +109,5 @@ optimizers = {
 }
 
 if __name__ == '__main__':
-    opt = optimizers['sgd'](Network(input_dim=3, units_per_layer=[3, 3, 2], acts=['relu', 'relu', 'relu']), 'squared')
+    opt = optimizers['sgd'](Network(input_dim=3, units_per_layer=[2, 3, 2], acts=['relu', 'relu', 'relu']), 'squared')
     opt.optimize(net_inp=[0.1, 0.1, 0.1], target=[1, 1])
