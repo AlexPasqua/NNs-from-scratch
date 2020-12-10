@@ -69,11 +69,12 @@ class SGD(Optimizer, ABC):
             dErr_dOut_new = np.zeros([len(curr_layer.units)])
             for j in range(len(curr_layer.units)):
                 dErr_dOut_new[j] = 0.  # it's already 0, but let's be sure
-                offset = len(curr_layer.units)  # offset to select the right unit from the next layer
                 for l in range(len(next_layer.units)):
                     # dNet_dOut[offset * l + j]: weight (deriv of net wrt out) on the connection j --> l
-                    # equivalent to: dErr_dOut_new[j] += dErr_dOut[l] * d_out[l] * dNet_dOut[offset * l + j]
                     dErr_dOut_new[j] += dErr_dOut[l] * d_out[l] * next_layer.units[l].w[j]
+                    # equivalent to:
+                    #   offset = len(curr_layer.units)  # offset to select the right unit from the next layer
+                    #   dErr_dOut_new[j] += dErr_dOut[l] * d_out[l] * dNet_dOut[offset * l + j]
             dErr_dOut = dErr_dOut_new
 
             # take new d_out and d_net wrt the current layer (no more the next)
@@ -81,9 +82,11 @@ class SGD(Optimizer, ABC):
             d_out = [curr_act.deriv(u.net) for u in curr_layer.units]
             if i > 0:
                 prev_layer = self.__nn.layers[i - 1]
+                curr_layer_inputs = prev_layer.outputs
                 d_net = prev_layer.outputs
             else:
                 d_net = net_inp
+                curr_layer_inputs = net_inp
 
             # computer delta for the current layer
             delta = [np.dot(delta_next, [u.w[j] for u in next_layer.units]) for j in range(len(curr_layer.units))]
@@ -96,11 +99,15 @@ class SGD(Optimizer, ABC):
             #     delta[j] *= d_out[j]
 
             # compute gradient of the error wrt this layer's weights
-            if i > 0:
-                prev_layer = self.__nn.layers[i - 1]
-                dErr_dw = np.multiply(delta, prev_layer.outputs, dtype=np.float_)
-            else:
-                dErr_dw = np.multiply(delta, net_inp, dtype=np.float_)
+
+            dErr_dw = np.zeros([len(curr_layer.units) * len(curr_layer_inputs)])
+            for j in range(len(curr_layer.units)):
+                for k in range(len(curr_layer_inputs)):
+                    print(j, k)
+                    offset = len(curr_layer_inputs)
+                    dErr_dw[k + j * offset] = curr_layer_inputs[k] * delta[j]
+            print(dErr_dw)
+            return
 
             # weights update
             delta_w = -dErr_dw
