@@ -68,7 +68,6 @@ class SGD(Optimizer, ABC):
             # gradient of the error wrt the outputs of the CURRENT layer
             dErr_dOut_new = np.zeros([len(curr_layer.units)])
             for j in range(len(curr_layer.units)):
-                dErr_dOut_new[j] = 0.  # it's already 0, but let's be sure
                 for l in range(len(next_layer.units)):
                     # dNet_dOut[offset * l + j]: weight (deriv of net wrt out) on the connection j --> l
                     dErr_dOut_new[j] += dErr_dOut[l] * d_out[l] * next_layer.units[l].w[j]
@@ -91,6 +90,7 @@ class SGD(Optimizer, ABC):
             # computer delta for the current layer
             delta = [np.dot(delta_next, [u.w[j] for u in next_layer.units]) for j in range(len(curr_layer.units))]
             delta = np.multiply(delta, d_out, dtype=np.float_)
+            delta_next = delta
             # equivalent to:
             # delta = np.zeros([len(curr_layer.units)])
             # for j in range(len(curr_layer.units)):
@@ -111,11 +111,6 @@ class SGD(Optimizer, ABC):
             for j in range(len(curr_layer.units)):
                 for k in range(len(curr_layer.units[j].w)):
                     curr_layer.units[j].w[k] += self.lrn_rate * delta_w[k + j * offset]
-
-            ########################################
-            # TODO: riprendi da qui
-            ########################################
-            break
 
 
 optimizers = {
