@@ -8,9 +8,11 @@ on:
   push:
     branches:
     - main
+    - develop
   pull_request:
     branches: 
     - main
+    - develop
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -57,4 +59,5 @@ jobs:
           python -m unittest test_losses.py
           python -m unittest test_regularizations.py
           python -m unittest test_weights_inits.py
+          python -m unittest test_network.py
         
