@@ -82,7 +82,13 @@ class SGD(Optimizer, ABC):
 
             # computer delta for the current layer
             delta = [np.dot(delta_next, [u.w[j] for u in next_layer.units]) for j in range(len(curr_layer.units))]
-            delta = [delta[j] * d_out[j] for j in range(len(curr_layer.units))]
+            delta = np.multiply(delta, d_out, dtype=np.float_)
+
+            # compute gradient of the error wrt this layer's weights
+            if i > 0:
+                print("I'm here")
+                prev_layer = self.__nn.layers[i - 1]
+                dErr_dw = np.multiply(delta, prev_layer.outputs, dtype=np.float_)
             break
 
             ########################################
