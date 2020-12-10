@@ -90,12 +90,17 @@ class Layer:
             if act != units_acts[0]:
                 raise ValueError("All units in a layer must have the same activation function")
         self.__units = units
+        self.__weights = [u.w[i] for u in self.__units for i in range(len(u.w))]
         self.__act = self.__units[0].act
         self.__outputs = []
 
     @property
     def units(self):
         return self.__units
+
+    @property
+    def weights(self):
+        return self.__weights
 
     @property
     def act(self):
