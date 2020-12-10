@@ -63,6 +63,9 @@ class SGD(Optimizer, ABC):
         # will contain all the delta_w to update the weights
         delta_w = [None] * len(self.__nn.layers)
 
+        print(output_layer.weights)
+        return
+
         # scan all layers from the penultimate to the first
         for i in reversed(range(len(self.__nn.layers) - 1)):
             curr_layer = self.__nn.layers[i]
