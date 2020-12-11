@@ -39,6 +39,9 @@ class SGD(Optimizer, ABC):
     def __init__(self, nn, loss, lrn_rate=0.01):
         self.__nn = nn
         super(SGD, self).__init__(loss, lrn_rate)
+        # makes sure lrn_rate is a value between 0 and 1
+        if lrn_rate <= 0 or lrn_rate > 1:
+            raise ValueError('lrn_rate should be a value between 0 and 1, Got:{}'.format(lrn_rate))
 
     def optimize(self, net_inp, target):
         # ONLINE VERSION
