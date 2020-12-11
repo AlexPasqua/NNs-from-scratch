@@ -65,7 +65,7 @@ class Unit:
         :return: unit's output
         """
         # compute activation function on weighted sum
-        self.__net = (np.dot(inp, self.w) + self.b)[0]  # position 0 because we need a number and we got a single-value array
+        self.__net = np.dot(inp, self.w) + self.b
         self.__out = self.act.func(self.__net)
         return self.__out
 
