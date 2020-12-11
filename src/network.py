@@ -88,12 +88,12 @@ class Layer:
         Constructor
         :param units: list on layer's units ('Unit' objects)
         """
-        units_acts = [u.act.name for u in units]
+        units_acts = [u.act for u in units]
         for act in units_acts[1:]:
             if act != units_acts[0]:
                 raise ValueError("All units in a layer must have the same activation function")
         self.__units = units
-        self.__weights = [u.w[i] for u in self.__units for i in range(len(u.w))]
+        # self.__weights = [u.w[i] for u in self.__units for i in range(len(u.w))]
         self.__act = self.__units[0].act
         self.__outputs = []
 
@@ -103,7 +103,8 @@ class Layer:
 
     @property
     def weights(self):
-        return self.__weights
+        return [u.w[i] for u in self.__units for i in range(len(u.w))]
+        # return self.__weights
 
     @property
     def act(self):
@@ -123,11 +124,11 @@ class Layer:
                 raise AttributeError("'value' must have the same length of the layer's weights")
         else:
             raise AttributeError(f"'value' must be a list, got {type(value)}")
-
         for i in range(len(self.units)):
-            u = self.units[i]
-            for j in range(len(u.w)):
-                u.w = value[j + i * len(u.w)]
+            n_weights = len(self.units[i].w)
+            start = i * n_weights
+            end = start + n_weights
+            self.units[i].w = value[start : end]
 
     def forward_pass(self, inp):
         """
