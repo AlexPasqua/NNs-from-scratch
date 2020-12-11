@@ -4,6 +4,7 @@ from activation_functions import act_funcs
 from optimizers import *
 from losses import losses
 from weights_inits import inits
+from numbers import Number
 
 
 class Unit:
@@ -15,6 +16,7 @@ class Unit:
         b: bias
         act: activation function
     """
+
     def __init__(self, w, b, act):
         """
         Constructor
@@ -32,6 +34,10 @@ class Unit:
     @property
     def w(self):
         return self.__w
+
+    @w.setter
+    def w(self, value):
+        self.__w = value
 
     @property
     def b(self):
@@ -76,16 +82,18 @@ class Layer:
     Attributes:
         units: list of layer's units ('Unit' objects)
     """
+
     def __init__(self, units):
         """
         Constructor
         :param units: list on layer's units ('Unit' objects)
         """
-        units_acts = [u.act.name for u in units]
+        units_acts = [u.act for u in units]
         for act in units_acts[1:]:
             if act != units_acts[0]:
                 raise ValueError("All units in a layer must have the same activation function")
         self.__units = units
+        # self.__weights = [u.w[i] for u in self.__units for i in range(len(u.w))]
         self.__act = self.__units[0].act
         self.__outputs = []
 
@@ -94,12 +102,33 @@ class Layer:
         return self.__units
 
     @property
+    def weights(self):
+        return [u.w[i] for u in self.__units for i in range(len(u.w))]
+        # return self.__weights
+
+    @property
     def act(self):
         return self.__act
 
     @property
     def outputs(self):
         return self.__outputs
+
+    @weights.setter
+    def weights(self, value):
+        if isinstance(value, list):
+            for n in value:
+                if not isinstance(n, Number):
+                    raise ValueError("layer's weights must be numeric. Got: ", type(value[0]))
+            if len(value) != len(self.weights):
+                raise AttributeError("'value' must have the same length of the layer's weights")
+        else:
+            raise AttributeError(f"'value' must be a list, got {type(value)}")
+        for i in range(len(self.units)):
+            n_weights = len(self.units[i].w)
+            start = i * n_weights
+            end = start + n_weights
+            self.units[i].w = value[start : end]
 
     def forward_pass(self, inp):
         """
@@ -118,6 +147,7 @@ class Network:
     Attributes:
         layers: list of net's layers ('Layer' objects)
     """
+
     def __init__(self, input_dim=3, units_per_layer=(3, 2), acts=('relu', 'sigmoid')):
         """
         Constructor
@@ -128,7 +158,8 @@ class Network:
         if input_dim < 1 or any(n_units < 1 for n_units in units_per_layer):
             raise ValueError("input_dim and every value in units_per_layer must be positive")
         if len(units_per_layer) != len(acts):
-            raise Exception(f"Mismatching lengths --> len(units_per_layer) = {len(units_per_layer)} ; len(acts) = {len(acts)}")
+            raise Exception(
+                f"Mismatching lengths --> len(units_per_layer) = {len(units_per_layer)} ; len(acts) = {len(acts)}")
 
         self.__input_dim = input_dim
         self.__units_per_layer = units_per_layer
@@ -232,7 +263,8 @@ class Network:
         target = np.array(target)
         if len(target.shape) > 1:
             if target.shape[1] != len(self.layers[-1].units):
-                raise Exception(f"Mismatching shapes --> target: {target.shape} ; output units: {len(self.layers[-1].units)}")
+                raise Exception(
+                    f"Mismatching shapes --> target: {target.shape} ; output units: {len(self.layers[-1].units)}")
         self.__opt.optimize(net_inp=inp, target=target)
 
     def print_net(self):
@@ -324,4 +356,3 @@ if __name__ == '__main__':
 
     if args.verbose:
         net.print_net()
-
