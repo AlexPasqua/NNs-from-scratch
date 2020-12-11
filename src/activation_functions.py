@@ -6,6 +6,7 @@ import math
 
 def check_is_number(x):
     if not isinstance(x, Number):
+        print(x)
         raise AttributeError(f"Input of sigmoid must be a number. Got {type(x)}")
 
 

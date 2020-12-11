@@ -65,7 +65,7 @@ class Unit:
         :return: unit's output
         """
         # compute activation function on weighted sum
-        self.__net = np.dot(inp, self.w) + self.b
+        self.__net = (np.dot(inp, self.w) + self.b)[0]  # position 0 because we need a number and we got a single-value array
         self.__out = self.act.func(self.__net)
         return self.__out
 
@@ -149,8 +149,8 @@ class Network:
             # for every unit in the current layer create layer's units
             for j in range(units_per_layer[i]):
                 units.append(
-                    Unit(w=self.__weights_init(n_weights=n_weights, lower_lim=0., upper_lim=1., kwargs=kwargs),
-                         b=self.__weights_init(n_weights=1, lower_lim=0., upper_lim=1., kwargs=kwargs),
+                    Unit(w=self.__weights_init(n_weights=n_weights, lower_lim=0., upper_lim=1., value=kwargs['value']),
+                         b=self.__weights_init(n_weights=1, lower_lim=0., upper_lim=1., value=kwargs['value']),
                          act=act_funcs[acts[i]])
 
                     # Unit(w=np.random.uniform(0., 1., n_weights),
@@ -293,6 +293,18 @@ if __name__ == '__main__':
         type=float,
         help="The target outputs"
     )
+    parser.add_argument(
+        '--weights_init',
+        action='store',
+        type=str,
+        help="The type of weights initialization"
+    )
+    parser.add_argument(
+        '--weights_value',
+        action='store',
+        type=float,
+        help="The value to which the weights are initialized"
+    )
     parser.add_argument('--verbose', '-v', action='store_true')
     args = parser.parse_args()
 
@@ -322,7 +334,9 @@ if __name__ == '__main__':
         net = Network(
             input_dim=args.input_dim,
             units_per_layer=args.units_per_layer,
-            acts=args.act_funcs
+            acts=args.act_funcs,
+            weights_init=args.weights_init,
+            value=args.weights_value
         )
         if args.targets is None:
             net.forward(args.inputs, verbose=args.verbose)

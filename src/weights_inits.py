@@ -1,7 +1,9 @@
 import numpy as np
 
 
-def uniform_init(n_weights, value, **kwargs):
+def uniform_init(**kwargs):
+    n_weights = kwargs['n_weights']
+    value = kwargs['value']
     return [value] * n_weights
 
 
