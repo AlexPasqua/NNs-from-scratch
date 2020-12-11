@@ -40,7 +40,7 @@ class SGD(Optimizer, ABC):
         self.__nn = nn
         super(SGD, self).__init__(loss, lrn_rate)
         # makes sure lrn_rate is a value between 0 and 1
-        if lrn_rate < 0 or lrn_rate > 1:
+        if lrn_rate <= 0 or lrn_rate > 1:
             raise ValueError('lrn_rate should be a value between 0 and 1, Got:{}'.format(lrn_rate))
 
     def optimize(self, net_inp, target):
@@ -139,5 +139,4 @@ optimizers = {
 if __name__ == '__main__':
     opt = optimizers['sgd'](Network(input_dim=3, units_per_layer=[2, 3, 2], acts=['relu', 'relu', 'relu']), 'squared')
     opt.optimize(net_inp=[0.1, 0.1, 0.1], target=[1, 1])
-
 
