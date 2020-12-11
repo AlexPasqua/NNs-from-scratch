@@ -3,7 +3,7 @@ import numpy as np
 
 def weights_inits(**kwargs):
     if 'type' not in kwargs.keys():
-        raise ValueError("'type' must be passed to function weights_inits")
+        raise AttributeError("'type' must be passed to function weights_inits")
     init_type = kwargs['type']
     inits = {
         'uniform': uniform_init,
@@ -12,9 +12,12 @@ def weights_inits(**kwargs):
     return inits[init_type](**kwargs)
 
 
-def uniform_init(**kwargs):
-    n_weights = kwargs['n_weights']
-    value = kwargs['value']
+def uniform_init(n_weights, value, **kwargs):
+    # required = ('n_weights', 'value')
+    # if not all(arg in kwargs.keys() for arg in required):
+    #     raise AttributeError(f"{required} parameters are required")
+    # n_weights = kwargs['n_weights']
+    # value = kwargs['value']
     return [value] * n_weights if n_weights > 1 else value
 
 
