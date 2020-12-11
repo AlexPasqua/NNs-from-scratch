@@ -129,20 +129,17 @@ class SGD(Optimizer, ABC):
             delta_w[i] = -dErr_dw
 
         # weights update
-        print(delta_w[-1])
-        # for i in range(len(self.__nn.layers)):
-        #     curr_layer = self.__nn.layers[i]
-        #     if i == 0:
-        #         curr_layer_inputs = net_inp
-        #     else:
-        #         prev_layer = self.__nn.layers[i - 1]
-        #         curr_layer_inputs = prev_layer.outputs
-        #     offset = len(curr_layer_inputs)
-        #     for j in range(len(curr_layer.units)):
-        #         for k in range(len(curr_layer.units[j].w)):
-        #             # TODO: delta_w[-1] is None, there's no weight update for the last layer --> fix it
-        #             if delta_w[i] is not None:
-        #                 curr_layer.units[j].w[k] += self.lrn_rate * delta_w[i][k + j * offset]
+        for i in range(len(self.__nn.layers)):
+            curr_layer = self.__nn.layers[i]
+            if i == 0:
+                curr_layer_inputs = net_inp
+            else:
+                prev_layer = self.__nn.layers[i - 1]
+                curr_layer_inputs = prev_layer.outputs
+            offset = len(curr_layer_inputs)
+            for j in range(len(curr_layer.units)):
+                for k in range(len(curr_layer.units[j].w)):
+                    curr_layer.units[j].w[k] += self.lrn_rate * delta_w[i][k + j * offset]
 
 
 optimizers = {
@@ -151,4 +148,4 @@ optimizers = {
 
 if __name__ == '__main__':
     opt = optimizers['sgd'](Network(input_dim=3, units_per_layer=[2, 3, 2], acts=['relu', 'relu', 'relu']), 'squared')
-    opt.optimize(net_inp=[0.1, 0.1, 0.1], target=[1, 1])
+    opt.optimize(net_inp=[0.1, 0.1, 0.1], target=[5, 5])
