@@ -253,6 +253,7 @@ class Network:
         if not hasattr(inp, '__iter__') or not hasattr(target, '__iter__'):
             raise AttributeError(f"'inp' and 'target' attributes must be iterable, got {type(inp)} and {type(target)}")
         target = np.array(target)
+        inp = np.array(inp)
         if len(target.shape) > 1:
             if target.shape[1] != len(self.layers[-1].units):
                 raise Exception(f"Mismatching shapes --> target: {target.shape} ; output units: {len(self.layers[-1].units)}")

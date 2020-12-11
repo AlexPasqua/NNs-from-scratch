@@ -23,7 +23,6 @@ class TestNetwork(unittest.TestCase):
         self.assertRaises(AttributeError, net.compile, opt='hello', loss='squared')
         self.assertRaises(AttributeError, net.compile, opt='sgd', loss='hello')
 
-
     def test_fit(self):
         net = Network(input_dim=3, units_per_layer=[6, 2], acts=['relu', 'relu'])
         self.assertRaises(AttributeError, net.fit, inp=(1, 1, 1), target=(1, 0, 1))
