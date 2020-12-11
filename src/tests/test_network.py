@@ -1,7 +1,5 @@
 import unittest
 from network import Network
-from activation_functions import act_funcs
-import random
 
 
 class TestNetwork(unittest.TestCase):
@@ -21,14 +19,15 @@ class TestNetwork(unittest.TestCase):
         self.assertRaises(Exception, net.forward, inp=('a', 'b', 'c'))
 
     def test_compile(self):
-        pass
+        net = Network(input_dim=3, units_per_layer=[6, 2], acts=['relu', 'relu'])
+        self.assertRaises(AttributeError, net.compile, opt='hello', loss='squared')
+        self.assertRaises(AttributeError, net.compile, opt='sgd', loss='hello')
+
 
     def test_fit(self):
         net = Network(input_dim=3, units_per_layer=[6, 2], acts=['relu', 'relu'])
-        net.compile('sgd', 'squared', lrn_rate=0.01)
-        # make sure Exception is raised when there is a mismatch between targets and outputs
-        self.assertRaises(Exception, net.fit, inp=(1, 1, 1), target=(1, 0, 1))
-        self.assertRaises(AttributeError, net.fit, [1, 1, 1], 'ciao')
+        self.assertRaises(AttributeError, net.fit, inp=(1, 1, 1), target=(1, 0, 1))
+        self.assertRaises(AttributeError, net.fit, inp=[1, 1, 1], target='ciao')
 
 
 if __name__ == '__main__':

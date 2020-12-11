@@ -225,7 +225,7 @@ class Network:
             raise AttributeError(f"'inp must be a list or a number, got {type(inp)}")
         if len(inp) != self.input_dim:
             raise AttributeError(f"Mismatching lengths --> len(net_inp) = {len(inp)} ; input_sim = {self.input_dim}")
-        if any(isinstance(i, Number) for i in inp):
+        if any(not isinstance(i, Number) for i in inp):
             raise AttributeError("'inp' must be a vector of numbers")
 
         if verbose:
@@ -239,6 +239,8 @@ class Network:
         return x
 
     def compile(self, opt='sgd', loss='squared', lrn_rate=0.01):
+        if opt not in optimizers or loss not in losses:
+            raise AttributeError(f"opt must be within {optimizers.keys()} and loss must be in {losses.keys()}")
         self.__opt = optimizers[opt](nn=self, loss=loss, lrn_rate=lrn_rate)
 
     def fit(self, inp, target):
@@ -248,8 +250,8 @@ class Network:
         :param target: list of arrays, each array corresponds to a pattern
             and each of its elements is the target for the i-th output unit
         """
-        if not isinstance(target, list) or not isinstance(target, Number):
-            raise AttributeError(f"'target' attribute must be a list or a number, got {type(target)}")
+        if not hasattr(inp, '__iter__') or not hasattr(target, '__iter__'):
+            raise AttributeError(f"'inp' and 'target' attributes must be iterable, got {type(inp)} and {type(target)}")
         target = np.array(target)
         if len(target.shape) > 1:
             if target.shape[1] != len(self.layers[-1].units):
