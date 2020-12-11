@@ -82,7 +82,6 @@ class Layer:
     Attributes:
         units: list of layer's units ('Unit' objects)
     """
-
     def __init__(self, units):
         """
         Constructor
