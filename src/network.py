@@ -1,3 +1,5 @@
+from numbers import Number
+
 import numpy as np
 import argparse
 from activation_functions import act_funcs
@@ -119,7 +121,7 @@ class Network:
     Attributes:
         layers: list of net's layers ('Layer' objects)
     """
-    def __init__(self, input_dim=3, units_per_layer=(3, 2), acts=('relu', 'sigmoid'), weights_init='uniform', **kwargs):
+    def __init__(self, input_dim=3, units_per_layer=(3, 2), acts=('relu', 'sigmoid'), weights_init='uniform', weights_value=0.1, **kwargs):
         """
         Constructor
         :param input_dim: the input dimension
@@ -129,7 +131,7 @@ class Network:
         if input_dim < 1 or any(n_units < 1 for n_units in units_per_layer):
             raise ValueError("input_dim and every value in units_per_layer must be positive")
         if len(units_per_layer) != len(acts):
-            raise Exception(f"Mismatching lengths --> len(units_per_layer) = {len(units_per_layer)} ; len(acts) = {len(acts)}")
+            raise AttributeError(f"Mismatching lengths --> len(units_per_layer) = {len(units_per_layer)} ; len(acts) = {len(acts)}")
         if any(act not in act_funcs.keys() for act in acts):
             raise ValueError("Invalid activation function")
 
@@ -148,17 +150,21 @@ class Network:
             # for every unit in the current layer create layer's units
             for j in range(units_per_layer[i]):
                 units.append(
-                    Unit(w=weights_inits(type=weights_init, n_weights=n_weights, lower_lim=0., upper_lim=1., value=kwargs['value']),
-                         b=weights_inits(type=weights_init, n_weights=1, lower_lim=0., upper_lim=1., value=kwargs['value']),
+                    Unit(w=weights_inits(type=weights_init, n_weights=n_weights, lower_lim=0., upper_lim=1., value=weights_value),
+                         b=weights_inits(type=weights_init, n_weights=1, lower_lim=0., upper_lim=1., value=weights_value),
                          act=act_funcs[acts[i]])
-
-                    # Unit(w=np.random.uniform(0., 1., n_weights),
-                    #      b=np.random.randn() % 1.,
-                    #      act=act_funcs[acts[i]])
                 )
 
             self.layers.append(Layer(units=units))
             units = []
+
+    @staticmethod
+    def __check_attributes(self, input_dim, units_per_layer, acts, weights_init):
+        if len(units_per_layer) != len(act_funcs):
+            parser.error("'units_per_layer' vector and 'act_funcs' must have the same length")
+        if args.targets is not None:
+            if len(args.targets) != args.units_per_layer[-1]:
+                parser.error("the length of 'targets' vector must be equal to the number of units in the output layer")
 
     @property
     def input_dim(self):
@@ -236,6 +242,8 @@ class Network:
         :param target: list of arrays, each array corresponds to a pattern
             and each of its elements is the target for the i-th output unit
         """
+        if not isinstance(target, list) or not isinstance(target, Number):
+            raise AttributeError(f"'target' attribute must be a list or a number, got {type(target)}")
         target = np.array(target)
         if len(target.shape) > 1:
             if target.shape[1] != len(self.layers[-1].units):
@@ -308,9 +316,10 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     # All arguments are optional, but either they're all present or they're all None
+    excluded_args = ('verbose', 'targets', 'weights_value')
     if (
-            not all(vars(args)[arg] is None for arg in vars(args) if arg not in ('verbose', 'targets')) and
-            not all(vars(args)[arg] is not None for arg in vars(args) if arg not in ('verbose', 'targets'))
+            not all(vars(args)[arg] is None for arg in vars(args) if arg not in excluded_args) and
+            not all(vars(args)[arg] is not None for arg in vars(args) if arg not in excluded_args)
     ):
         parser.error("All arguments are optional, but either they're all present or they're all None")
 
