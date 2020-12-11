@@ -2,6 +2,7 @@ import unittest
 from network import Network
 from activation_functions import act_funcs
 import random
+from network import Layer, Unit
 
 
 class TestNetwork(unittest.TestCase):
@@ -20,6 +21,10 @@ class TestNetwork(unittest.TestCase):
         self.assertRaises(ValueError, Network, input_dim=2, units_per_layer=[-4, 1], acts=['relu', 'relu'])
         self.assertRaises(ValueError, Network, input_dim=3, units_per_layer=[3, 0], acts=['relu', 'relu'])
         self.assertRaises(Exception, Network, input_dim=3, units_per_layer=[3, 2], acts=['relu', 'relu', 'relu'])
+        # make sure a ValueError is raised when the units in a layer have different activation functions
+        self.assertRaises(ValueError, Layer, [Unit(w=[0.5, 0.5, 0.5], b=1, act=act_funcs['sigmoid']),
+                                              Unit(w=[0.5, 0.5, 0.5], b=1, act=act_funcs['relu'])]
+                          )
 
 
 if __name__ == '__main__':
