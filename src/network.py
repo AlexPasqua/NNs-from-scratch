@@ -128,12 +128,12 @@ class Network:
         :param units_per_layer: list of layers' sizes as number on units
         :param acts: list of activation function names (one for each layer)
         """
-        if input_dim < 1 or any(n_units < 1 for n_units in units_per_layer):
-            raise ValueError("input_dim and every value in units_per_layer must be positive")
-        if len(units_per_layer) != len(acts):
-            raise AttributeError(f"Mismatching lengths --> len(units_per_layer) = {len(units_per_layer)} ; len(acts) = {len(acts)}")
-        if any(act not in act_funcs.keys() for act in acts):
-            raise ValueError("Invalid activation function")
+        self.__check_attributes(self,
+                                input_dim=input_dim,
+                                units_per_layer=units_per_layer,
+                                acts=acts,
+                                weights_init=weights_init,
+                                weights_value=weights_value)
 
         self.__input_dim = input_dim
         self.__units_per_layer = units_per_layer
@@ -159,12 +159,14 @@ class Network:
             units = []
 
     @staticmethod
-    def __check_attributes(self, input_dim, units_per_layer, acts, weights_init):
-        if len(units_per_layer) != len(act_funcs):
-            parser.error("'units_per_layer' vector and 'act_funcs' must have the same length")
-        if args.targets is not None:
-            if len(args.targets) != args.units_per_layer[-1]:
-                parser.error("the length of 'targets' vector must be equal to the number of units in the output layer")
+    def __check_attributes(self, input_dim, units_per_layer, acts, weights_init, weights_value):
+        if input_dim < 1 or any(n_units < 1 for n_units in units_per_layer):
+            raise ValueError("input_dim and every value in units_per_layer must be positive")
+        if len(units_per_layer) != len(acts):
+            raise AttributeError(f"Mismatching lengths --> len(units_per_layer) = {len(units_per_layer)} ; len(acts) = {len(acts)}")
+        if any(act not in act_funcs.keys() for act in acts):
+            raise ValueError("Invalid activation function")
+
 
     @property
     def input_dim(self):
@@ -219,8 +221,12 @@ class Network:
         :param inp: net's input vector
         :return: net's output
         """
+        if not hasattr(inp, '__iter__'):
+            raise AttributeError(f"'inp must be a list or a number, got {type(inp)}")
         if len(inp) != self.input_dim:
-            raise Exception(f"Mismatching lengths --> len(net_inp) = {len(inp)} ; input_sim = {self.input_dim}")
+            raise AttributeError(f"Mismatching lengths --> len(net_inp) = {len(inp)} ; input_sim = {self.input_dim}")
+        if any(isinstance(i, Number) for i in inp):
+            raise AttributeError("'inp' must be a vector of numbers")
 
         if verbose:
             print(f"Net's inputs: {inp}")
