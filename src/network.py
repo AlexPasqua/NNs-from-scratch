@@ -5,6 +5,7 @@ import argparse
 from activation_functions import act_funcs
 from optimizers import *
 from losses import losses
+from numbers import Number
 from weights_inits import weights_inits
 from weights_inits import weights_inits
 
@@ -35,6 +36,10 @@ class Unit:
     @property
     def w(self):
         return self.__w
+
+    @w.setter
+    def w(self, value):
+        self.__w = value
 
     @property
     def b(self):
@@ -84,7 +89,7 @@ class Layer:
         Constructor
         :param units: list on layer's units ('Unit' objects)
         """
-        units_acts = [u.act.name for u in units]
+        units_acts = [u.act for u in units]
         for act in units_acts[1:]:
             if act != units_acts[0]:
                 raise ValueError("All units in a layer must have the same activation function")
@@ -97,12 +102,32 @@ class Layer:
         return self.__units
 
     @property
+    def weights(self):
+        return [u.w[i] for u in self.__units for i in range(len(u.w))]
+
+    @property
     def act(self):
         return self.__act
 
     @property
     def outputs(self):
         return self.__outputs
+
+    @weights.setter
+    def weights(self, value):
+        if isinstance(value, list):
+            for n in value:
+                if not isinstance(n, Number):
+                    raise ValueError("layer's weights must be numeric. Got: ", type(value[0]))
+            if len(value) != len(self.weights):
+                raise AttributeError("'value' must have the same length of the layer's weights")
+        else:
+            raise AttributeError(f"'value' must be a list, got {type(value)}")
+        for i in range(len(self.units)):
+            n_weights = len(self.units[i].w)
+            start = i * n_weights
+            end = start + n_weights
+            self.units[i].w = value[start : end]
 
     def forward_pass(self, inp):
         """
