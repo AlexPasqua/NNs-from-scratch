@@ -136,7 +136,6 @@ class Network:
         self.__input_dim = input_dim
         self.__units_per_layer = units_per_layer
         self.__acts = acts
-        self.__weights_init = weights_inits[weights_init]
         self.__layers = []
         self.__opt = None
         units = []
@@ -149,8 +148,8 @@ class Network:
             # for every unit in the current layer create layer's units
             for j in range(units_per_layer[i]):
                 units.append(
-                    Unit(w=self.__weights_init(n_weights=n_weights, lower_lim=0., upper_lim=1., value=kwargs['value']),
-                         b=self.__weights_init(n_weights=1, lower_lim=0., upper_lim=1., value=kwargs['value']),
+                    Unit(w=weights_inits(type=weights_init, n_weights=n_weights, lower_lim=0., upper_lim=1., value=kwargs['value']),
+                         b=weights_inits(type=weights_init, n_weights=1, lower_lim=0., upper_lim=1., value=kwargs['value']),
                          act=act_funcs[acts[i]])
 
                     # Unit(w=np.random.uniform(0., 1., n_weights),
