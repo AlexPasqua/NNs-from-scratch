@@ -3,7 +3,8 @@ import argparse
 from activation_functions import act_funcs
 from optimizers import *
 from losses import losses
-from weights_inits import inits
+from weights_inits import weights_inits
+from weights_inits import weights_inits
 
 
 class Unit:
@@ -118,7 +119,7 @@ class Network:
     Attributes:
         layers: list of net's layers ('Layer' objects)
     """
-    def __init__(self, input_dim=3, units_per_layer=(3, 2), acts=('relu', 'sigmoid')):
+    def __init__(self, input_dim=3, units_per_layer=(3, 2), acts=('relu', 'sigmoid'), weights_init='uniform', **kwargs):
         """
         Constructor
         :param input_dim: the input dimension
@@ -129,10 +130,13 @@ class Network:
             raise ValueError("input_dim and every value in units_per_layer must be positive")
         if len(units_per_layer) != len(acts):
             raise Exception(f"Mismatching lengths --> len(units_per_layer) = {len(units_per_layer)} ; len(acts) = {len(acts)}")
+        if any(act not in act_funcs.keys() for act in acts):
+            raise ValueError("Invalid activation function")
 
         self.__input_dim = input_dim
         self.__units_per_layer = units_per_layer
         self.__acts = acts
+        self.__weights_init = weights_inits[weights_init]
         self.__layers = []
         self.__opt = None
         units = []
@@ -145,9 +149,13 @@ class Network:
             # for every unit in the current layer create layer's units
             for j in range(units_per_layer[i]):
                 units.append(
-                    Unit(w=np.random.uniform(0., 1., n_weights),
-                         b=np.random.randn() % 1.,
+                    Unit(w=self.__weights_init(n_weights=n_weights, lower_lim=0., upper_lim=1., kwargs=kwargs),
+                         b=self.__weights_init(n_weights=1, lower_lim=0., upper_lim=1., kwargs=kwargs),
                          act=act_funcs[acts[i]])
+
+                    # Unit(w=np.random.uniform(0., 1., n_weights),
+                    #      b=np.random.randn() % 1.,
+                    #      act=act_funcs[acts[i]])
                 )
 
             self.layers.append(Layer(units=units))
