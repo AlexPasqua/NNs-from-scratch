@@ -4,7 +4,7 @@ from abc import ABC, abstractmethod
 from losses import losses
 from network import *
 import numpy as np
-from numbers import Number
+
 
 class Optimizer(ABC):
     """
@@ -52,22 +52,37 @@ class SGD(Optimizer, ABC):
         output_act = output_layer.act
 
         # dErr_dOut: gradient of the error wrt the net's outputs
-        # d_out: gradient of the net's outputs wrt the output units' weighted sums
+        # dOut_dNet: gradient of the net's outputs wrt the output units' weighted sums
         # dNet_dOut: gradient of the output units' weighted sum wrt the prev layer's outputs
         dErr_dOut = self.loss.deriv(predicted=net_outputs, target=target)
-        d_out = [output_act.deriv(u.net) for u in output_layer.units]
+        dOut_dNet = [output_act.deriv(u.net) for u in output_layer.units]
         dNet_dOut = [u.w[j] for u in output_layer.units for j in range(len(u.w))]
 
         # delta_next is the delta of the output layer
         # 'next' is because it will be continuously overwritten with the delta of the next layer
         # it's normal mult because the vecs have the same dimension and they are 'numpy ndarray'
-        delta_next = dErr_dOut * d_out
+        delta = dErr_dOut * dOut_dNet
 
         # will contain all the delta_w to update the weights
         delta_w = [None] * len(self.__nn.layers)
 
-        print(output_layer.weights)
-        return
+        # retrieve output of the penultimate layer to compute the weights update of the last layer
+        if len(self.__nn.layers) > 1:
+            penult_layer = self.__nn.layers[-2]
+            offset = len(penult_layer.units)
+            dErr_dw = np.zeros([len(output_layer.units) * offset])
+            for j in range(len(output_layer.units)):
+                for k in range(offset):
+                    dErr_dw[k + j * offset] = penult_layer.outputs[k] * delta[j]
+        else:
+            delta_w[-1] = delta * net_inp
+            offset = len(net_inp)
+            dErr_dw = np.zeros([offset * len(output_layer.units)])
+            for j in range(len(output_layer.units)):
+                for k in range(offset):
+                    dErr_dw[k + j * offset] = net_inp[k] * delta[j]
+        delta_w[-1] = -dErr_dw
+        delta_next = delta
 
         # scan all layers from the penultimate to the first
         for i in reversed(range(len(self.__nn.layers) - 1)):
@@ -79,15 +94,15 @@ class SGD(Optimizer, ABC):
             for j in range(len(curr_layer.units)):
                 for l in range(len(next_layer.units)):
                     # dNet_dOut[offset * l + j]: weight (deriv of net wrt out) on the connection j --> l
-                    dErr_dOut_new[j] += dErr_dOut[l] * d_out[l] * next_layer.units[l].w[j]
+                    dErr_dOut_new[j] += dErr_dOut[l] * dOut_dNet[l] * next_layer.units[l].w[j]
                     # equivalent to:
                     #   offset = len(curr_layer.units)  # offset to select the right unit from the next layer
-                    #   dErr_dOut_new[j] += dErr_dOut[l] * d_out[l] * dNet_dOut[offset * l + j]
+                    #   dErr_dOut_new[j] += dErr_dOut[l] * dOut_dNet[l] * dNet_dOut[offset * l + j]
             dErr_dOut = dErr_dOut_new
 
-            # take new d_out and d_net wrt the current layer (no more the next)
+            # take new dOut_dNet and d_net wrt the current layer (no more the next)
             curr_act = curr_layer.act
-            d_out = [curr_act.deriv(u.net) for u in curr_layer.units]
+            dOut_dNet = [curr_act.deriv(u.net) for u in curr_layer.units]
             if i > 0:
                 prev_layer = self.__nn.layers[i - 1]
                 curr_layer_inputs = prev_layer.outputs
@@ -98,14 +113,14 @@ class SGD(Optimizer, ABC):
 
             # computer delta for the current layer
             delta = [np.dot(delta_next, [u.w[j] for u in next_layer.units]) for j in range(len(curr_layer.units))]
-            delta = np.multiply(delta, d_out, dtype=np.float_)
+            delta = np.multiply(delta, dOut_dNet, dtype=np.float_)
             delta_next = delta
             # equivalent to:
             # delta = np.zeros([len(curr_layer.units)])
             # for j in range(len(curr_layer.units)):
             #     for l in range(len(next_layer.units)):
             #         delta[j] += next_layer.units[l].w[j] * delta_next[l]
-            #     delta[j] *= d_out[j]
+            #     delta[j] *= dOut_dNet[j]
 
             # compute gradient of the error wrt this layer's weights
             dErr_dw = np.zeros([len(curr_layer.units) * len(curr_layer_inputs)])
@@ -125,11 +140,11 @@ class SGD(Optimizer, ABC):
                 prev_layer = self.__nn.layers[i - 1]
                 curr_layer_inputs = prev_layer.outputs
             offset = len(curr_layer_inputs)
-            for j in range(len(curr_layer.units)):
-                for k in range(len(curr_layer.units[j].w)):
-                    # TODO: delta_w[-1] is None, there's no weight update for the last layer --> fix it
-                    if delta_w[i] is not None:
-                        curr_layer.units[j].w[k] += self.lrn_rate * delta_w[i][k + j * offset]
+            curr_layer.weights += self.lrn_rate * delta_w[i]
+            # equivalent to:
+            # for j in range(len(curr_layer.units)):
+            #     for k in range(len(curr_layer.units[j].w)):
+            #         curr_layer.units[j].w[k] += self.lrn_rate * delta_w[i][k + j * offset]
 
 
 optimizers = {
@@ -137,6 +152,5 @@ optimizers = {
 }
 
 if __name__ == '__main__':
-    opt = optimizers['sgd'](Network(input_dim=3, units_per_layer=[2, 3, 2], acts=['relu', 'relu', 'relu']), 'squared')
-    opt.optimize(net_inp=[0.1, 0.1, 0.1], target=[1, 1])
-
+    opt = optimizers['sgd'](Network(input_dim=3, units_per_layer=[3, 3, 2], acts=['relu', 'relu', 'relu']), 'squared')
+    opt.optimize(net_inp=[0.1, 0.1, 0.1], target=[5, 5])
