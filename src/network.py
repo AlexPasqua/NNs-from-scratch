@@ -84,7 +84,6 @@ class Layer:
     Attributes:
         units: list of layer's units ('Unit' objects)
     """
-
     def __init__(self, units):
         """
         Constructor
@@ -132,7 +131,7 @@ class Layer:
     def forward_pass(self, inp):
         """
         Performs the forward pass on the current layer
-        :param inp: input vector
+        :param inp: (numpy ndarray) input vector
         :return: the vector of the current layer's soutputs
         """
         self.__outputs = [unit.output(inp) for unit in self.units]
@@ -230,7 +229,11 @@ class Network:
         :param inp: net's input vector
         :return: net's output
         """
+        if isinstance(inp, str):
+            raise AttributeError("'inp' must be a vector of numbers, got string")
         inp = np.array(inp)
+        if len(inp.shape) == 0:
+            inp = np.expand_dims(inp, 0)
         pattern_len = inp.shape[1] if len(inp.shape) > 1 else inp.shape[0]
         if pattern_len != self.input_dim:
             raise AttributeError(f"Mismatching lengths --> len(net_inp) = {len(inp)} ; input_sim = {self.input_dim}")

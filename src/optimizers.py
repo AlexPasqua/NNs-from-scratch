@@ -43,108 +43,111 @@ class SGD(Optimizer, ABC):
         if lrn_rate <= 0 or lrn_rate > 1:
             raise ValueError('lrn_rate should be a value between 0 and 1, Got:{}'.format(lrn_rate))
 
-    def optimize(self, net_inp, target):
+    def optimize(self, net_inp, targets):
+        """
+        :param net_inp: (numpy ndarray) inputs
+        :param targets:
+        :return:
+        """
         # ONLINE VERSION
-        net_outputs = self.__nn.forward(inp=net_inp)
-        err = self.loss.func(predicted=net_outputs, target=target)
+        if len(net_inp.shape) < 2:
+            net_inp = net_inp[np.newaxis, :]
+        if len(targets.shape) < 2:
+            targets = targets[np.newaxis, :]
 
-        output_layer = self.__nn.layers[-1]
-        output_act = output_layer.act
+        for pattern, target in zip(net_inp, targets):
+            net_outputs = self.__nn.forward(inp=pattern)
+            print(self.loss.func(predicted=net_outputs, target=target))
+            output_layer = self.__nn.layers[-1]
+            output_act = output_layer.act
 
-        # dErr_dOut: gradient of the error wrt the net's outputs
-        # dOut_dNet: gradient of the net's outputs wrt the output units' weighted sums
-        # dNet_dOut: gradient of the output units' weighted sum wrt the prev layer's outputs
-        dErr_dOut = self.loss.deriv(predicted=net_outputs, target=target)
-        dOut_dNet = [output_act.deriv(u.net) for u in output_layer.units]
-        dNet_dOut = [u.w[j] for u in output_layer.units for j in range(len(u.w))]
+            # dErr_dOut: gradient of the error wrt the net's outputs
+            # dOut_dNet: gradient of the net's outputs wrt the output units' weighted sums
+            dErr_dOut = self.loss.deriv(predicted=net_outputs, target=target)
+            dOut_dNet = [output_act.deriv(u.net) for u in output_layer.units]
 
-        # delta_next is the delta of the output layer
-        # 'next' is because it will be continuously overwritten with the delta of the next layer
-        # it's normal mult because the vecs have the same dimension and they are 'numpy ndarray'
-        delta = dErr_dOut * dOut_dNet
+            # it's normal mult because the vecs have the same dimension and they are 'numpy ndarray'
+            delta = dErr_dOut * dOut_dNet
 
-        # will contain all the delta_w to update the weights
-        delta_w = [None] * len(self.__nn.layers)
+            # will contain all the delta_w to update the weights
+            delta_w = [None] * len(self.__nn.layers)
 
-        # retrieve output of the penultimate layer to compute the weights update of the last layer
-        if len(self.__nn.layers) > 1:
-            penult_layer = self.__nn.layers[-2]
-            offset = len(penult_layer.units)
-            dErr_dw = np.zeros([len(output_layer.units) * offset])
-            for j in range(len(output_layer.units)):
-                for k in range(offset):
-                    dErr_dw[k + j * offset] = penult_layer.outputs[k] * delta[j]
-        else:
-            delta_w[-1] = delta * net_inp
-            offset = len(net_inp)
-            dErr_dw = np.zeros([offset * len(output_layer.units)])
-            for j in range(len(output_layer.units)):
-                for k in range(offset):
-                    dErr_dw[k + j * offset] = net_inp[k] * delta[j]
-        delta_w[-1] = -dErr_dw
-        delta_next = delta
-
-        # scan all layers from the penultimate to the first
-        for i in reversed(range(len(self.__nn.layers) - 1)):
-            curr_layer = self.__nn.layers[i]
-            next_layer = self.__nn.layers[i + 1]
-
-            # gradient of the error wrt the outputs of the CURRENT layer
-            dErr_dOut_new = np.zeros([len(curr_layer.units)])
-            for j in range(len(curr_layer.units)):
-                for l in range(len(next_layer.units)):
-                    # dNet_dOut[offset * l + j]: weight (deriv of net wrt out) on the connection j --> l
-                    dErr_dOut_new[j] += dErr_dOut[l] * dOut_dNet[l] * next_layer.units[l].w[j]
-                    # equivalent to:
-                    #   offset = len(curr_layer.units)  # offset to select the right unit from the next layer
-                    #   dErr_dOut_new[j] += dErr_dOut[l] * dOut_dNet[l] * dNet_dOut[offset * l + j]
-            dErr_dOut = dErr_dOut_new
-
-            # take new dOut_dNet and d_net wrt the current layer (no more the next)
-            curr_act = curr_layer.act
-            dOut_dNet = [curr_act.deriv(u.net) for u in curr_layer.units]
-            if i > 0:
-                prev_layer = self.__nn.layers[i - 1]
-                curr_layer_inputs = prev_layer.outputs
-                d_net = prev_layer.outputs
+            # retrieve output of the penultimate layer to compute the weights update of the last layer
+            if len(self.__nn.layers) > 1:
+                penult_layer = self.__nn.layers[-2]
+                offset = len(penult_layer.units)
+                dErr_dw = np.zeros([len(output_layer.units) * offset])
+                for j in range(len(output_layer.units)):
+                    for k in range(offset):
+                        dErr_dw[k + j * offset] = penult_layer.outputs[k] * delta[j]
             else:
-                d_net = net_inp
-                curr_layer_inputs = net_inp
-
-            # computer delta for the current layer
-            delta = [np.dot(delta_next, [u.w[j] for u in next_layer.units]) for j in range(len(curr_layer.units))]
-            delta = np.multiply(delta, dOut_dNet, dtype=np.float_)
+                delta_w[-1] = delta * pattern
+                offset = len(pattern)
+                dErr_dw = np.zeros([offset * len(output_layer.units)])
+                for j in range(len(output_layer.units)):
+                    for k in range(offset):
+                        dErr_dw[k + j * offset] = pattern[k] * delta[j]
+            delta_w[-1] = -dErr_dw
             delta_next = delta
-            # equivalent to:
-            # delta = np.zeros([len(curr_layer.units)])
-            # for j in range(len(curr_layer.units)):
-            #     for l in range(len(next_layer.units)):
-            #         delta[j] += next_layer.units[l].w[j] * delta_next[l]
-            #     delta[j] *= dOut_dNet[j]
 
-            # compute gradient of the error wrt this layer's weights
-            dErr_dw = np.zeros([len(curr_layer.units) * len(curr_layer_inputs)])
-            offset = len(curr_layer_inputs)
-            for j in range(len(curr_layer.units)):
-                for k in range(len(curr_layer_inputs)):
-                    dErr_dw[k + j * offset] = curr_layer_inputs[k] * delta[j]
+            # scan all layers from the penultimate to the first
+            for i in reversed(range(len(self.__nn.layers) - 1)):
+                curr_layer = self.__nn.layers[i]
+                next_layer = self.__nn.layers[i + 1]
 
-            delta_w[i] = -dErr_dw
+                # gradient of the error wrt the outputs of the CURRENT layer
+                dErr_dOut_new = np.zeros([len(curr_layer.units)])
+                for j in range(len(curr_layer.units)):
+                    for l in range(len(next_layer.units)):
+                        # dNet_dOut[offset * l + j]: weight (deriv of net wrt out) on the connection j --> l
+                        dErr_dOut_new[j] += dErr_dOut[l] * dOut_dNet[l] * next_layer.units[l].w[j]
+                dErr_dOut = dErr_dOut_new
 
-        # weights update
-        for i in range(len(self.__nn.layers)):
-            curr_layer = self.__nn.layers[i]
-            if i == 0:
-                curr_layer_inputs = net_inp
-            else:
-                prev_layer = self.__nn.layers[i - 1]
-                curr_layer_inputs = prev_layer.outputs
-            offset = len(curr_layer_inputs)
-            curr_layer.weights += self.lrn_rate * delta_w[i]
-            # equivalent to:
-            # for j in range(len(curr_layer.units)):
-            #     for k in range(len(curr_layer.units[j].w)):
-            #         curr_layer.units[j].w[k] += self.lrn_rate * delta_w[i][k + j * offset]
+                # take new dOut_dNet and d_net wrt the current layer (no more the next)
+                curr_act = curr_layer.act
+                dOut_dNet = [curr_act.deriv(u.net) for u in curr_layer.units]
+                if i > 0:
+                    prev_layer = self.__nn.layers[i - 1]
+                    curr_layer_inputs = prev_layer.outputs
+                    d_net = prev_layer.outputs
+                else:
+                    d_net = pattern
+                    curr_layer_inputs = pattern
+
+                # computer delta for the current layer
+                delta = [np.dot(delta_next, [u.w[j] for u in next_layer.units]) for j in range(len(curr_layer.units))]
+                delta = np.multiply(delta, dOut_dNet, dtype=np.float_)
+                delta_next = delta
+                # equivalent to:
+                # delta = np.zeros([len(curr_layer.units)])
+                # for j in range(len(curr_layer.units)):
+                #     for l in range(len(next_layer.units)):
+                #         delta[j] += next_layer.units[l].w[j] * delta_next[l]
+                #     delta[j] *= dOut_dNet[j]
+
+                # compute gradient of the error wrt this layer's weights
+                dErr_dw = np.zeros([len(curr_layer.units) * len(curr_layer_inputs)])
+                offset = len(curr_layer_inputs)
+                for j in range(len(curr_layer.units)):
+                    for k in range(len(curr_layer_inputs)):
+                        dErr_dw[k + j * offset] = curr_layer_inputs[k] * delta[j]
+
+                delta_w[i] = -dErr_dw
+
+            # weights update
+            for i in range(len(self.__nn.layers)):
+                curr_layer = self.__nn.layers[i]
+                if i == 0:
+                    curr_layer_inputs = pattern
+                else:
+                    prev_layer = self.__nn.layers[i - 1]
+                    curr_layer_inputs = prev_layer.outputs
+                offset = len(curr_layer_inputs)
+                curr_layer.weights += self.lrn_rate * delta_w[i]
+                # equivalent to:
+                # for j in range(len(curr_layer.units)):
+                #     for k in range(len(curr_layer.units[j].w)):
+                #         curr_layer.units[j].w[k] += self.lrn_rate * delta_w[i][k + j * offset]
 
 
 optimizers = {
@@ -153,4 +156,5 @@ optimizers = {
 
 if __name__ == '__main__':
     opt = optimizers['sgd'](Network(input_dim=3, units_per_layer=[3, 3, 2], acts=['relu', 'relu', 'relu']), 'squared')
-    opt.optimize(net_inp=[0.1, 0.1, 0.1], target=[5, 5])
+    opt.optimize(net_inp=np.array([[0.1, 0.1, 0.1], [0.2, 4.1, 0.1], [0.1, 0.1, 1.1]]),
+                 targets=np.array([[5, 5], [5, 6], [5, 2]]))

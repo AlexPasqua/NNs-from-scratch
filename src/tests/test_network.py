@@ -32,8 +32,7 @@ class TestNetwork(unittest.TestCase):
 
     def test_fit(self):
         net = Network(input_dim=3, units_per_layer=[6, 2], acts=['relu', 'relu'])
-        self.assertRaises(AttributeError, net.fit, inp=(1, 1, 1), target=(1, 0, 1))
-        self.assertRaises(AttributeError, net.fit, inp=[1, 1, 1], target='ciao')
+        self.assertRaises(AttributeError, net.fit, inp=[1, 1], target=[1, 2, 3])
 
 
 if __name__ == '__main__':
