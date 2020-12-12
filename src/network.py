@@ -18,6 +18,7 @@ class Unit:
         b: bias
         act: activation function
     """
+
     def __init__(self, w, b, act):
         """
         Constructor
@@ -83,6 +84,7 @@ class Layer:
     Attributes:
         units: list of layer's units ('Unit' objects)
     """
+
     def __init__(self, units):
         """
         Constructor
@@ -125,7 +127,7 @@ class Layer:
             n_weights = len(self.units[i].w)
             start = i * n_weights
             end = start + n_weights
-            self.units[i].w = value[start : end]
+            self.units[i].w = value[start: end]
 
     def forward_pass(self, inp):
         """
@@ -144,7 +146,9 @@ class Network:
     Attributes:
         layers: list of net's layers ('Layer' objects)
     """
-    def __init__(self, input_dim=3, units_per_layer=(3, 2), acts=('relu', 'sigmoid'), weights_init='uniform', weights_value=0.1, **kwargs):
+
+    def __init__(self, input_dim=3, units_per_layer=(3, 2), acts=('relu', 'sigmoid'), weights_init='uniform',
+                 weights_value=0.1, **kwargs):
         """
         Constructor
         :param input_dim: the input dimension
@@ -173,11 +177,12 @@ class Network:
             # for every unit in the current layer create layer's units
             for j in range(units_per_layer[i]):
                 units.append(
-                    Unit(w=weights_inits(type=weights_init, n_weights=n_weights, lower_lim=0., upper_lim=1., value=weights_value),
-                         b=weights_inits(type=weights_init, n_weights=1, lower_lim=0., upper_lim=1., value=weights_value),
+                    Unit(w=weights_inits(type=weights_init, n_weights=n_weights, lower_lim=0., upper_lim=1.,
+                                         value=weights_value),
+                         b=weights_inits(type=weights_init, n_weights=1, lower_lim=0., upper_lim=1.,
+                                         value=weights_value),
                          act=act_funcs[acts[i]])
                 )
-
             self.layers.append(Layer(units=units))
             units = []
 
@@ -186,10 +191,9 @@ class Network:
         if input_dim < 1 or any(n_units < 1 for n_units in units_per_layer):
             raise ValueError("input_dim and every value in units_per_layer must be positive")
         if len(units_per_layer) != len(acts):
-            raise AttributeError(f"Mismatching lengths --> len(units_per_layer) = {len(units_per_layer)} ; len(acts) = {len(acts)}")
+            raise AttributeError(f"Mismatching lengths --> len(units_per_layer)={len(units_per_layer)}; len(acts)={len(acts)}")
         if any(act not in act_funcs.keys() for act in acts):
             raise ValueError("Invalid activation function")
-
 
     @property
     def input_dim(self):
@@ -219,24 +223,6 @@ class Network:
             "acts": self.acts,
         }
 
-    # def set_input_dim(self, input_dim):
-    #     """
-    #     Set the hyper-parameter input dimension of the Network
-    #     """
-    #     self.input_dim = input_dim
-    #
-    # def set_units_per_layer(self,units_per_layer):
-    #     """
-    #     Set the hyper-parameter units per layer of the Network
-    #     """
-    #     self.units_per_layer = units_per_layer
-    #
-    # def set_acts(self, acts):
-    #     """
-    #     Set the types of activation function of the Network
-    #     """
-    #     self.acts = acts
-
     def forward(self, inp=(2, 2, 2), verbose=False):
         """
         Performs a complete forward pass on the whole NN
@@ -244,12 +230,10 @@ class Network:
         :param inp: net's input vector
         :return: net's output
         """
-        if not hasattr(inp, '__iter__'):
-            raise AttributeError(f"'inp must be a list or a number, got {type(inp)}")
-        if len(inp) != self.input_dim:
+        inp = np.array(inp)
+        pattern_len = inp.shape[1] if len(inp.shape) > 1 else inp.shape[0]
+        if pattern_len != self.input_dim:
             raise AttributeError(f"Mismatching lengths --> len(net_inp) = {len(inp)} ; input_sim = {self.input_dim}")
-        if any(not isinstance(i, Number) for i in inp):
-            raise AttributeError("'inp' must be a vector of numbers")
 
         if verbose:
             print(f"Net's inputs: {inp}")
@@ -273,13 +257,15 @@ class Network:
         :param target: list of arrays, each array corresponds to a pattern
             and each of its elements is the target for the i-th output unit
         """
-        if not hasattr(inp, '__iter__') or not hasattr(target, '__iter__'):
-            raise AttributeError(f"'inp' and 'target' attributes must be iterable, got {type(inp)} and {type(target)}")
         target = np.array(target)
         inp = np.array(inp)
-        if len(target.shape) > 1:
-            if target.shape[1] != len(self.layers[-1].units):
-                raise Exception(f"Mismatching shapes --> target: {target.shape} ; output units: {len(self.layers[-1].units)}")
+        target_len = target.shape[1] if len(target.shape) > 1 else target.shape[0]
+        if target_len != len(self.layers[-1].units):
+            raise AttributeError(
+                f"Mismatching shapes --> target: {target.shape} ; output units: {len(self.layers[-1].units)}")
+        n_pattern = inp.shape[0] if len(inp.shape) > 1 else 1
+        n_target = target.shape[0] if len(target.shape) > 1 else 1
+        assert(n_pattern == n_target)
         self.__opt.optimize(net_inp=inp, target=target)
 
     def print_net(self):
