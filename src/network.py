@@ -229,7 +229,11 @@ class Network:
         :param inp: net's input vector
         :return: net's output
         """
+        if isinstance(inp, str):
+            raise AttributeError("'inp' must be a vector of numbers, got string")
         inp = np.array(inp)
+        if len(inp.shape) == 0:
+            inp = np.expand_dims(inp, 0)
         pattern_len = inp.shape[1] if len(inp.shape) > 1 else inp.shape[0]
         if pattern_len != self.input_dim:
             raise AttributeError(f"Mismatching lengths --> len(net_inp) = {len(inp)} ; input_sim = {self.input_dim}")
