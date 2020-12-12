@@ -43,18 +43,18 @@ class SGD(Optimizer, ABC):
         if lrn_rate <= 0 or lrn_rate > 1:
             raise ValueError('lrn_rate should be a value between 0 and 1, Got:{}'.format(lrn_rate))
 
-    def optimize(self, net_inp, target):
+    def optimize(self, net_inp, targets):
         """
         :param net_inp: (numpy ndarray) inputs
-        :param target: (numpy ndarray)
+        :param targets:
         :return:
         """
         # ONLINE VERSION
         if len(net_inp.shape) < 2:
             net_inp = net_inp[np.newaxis, :]
-        for pattern in net_inp:
-            print(pattern)
-            continue
+        if len(targets.shape) < 2:
+            targets = targets[np.newaxis, :]
+        for pattern, target in zip(net_inp, targets):
             net_outputs = self.__nn.forward(inp=pattern)
             output_layer = self.__nn.layers[-1]
             output_act = output_layer.act
@@ -155,4 +155,4 @@ optimizers = {
 if __name__ == '__main__':
     opt = optimizers['sgd'](Network(input_dim=3, units_per_layer=[3, 3, 2], acts=['relu', 'relu', 'relu']), 'squared')
     opt.optimize(net_inp=np.array([[0.1, 0.1, 0.1], [0.1, 0.1, 0.1], [0.1, 0.1, 0.1]]),
-                 target=np.array([[5, 5], [5, 5], [5, 5]]))
+                 targets=np.array([[5, 5], [5, 5], [5, 5]]))
