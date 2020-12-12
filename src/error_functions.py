@@ -5,16 +5,32 @@ from Function import Function
 def mean_euclidean_error(predicted, target):
     """
     Computes the Mean Euclidean Error between
-    the targ vector and the output pred by the net
+    the targ vector and the output pred by the net over all patterns
 
     :param predicted: ndarray of shape (n, m) – Predictions for the n examples
     :param target: ndarray of shape (n, m) – Ground truth w_vals for each of n examples
     :return: loss in term of mee (Mean Euclidean Error)
     """
+
+    if predicted.shape != target.shape:
+        raise Exception(f"Mismatching shapes in MEE: predictions shape: "
+                        f"{predicted.shape} - targets shape {target.shape}")
+    return np.linalg.norm(predicted - target) / target.shape[0]
+
+
+def mean_squared_error(predicted, target):
+    """
+    Computes the Mean Squared Error between
+    the targ vector and the output pred by the net over all patterns
+
+    :param predicted: ndarray of shape (n, m) – Predictions for the n examples
+    :param target: ndarray of shape (n, m) – Ground truth w_vals for each of n examples
+    :return: loss in term of mse (Mean Squared Error)
+    """
     if predicted.shape != target.shape:
         raise Exception(f"Mismatching shapes in MSE: predictions shape: "
                         f"{predicted.shape} - targets shape {target.shape}")
-    return np.linalg.norm(predicted - target) / target.shape[0]
+    return (np.sum(np.square(predicted - target))) / predicted.shape[0]
 
 
 # def mean_euclidean_error_deriv(pred, targ):
@@ -33,8 +49,10 @@ def mean_euclidean_error(predicted, target):
 
 
 MEE = Function(mean_euclidean_error, 'mee')
+MSE = Function(mean_squared_error, 'mse')
 err_funcs = {
-    'mee': MEE
+    'mee': MEE,
+    'mse': MSE
 }
 
 if __name__ == '__main__':
@@ -48,3 +66,5 @@ if __name__ == '__main__':
     )
 
     print(f"MEE:{err_funcs['mee'].func(predicted, target)}")
+    print(f"MSE:{err_funcs['mse'].func(predicted, target)}")
+
