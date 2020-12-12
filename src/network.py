@@ -84,7 +84,6 @@ class Layer:
     Attributes:
         units: list of layer's units ('Unit' objects)
     """
-
     def __init__(self, units):
         """
         Constructor
@@ -132,7 +131,7 @@ class Layer:
     def forward_pass(self, inp):
         """
         Performs the forward pass on the current layer
-        :param inp: input vector
+        :param inp: (numpy ndarray) input vector
         :return: the vector of the current layer's soutputs
         """
         self.__outputs = [unit.output(inp) for unit in self.units]
