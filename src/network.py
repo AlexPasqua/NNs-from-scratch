@@ -115,14 +115,13 @@ class Layer:
 
     @weights.setter
     def weights(self, value):
-        if isinstance(value, list):
-            for n in value:
-                if not isinstance(n, Number):
-                    raise ValueError("layer's weights must be numeric. Got: ", type(value[0]))
+        if hasattr(value, '__iter__'):
+            if not all(isinstance(n, Number) for n in value):
+                raise ValueError("layer's weights must be numeric. Got: ", type(value[0]))
             if len(value) != len(self.weights):
                 raise AttributeError("'value' must have the same length of the layer's weights")
         else:
-            raise AttributeError(f"'value' must be a list, got {type(value)}")
+            raise AttributeError(f"'value' must be a iterable, got {type(value)}")
         for i in range(len(self.units)):
             n_weights = len(self.units[i].w)
             start = i * n_weights

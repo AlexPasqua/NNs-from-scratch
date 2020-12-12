@@ -140,9 +140,11 @@ class SGD(Optimizer, ABC):
                 prev_layer = self.__nn.layers[i - 1]
                 curr_layer_inputs = prev_layer.outputs
             offset = len(curr_layer_inputs)
-            for j in range(len(curr_layer.units)):
-                for k in range(len(curr_layer.units[j].w)):
-                    curr_layer.units[j].w[k] += self.lrn_rate * delta_w[i][k + j * offset]
+            curr_layer.weights += self.lrn_rate * delta_w[i]
+            # equivalent to:
+            # for j in range(len(curr_layer.units)):
+            #     for k in range(len(curr_layer.units[j].w)):
+            #         curr_layer.units[j].w[k] += self.lrn_rate * delta_w[i][k + j * offset]
 
 
 optimizers = {
@@ -150,5 +152,5 @@ optimizers = {
 }
 
 if __name__ == '__main__':
-    opt = optimizers['sgd'](Network(input_dim=3, units_per_layer=[2, 3, 2], acts=['relu', 'relu', 'relu']), 'squared')
+    opt = optimizers['sgd'](Network(input_dim=3, units_per_layer=[3, 3, 2], acts=['relu', 'relu', 'relu']), 'squared')
     opt.optimize(net_inp=[0.1, 0.1, 0.1], target=[5, 5])
