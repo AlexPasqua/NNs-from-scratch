@@ -124,4 +124,3 @@ if __name__ == '__main__':
     print(f"Threshold(-1.8): {act_funcs['threshold'].func(-1.8)}")
     print(f"Threshold(0.5): {act_funcs['threshold'].func(0.5)}")
     print(f"Derivative of threshold(1): {act_funcs['threshold'].deriv(1)}")
-
