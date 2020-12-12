@@ -13,11 +13,6 @@ def weights_inits(**kwargs):
 
 
 def uniform_init(n_weights, value, **kwargs):
-    # required = ('n_weights', 'value')
-    # if not all(arg in kwargs.keys() for arg in required):
-    #     raise AttributeError(f"{required} parameters are required")
-    # n_weights = kwargs['n_weights']
-    # value = kwargs['value']
     return [value] * n_weights if n_weights > 1 else value
 
 
