@@ -7,7 +7,6 @@ from optimizers import *
 from losses import losses
 from numbers import Number
 from weights_inits import weights_inits
-from weights_inits import weights_inits
 
 
 class Unit:
@@ -388,4 +387,3 @@ if __name__ == '__main__':
 
     if args.verbose:
         net.print_net()
-
