@@ -1,5 +1,6 @@
 import numpy as np
-from Function import Function
+from src.Function import Function
+from src.losses import losses
 
 
 def mean_euclidean_error(predicted, target):
@@ -7,14 +8,15 @@ def mean_euclidean_error(predicted, target):
     Computes the Mean Euclidean Error between
     the targ vector and the output pred by the net over all patterns
 
+    :type predicted: object
     :param predicted: ndarray of shape (n, m) – Predictions for the n examples
     :param target: ndarray of shape (n, m) – Ground truth w_vals for each of n examples
     :return: loss in term of mee (Mean Euclidean Error)
     """
 
     if predicted.shape != target.shape:
-        raise Exception(f"Mismatching shapes in MEE: predictions shape: "
-                        f"{predicted.shape} - targets shape {target.shape}")
+        raise AttributeError(f"Mismatching shapes in MEE: predictions shape: "
+                             f"{predicted.shape} - targets shape {target.shape}")
     return np.linalg.norm(predicted - target) / target.shape[0]
 
 
@@ -23,14 +25,15 @@ def mean_squared_error(predicted, target):
     Computes the Mean Squared Error between
     the targ vector and the output pred by the net over all patterns
 
+    :type predicted: object
     :param predicted: ndarray of shape (n, m) – Predictions for the n examples
     :param target: ndarray of shape (n, m) – Ground truth w_vals for each of n examples
     :return: loss in term of mse (Mean Squared Error)
     """
     if predicted.shape != target.shape:
-        raise Exception(f"Mismatching shapes in MSE: predictions shape: "
-                        f"{predicted.shape} - targets shape {target.shape}")
-    return (np.sum(np.square(predicted - target))) / predicted.shape[0]
+        raise AttributeError(f"Mismatching shapes in MEE: predictions shape: "
+                             f"{predicted.shape} - targets shape {target.shape}")
+    return np.sum(losses['squared'].func(predicted, target))
 
 
 # def mean_euclidean_error_deriv(pred, targ):
