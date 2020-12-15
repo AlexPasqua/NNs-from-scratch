@@ -15,7 +15,7 @@ def squared_loss(predicted, target):
     predicted = np.array(predicted)
     target = np.array(target)
     if predicted.shape != target.shape:
-        raise Exception(f"Mismatching shapes in Squared Loss: predictions shape: "
+        raise AttributeError(f"Mismatching shapes in Squared Loss: predictions shape: "
                         f"{predicted.shape} - targets shape {target.shape}")
 
     # MSE of the whole net would be
@@ -50,12 +50,12 @@ losses = {
 if __name__ == '__main__':
     # Test loss functions
     print('\nArrays for testing loss functions:')
-    pred = [1, 0, 0, 1]
-    targ = [1, 1, 0, 0]
+    pred = [[1, 0, 0, 1], [1, 0, 1, 1]]
+    targ = [[1, 0, 0, 0], [1, 1, 0, 1]]
 
     print(f"pred:\t{pred}\n")
-    print(f"targ:\t{targ}")
+    print(f"targ:\t{targ}\n")
     print('Loss functions test:')
-    print(f"squared loss:\t{losses['squared'].func(pred, targ)}")
+    print(f"squared loss:\t{losses['squared'].func(pred, targ)}\n")
     print(f"squared loss deriv:\t{losses['squared'].deriv(pred, targ)}")
 
