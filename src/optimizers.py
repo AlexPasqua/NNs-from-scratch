@@ -62,6 +62,20 @@ class SGD(Optimizer, ABC):
 
             dErr_dOut = self.loss.deriv(predicted=net_outputs, target=target)
             dOut_dNet = [output_act.deriv(u.net) for u in output_layer.units]
+            delta = -dErr_dOut * dOut_dNet
+
+            # retrieve the inputs of the output layer to compute the weights update for the output layer
+            out_layer_inputs = self.__nn.layers[-2].outputs if len(self.__nn.layers) > 1 else net_inp
+
+            dErr_dw = [
+                -delta[j] * out_layer_inputs[i]
+                for j in range(len(delta))
+                for i in range(len(out_layer_inputs))
+            ]
+            dErr_dw = np.reshape(dErr_dw, newshape=(6,))
+
+            # will contain all the delta_weights to update the weights
+            delta_weights = [None] * len(self.__nn.layers)
 
         # for z in range(5):
         #     for pattern, target in zip(net_inp, targets):
