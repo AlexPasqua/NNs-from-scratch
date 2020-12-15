@@ -20,8 +20,6 @@ def squared_loss(predicted, target):
 
     # MSE of the whole net would be
     # np.sum(np.square(pred - targ)) / (targ.shape[0] * 2)
-    print(predicted - target)
-    print(np.square(predicted - target))
     return 0.5 * np.square(predicted - target)    # "0.5" is to make the gradient simpler
 
 

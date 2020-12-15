@@ -13,7 +13,6 @@ def mean_euclidean_error(predicted, target):
     :param target: ndarray of shape (n, m) – Ground truth w_vals for each of n examples
     :return: loss in term of mee (Mean Euclidean Error)
     """
-
     if predicted.shape != target.shape:
         raise AttributeError(f"Mismatching shapes in MEE: predictions shape: "
                              f"{predicted.shape} - targets shape {target.shape}")
@@ -33,7 +32,8 @@ def mean_squared_error(predicted, target):
     if predicted.shape != target.shape:
         raise AttributeError(f"Mismatching shapes in MEE: predictions shape: "
                              f"{predicted.shape} - targets shape {target.shape}")
-    return np.sum(losses['squared'].func(predicted=predicted, target=target))
+    n_patterns = predicted.shape[0]
+    return np.sum(losses['squared'].func(predicted=predicted, target=target)) / n_patterns
 
 
 # def mean_euclidean_error_deriv(pred, targ):
