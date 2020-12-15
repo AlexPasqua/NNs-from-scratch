@@ -37,10 +37,6 @@ class Unit:
     def w(self):
         return self.__w
 
-    @w.setter
-    def w(self, value):
-        self.__w = value
-
     @property
     def b(self):
         return self.__b
@@ -56,6 +52,14 @@ class Unit:
     @property
     def net(self):
         return self.__net
+
+    @w.setter
+    def w(self, value):
+        self.__w = value
+
+    @b.setter
+    def b(self, value):
+        self.__b = value
 
     # def net(self, inp):
     #     """
@@ -102,8 +106,35 @@ class Layer:
         return self.__units
 
     @property
-    def weights(self):
+    def weights_only(self):
+        """
+        :return: vector of layer's weights (NOT biases)
+        """
         return [u.w[i] for u in self.__units for i in range(len(u.w))]
+
+    @property
+    def weights_biases(self):
+        """
+        :return: vector of layer's weights and biases
+        """
+        wb = np.zeros([len(self.units) * (len(self.units[0].w) + 1)])
+        for j in range(len(self.units)):
+            u = self.units[j]
+            offset = len(u.w) + 1
+            wb[offset * (j + 1) - 1] = u.b
+            for k in range(len(u.w)):
+                wb[k + offset * j] = u.w[k]
+        return wb
+
+    @staticmethod
+    def __check_vectors(self, passed, own):
+        if hasattr(passed, '__iter__'):
+            if not all(isinstance(n, Number) for n in passed):
+                raise ValueError("layer's weights must be numeric. Got: ", type(passed[0]))
+            if len(passed) != len(own):
+                raise AttributeError("'value' must have the same length of the layer's weights")
+        else:
+            raise AttributeError(f"'value' must be a iterable, got {type(passed)}")
 
     @property
     def act(self):
@@ -113,20 +144,24 @@ class Layer:
     def outputs(self):
         return self.__outputs
 
-    @weights.setter
-    def weights(self, value):
-        if hasattr(value, '__iter__'):
-            if not all(isinstance(n, Number) for n in value):
-                raise ValueError("layer's weights must be numeric. Got: ", type(value[0]))
-            if len(value) != len(self.weights):
-                raise AttributeError("'value' must have the same length of the layer's weights")
-        else:
-            raise AttributeError(f"'value' must be a iterable, got {type(value)}")
+    @weights_only.setter
+    def weights_only(self, value):
+        self.__check_vectors(self, passed=value, own=self.weights_only)
         for i in range(len(self.units)):
             n_weights = len(self.units[i].w)
             start = i * n_weights
             end = start + n_weights
             self.units[i].w = value[start: end]
+
+    @weights_biases.setter
+    def weights_biases(self, value):
+        self.__check_vectors(self, passed=value, own=self.weights_biases)
+        for i in range(len(self.units)):
+            n = len(self.units[i].w)
+            start = i * n
+            end = start + n
+            self.units[i].w = value[start: end]
+            self.units[i].b = value[end]
 
     def forward_pass(self, inp):
         """
@@ -190,7 +225,8 @@ class Network:
         if input_dim < 1 or any(n_units < 1 for n_units in units_per_layer):
             raise ValueError("input_dim and every value in units_per_layer must be positive")
         if len(units_per_layer) != len(acts):
-            raise AttributeError(f"Mismatching lengths --> len(units_per_layer)={len(units_per_layer)}; len(acts)={len(acts)}")
+            raise AttributeError(
+                f"Mismatching lengths --> len(units_per_layer)={len(units_per_layer)}; len(acts)={len(acts)}")
         if any(act not in act_funcs.keys() for act in acts):
             raise ValueError("Invalid activation function")
 
@@ -268,7 +304,7 @@ class Network:
                 f"Mismatching shapes --> target: {target.shape} ; output units: {len(self.layers[-1].units)}")
         n_pattern = inp.shape[0] if len(inp.shape) > 1 else 1
         n_target = target.shape[0] if len(target.shape) > 1 else 1
-        assert(n_pattern == n_target)
+        assert (n_pattern == n_target)
         self.__opt.optimize(net_inp=inp, target=target)
 
     def print_net(self):

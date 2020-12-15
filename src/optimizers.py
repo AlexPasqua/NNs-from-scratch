@@ -57,9 +57,9 @@ class SGD(Optimizer, ABC):
 
         for pattern, target in zip(net_inp, targets):
             net_outputs = self.__nn.forward(inp=pattern)
-            print(self.loss.func(predicted=net_outputs, target=target))
             output_layer = self.__nn.layers[-1]
             output_act = output_layer.act
+            n_out_units = len(output_layer.units)
 
             # dErr_dOut: gradient of the error wrt the net's outputs
             # dOut_dNet: gradient of the net's outputs wrt the output units' weighted sums
@@ -75,17 +75,21 @@ class SGD(Optimizer, ABC):
             # retrieve output of the penultimate layer to compute the weights update of the last layer
             if len(self.__nn.layers) > 1:
                 penult_layer = self.__nn.layers[-2]
-                offset = len(penult_layer.units)
-                dErr_dw = np.zeros([len(output_layer.units) * offset])
-                for j in range(len(output_layer.units)):
-                    for k in range(offset):
+                offset = len(penult_layer.units) + 1    # + 1 for bias
+                dErr_dw = np.zeros([n_out_units * offset])
+                for j in range(n_out_units):
+                    # set dErr_dw wrt biases
+                    dErr_dw[offset * (j+1) - 1] = 1.
+                    # set dErr_dw wrt weights
+                    for k in range(offset - 1):
                         dErr_dw[k + j * offset] = penult_layer.outputs[k] * delta[j]
             else:
-                delta_w[-1] = delta * pattern
-                offset = len(pattern)
-                dErr_dw = np.zeros([offset * len(output_layer.units)])
-                for j in range(len(output_layer.units)):
-                    for k in range(offset):
+                delta_w[-1] = [delta_j * pattern_k for delta_j in delta for pattern_k in pattern]
+                offset = len(pattern) + 1
+                dErr_dw = np.zeros([n_out_units * offset])
+                for j in range(n_out_units):
+                    dErr_dw[offset * (j+1) - 1] = 1.
+                    for k in range(offset - 1):
                         dErr_dw[k + j * offset] = pattern[k] * delta[j]
             delta_w[-1] = -dErr_dw
             delta_next = delta
@@ -143,7 +147,7 @@ class SGD(Optimizer, ABC):
                     prev_layer = self.__nn.layers[i - 1]
                     curr_layer_inputs = prev_layer.outputs
                 offset = len(curr_layer_inputs)
-                curr_layer.weights += self.lrn_rate * delta_w[i]
+                curr_layer.weights_biases += self.lrn_rate * delta_w[i]
                 # equivalent to:
                 # for j in range(len(curr_layer.units)):
                 #     for k in range(len(curr_layer.units[j].w)):
@@ -155,6 +159,6 @@ optimizers = {
 }
 
 if __name__ == '__main__':
-    opt = optimizers['sgd'](Network(input_dim=3, units_per_layer=[3, 3, 2], acts=['relu', 'relu', 'relu']), 'squared')
+    opt = optimizers['sgd'](Network(input_dim=3, units_per_layer=[2], acts=['relu']), 'squared')
     opt.optimize(net_inp=np.array([[0.1, 0.1, 0.1], [0.2, 4.1, 0.1], [0.1, 0.1, 1.1]]),
                  targets=np.array([[5, 5], [5, 6], [5, 2]]))
