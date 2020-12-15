@@ -60,6 +60,9 @@ class SGD(Optimizer, ABC):
             output_act = output_layer.act
             net_outputs = self.__nn.forward(inp=pattern)
 
+            err = self.loss.func(predicted=net_outputs, target=target)
+            print('Loss: ', np.sum(err) / len(err))
+
             dErr_dOut = self.loss.deriv(predicted=net_outputs, target=target)
             dOut_dNet = [output_act.deriv(u.net) for u in output_layer.units]
             delta = -dErr_dOut * dOut_dNet
@@ -134,5 +137,8 @@ if __name__ == '__main__':
             weights_value=0.5
         ),
         loss='squared')
-    opt.optimize(net_inp=np.array([0.1, 0.1, 0.1]),
-                 targets=np.array([0.5, 0.5]))
+    n_patterns = 20
+    inputs = np.reshape([0.1, 0.1, 0.1] * n_patterns, newshape=(n_patterns, 3))
+    targets = np.reshape([0.5, 0.5] * n_patterns, newshape=(n_patterns, 2))
+    opt.optimize(net_inp=np.array(inputs),
+                 targets=np.array(targets))
