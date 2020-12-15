@@ -58,7 +58,6 @@ class SGD(Optimizer, ABC):
         for pattern, target in zip(net_inp, targets):
             output_layer = self.__nn.layers[-1]
             output_act = output_layer.act
-            n_out_units = len(output_layer.units)
             net_outputs = self.__nn.forward(inp=pattern)
 
             dErr_dOut = self.loss.deriv(predicted=net_outputs, target=target)
@@ -87,6 +86,13 @@ class SGD(Optimizer, ABC):
                 next_layer = self.__nn.layers[layer_index + 1]
                 n_curr_units = len(curr_layer.units)    # number of units in the current layer
                 n_next_units = len(next_layer.units)    # number of units in the next layer
+
+                # compute dErr_dOut of the current layer
+                dErr_dOut_new = np.zeros([n_curr_units])
+                for j in range(n_curr_units):
+                    for l in range(n_next_units):
+                        dErr_dOut_new[j] += dErr_dOut[l] * dOut_dNet[l] * next_layer.units[l].w[j]
+                dErr_dOut = dErr_dOut_new
 
         # for z in range(5):
         #     for pattern, target in zip(net_inp, targets):
