@@ -84,11 +84,12 @@ class SGD(Optimizer, ABC):
                     for k in range(offset - 1):
                         dErr_dw[k + j * offset] = penult_layer.outputs[k] * delta[j]
             else:
-                delta_w[-1] = delta * pattern
-                offset = len(pattern)
-                dErr_dw = np.zeros([offset * len(output_layer.units)])
-                for j in range(len(output_layer.units)):
-                    for k in range(offset):
+                delta_w[-1] = [delta_j * pattern_k for delta_j in delta for pattern_k in pattern]
+                offset = len(pattern) + 1
+                dErr_dw = np.zeros([n_out_units * offset])
+                for j in range(n_out_units):
+                    dErr_dw[offset * (j+1) - 1] = 1.
+                    for k in range(offset - 1):
                         dErr_dw[k + j * offset] = pattern[k] * delta[j]
             delta_w[-1] = -dErr_dw
             delta_next = delta
@@ -158,6 +159,6 @@ optimizers = {
 }
 
 if __name__ == '__main__':
-    opt = optimizers['sgd'](Network(input_dim=3, units_per_layer=[3, 3, 2], acts=['relu', 'relu', 'relu']), 'squared')
+    opt = optimizers['sgd'](Network(input_dim=3, units_per_layer=[2], acts=['relu']), 'squared')
     opt.optimize(net_inp=np.array([[0.1, 0.1, 0.1], [0.2, 4.1, 0.1], [0.1, 0.1, 1.1]]),
                  targets=np.array([[5, 5], [5, 6], [5, 2]]))
