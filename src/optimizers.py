@@ -59,6 +59,7 @@ class SGD(Optimizer, ABC):
             net_outputs = self.__nn.forward(inp=pattern)
             output_layer = self.__nn.layers[-1]
             output_act = output_layer.act
+            n_out_units = len(output_layer.units)
 
             # dErr_dOut: gradient of the error wrt the net's outputs
             # dOut_dNet: gradient of the net's outputs wrt the output units' weighted sums
@@ -74,12 +75,13 @@ class SGD(Optimizer, ABC):
             # retrieve output of the penultimate layer to compute the weights update of the last layer
             if len(self.__nn.layers) > 1:
                 penult_layer = self.__nn.layers[-2]
-                offset = len(penult_layer.units)
-                dErr_dw = np.zeros([len(output_layer.units) * offset + len(output_layer.units)])
-                print(dErr_dw)
-                return
-                for j in range(len(output_layer.units)):
-                    for k in range(offset):
+                offset = len(penult_layer.units) + 1    # + 1 for bias
+                dErr_dw = np.zeros([n_out_units * offset])
+                for j in range(n_out_units):
+                    # set dErr_dw wrt biases
+                    dErr_dw[offset * (j+1) - 1] = 1.
+                    # set dErr_dw wrt weights
+                    for k in range(offset - 1):
                         dErr_dw[k + j * offset] = penult_layer.outputs[k] * delta[j]
             else:
                 delta_w[-1] = delta * pattern
