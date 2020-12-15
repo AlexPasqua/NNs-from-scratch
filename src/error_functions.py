@@ -16,7 +16,8 @@ def mean_euclidean_error(predicted, target):
     if predicted.shape != target.shape:
         raise AttributeError(f"Mismatching shapes in MEE: predictions shape: "
                              f"{predicted.shape} - targets shape {target.shape}")
-    return np.linalg.norm(predicted - target) / target.shape[0]
+    n_patterns = predicted.shape[0]
+    return np.linalg.norm(predicted - target) / n_patterns
 
 
 def mean_squared_error(predicted, target):
@@ -70,4 +71,3 @@ if __name__ == '__main__':
 
     print(f"MEE:{err_funcs['mee'].func(predicted, target)}")
     print(f"MSE:{err_funcs['mse'].func(predicted, target)}")
-
