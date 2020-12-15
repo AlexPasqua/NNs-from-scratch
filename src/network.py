@@ -88,7 +88,6 @@ class Layer:
     Attributes:
         units: list of layer's units ('Unit' objects)
     """
-
     def __init__(self, units):
         """
         Constructor
@@ -108,10 +107,16 @@ class Layer:
 
     @property
     def weights_only(self):
+        """
+        :return: vector of layer's weights (NOT biases)
+        """
         return [u.w[i] for u in self.__units for i in range(len(u.w))]
 
     @property
     def weights_biases(self):
+        """
+        :return: vector of layer's weights and biases
+        """
         wb = np.zeros([len(self.units) * (len(self.units[0].w) + 1)])
         for j in range(len(self.units)):
             u = self.units[j]
