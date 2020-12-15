@@ -58,6 +58,7 @@ class SGD(Optimizer, ABC):
         for pattern, target in zip(net_inp, targets):
             output_layer = self.__nn.layers[-1]
             output_act = output_layer.act
+            n_out_units = len(output_layer.units)
             net_outputs = self.__nn.forward(inp=pattern)
 
             dErr_dOut = self.loss.deriv(predicted=net_outputs, target=target)
@@ -65,17 +66,26 @@ class SGD(Optimizer, ABC):
             delta = -dErr_dOut * dOut_dNet
 
             # retrieve the inputs of the output layer to compute the weights update for the output layer
-            out_layer_inputs = self.__nn.layers[-2].outputs if len(self.__nn.layers) > 1 else net_inp
-
+            out_layer_inputs = self.__nn.layers[-2].outputs if len(self.__nn.layers) > 1 else pattern
             dErr_dw = [
                 -delta[j] * out_layer_inputs[i]
                 for j in range(len(delta))
                 for i in range(len(out_layer_inputs))
             ]
-            dErr_dw = np.reshape(dErr_dw, newshape=(6,))
+            # transform shape to single dimension: e.g. (2, 3) --> (6,)
+            length = n_out_units * len(out_layer_inputs)
+            dErr_dw = np.reshape(dErr_dw, newshape=(length,))
 
             # will contain all the delta_weights to update the weights
             delta_weights = [None] * len(self.__nn.layers)
+            delta_weights[-1] = -dErr_dw
+
+            # scan all layers from the penultimate to the first
+            for layer_index in reversed(range(len(self.__nn.layers) - 1)):
+                curr_layer = self.__nn.layers[layer_index]
+                next_layer = self.__nn.layers[layer_index + 1]
+                n_curr_units = len(curr_layer.units)    # number of units in the current layer
+                n_next_units = len(next_layer.units)    # number of units in the next layer
 
         # for z in range(5):
         #     for pattern, target in zip(net_inp, targets):
@@ -189,11 +199,11 @@ if __name__ == '__main__':
     opt = optimizers['sgd'](
         Network(
             input_dim=3,
-            units_per_layer=[2],
-            acts=['sigmoid'],
+            units_per_layer=[3, 2, 2],
+            acts=['sigmoid', 'sigmoid', 'sigmoid'],
             weights_init='uniform',
             weights_value=0.5
         ),
         loss='squared')
     opt.optimize(net_inp=np.array([0.1, 0.1, 0.1]),
-                 targets=np.array([0.99, 0.99]))
+                 targets=np.array([0.5, 0.5]))
