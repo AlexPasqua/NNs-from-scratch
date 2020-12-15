@@ -57,7 +57,6 @@ class SGD(Optimizer, ABC):
 
         for pattern, target in zip(net_inp, targets):
             net_outputs = self.__nn.forward(inp=pattern)
-            print(self.loss.func(predicted=net_outputs, target=target))
             output_layer = self.__nn.layers[-1]
             output_act = output_layer.act
 
@@ -76,7 +75,9 @@ class SGD(Optimizer, ABC):
             if len(self.__nn.layers) > 1:
                 penult_layer = self.__nn.layers[-2]
                 offset = len(penult_layer.units)
-                dErr_dw = np.zeros([len(output_layer.units) * offset])
+                dErr_dw = np.zeros([len(output_layer.units) * offset + len(output_layer.units)])
+                print(dErr_dw)
+                return
                 for j in range(len(output_layer.units)):
                     for k in range(offset):
                         dErr_dw[k + j * offset] = penult_layer.outputs[k] * delta[j]
