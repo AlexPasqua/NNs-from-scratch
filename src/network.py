@@ -21,17 +21,34 @@ class Unit:
 
     def __init__(self, w, b, act):
         """
-        Constructor
+        Unit's constructor
         :param w: vector of weights
         :param b: bias (number)
         :param act: activation function --> 'Function' obj (see 'functions.py')
         """
+
         self.__w = w
         self.__b = b
         self.__act = act
         self.__net = None
         self.__out = None
         self.__upstream_grad = []
+
+        # check w values
+        if hasattr(w, '__iter__'):
+            if not all(isinstance(n, Number) for n in w):
+                raise ValueError("layer's weights must be numeric. Got: ", str)
+            # TODO: type(w[0]) Currently return the type of the first value - not always the one that raised the error
+            # TODO: maybe str is better? is the only anomalous value that can be entered
+
+        # check b values
+        if hasattr(b, '__iter__'):
+            if not all(isinstance(n, Number) for n in b):
+                raise ValueError("layer's biases must be numeric. Got: ", type(b[0]))
+
+        # if act not in act_funcs.keys():
+        #   raise ValueError("Invalid activation function \nSelect one among:\n{}".format((act_funcs.keys())))
+        # TODO: raises an error without creating object Unit. The origin of the error is line 257
 
     @property
     def w(self):
@@ -88,9 +105,10 @@ class Layer:
     Attributes:
         units: list of layer's units ('Unit' objects)
     """
+
     def __init__(self, units):
         """
-        Constructor
+        Layer's constructor
         :param units: list on layer's units ('Unit' objects)
         """
         units_acts = [u.act for u in units]
@@ -128,6 +146,13 @@ class Layer:
 
     @staticmethod
     def __check_vectors(self, passed, own):
+        """
+
+        :param self:
+        :param passed: values to be tested
+        :param own: The values against which to test each value of passed
+        :return: Errors if test fails
+        """
         if hasattr(passed, '__iter__'):
             if not all(isinstance(n, Number) for n in passed):
                 raise ValueError("layer's weights must be numeric. Got: ", type(passed[0]))
@@ -146,6 +171,11 @@ class Layer:
 
     @weights_only.setter
     def weights_only(self, value):
+        """
+
+        :param value: weight values
+        :return:
+        """
         self.__check_vectors(self, passed=value, own=self.weights_only)
         for i in range(len(self.units)):
             n_weights = len(self.units[i].w)
@@ -155,6 +185,11 @@ class Layer:
 
     @weights_biases.setter
     def weights_biases(self, value):
+        """
+
+        :param value: bias values
+        :return:
+        """
         self.__check_vectors(self, passed=value, own=self.weights_biases)
         for i in range(len(self.units)):
             n = len(self.units[i].w)
@@ -167,7 +202,7 @@ class Layer:
         """
         Performs the forward pass on the current layer
         :param inp: (numpy ndarray) input vector
-        :return: the vector of the current layer's soutputs
+        :return: the vector of the current layer's outputs
         """
         self.__outputs = [unit.output(inp) for unit in self.units]
         return self.__outputs
@@ -184,10 +219,11 @@ class Network:
     def __init__(self, input_dim=3, units_per_layer=(3, 2), acts=('relu', 'sigmoid'), weights_init='uniform',
                  weights_value=0.1, **kwargs):
         """
-        Constructor
+       Network's constructor
         :param input_dim: the input dimension
         :param units_per_layer: list of layers' sizes as number on units
         :param acts: list of activation function names (one for each layer)
+        :param weights_init: type of weights initialization
         """
         self.__check_attributes(self,
                                 input_dim=input_dim,
@@ -222,13 +258,21 @@ class Network:
 
     @staticmethod
     def __check_attributes(self, input_dim, units_per_layer, acts, weights_init, weights_value):
+        """
+        :param input_dim: the input dimension
+        :param units_per_layer: list of layers' sizes as number on units
+        :param acts: list of activation function names (one for each layer)
+        :param weights_init: type of weights initialization
+        :param weights_value:
+        :return:
+        """
         if input_dim < 1 or any(n_units < 1 for n_units in units_per_layer):
             raise ValueError("input_dim and every value in units_per_layer must be positive")
         if len(units_per_layer) != len(acts):
             raise AttributeError(
                 f"Mismatching lengths --> len(units_per_layer)={len(units_per_layer)}; len(acts)={len(acts)}")
         if any(act not in act_funcs.keys() for act in acts):
-            raise ValueError("Invalid activation function")
+            raise ValueError("Invalid activation function \nSelect one among:\n{}".format((act_funcs.keys())))
 
     @property
     def input_dim(self):
@@ -261,7 +305,7 @@ class Network:
     def forward(self, inp=(2, 2, 2), verbose=False):
         """
         Performs a complete forward pass on the whole NN
-        :param verbose:
+        :param verbose: if True prints the forward pass
         :param inp: net's input vector
         :return: net's output
         """
@@ -285,6 +329,13 @@ class Network:
         return x
 
     def compile(self, opt='sgd', loss='squared', lrn_rate=0.01):
+        """
+
+        :param opt: type of optimization algorithm
+        :param loss: type of loss function
+        :param lrn_rate: learning rate (default value: 0.01)
+        :return:
+        """
         if opt not in optimizers or loss not in losses:
             raise AttributeError(f"opt must be within {optimizers.keys()} and loss must be in {losses.keys()}")
         self.__opt = optimizers[opt](nn=self, loss=loss, lrn_rate=lrn_rate)
@@ -292,7 +343,7 @@ class Network:
     def fit(self, inp, target):
         """
         Execute the training of the network
-        :param inp: inputs (training set)
+        :param inp: input patterns
         :param target: list of arrays, each array corresponds to a pattern
             and each of its elements is the target for the i-th output unit
         """
