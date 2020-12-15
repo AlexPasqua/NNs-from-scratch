@@ -1,6 +1,6 @@
 import numpy as np
-from src.Function import Function
-from src.losses import losses
+from Function import Function
+from losses import losses
 
 
 def mean_euclidean_error(predicted, target):
