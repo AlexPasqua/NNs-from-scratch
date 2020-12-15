@@ -78,7 +78,7 @@ class SGD(Optimizer, ABC):
             # delta_weights: list of lists --> layers x weights_in_layer
             # delta_biases: list of lists --> layers x biases_in_layer
             delta_weights = delta_biases = [[]] * len(self.__nn.layers)
-            delta_weights[-1] = [-dErr_dWeights[j] for j in range(len(dErr_dWeights))]
+            delta_weights[-1] = [-dErr_dWeights[i] for i in range(len(dErr_dWeights))]
             delta_biases[-1] = [-dErr_dBiases[j] for j in range(len(dErr_dBiases))]
 
             # scan all layers from the penultimate to the first
@@ -87,6 +87,9 @@ class SGD(Optimizer, ABC):
                 next_layer = self.__nn.layers[layer_index + 1]
                 n_curr_units = len(curr_layer.units)    # number of units in the current layer
                 n_next_units = len(next_layer.units)    # number of units in the next layer
+                curr_act = curr_layer.act
+
+                dOut_dNet = [curr_act.deriv(u.net) for u in curr_layer.units]
 
                 delta = [np.dot(delta_next, [u.w[j] for u in next_layer.units]) for j in range(n_curr_units)]
                 delta = np.multiply(delta, dOut_dNet)
@@ -98,14 +101,18 @@ class SGD(Optimizer, ABC):
                 #         delta[j] += next_layer.units[l].w[j] * delta_next[l]
                 #     delta[j] *= dOut_dNet[j]
 
-                return
+                curr_layer_inputs = self.__nn.layers[layer_index - 1].outputs if layer_index > 1 else pattern
+                dErr_dBiases = -delta
+                dErr_dWeights = [
+                    -delta[j] * curr_layer_inputs[i]
+                    for j in range(len(delta))
+                    for i in range(len(curr_layer_inputs))
+                ]
+                delta_weights[layer_index] = [-dErr_dWeights[i] for i in range(len(dErr_dWeights))]
+                delta_biases[layer_index] = [-dErr_dBiases[j] for j in range(len(dErr_dBiases))]
 
-                # # compute dErr_dOut of the current layer
-                # dErr_dOut_new = np.zeros([n_curr_units])
-                # for j in range(n_curr_units):
-                #     for l in range(n_next_units):
-                #         dErr_dOut_new[j] += dErr_dOut[l] * dOut_dNet[l] * next_layer.units[l].w[j]
-                # dErr_dOut = dErr_dOut_new
+            # update weights and biases
+
 
         # for z in range(5):
         #     for pattern, target in zip(net_inp, targets):
