@@ -147,7 +147,9 @@ class SGD(Optimizer, ABC):
                     prev_layer = self.__nn.layers[i - 1]
                     curr_layer_inputs = prev_layer.outputs
                 offset = len(curr_layer_inputs)
-                curr_layer.weights += self.lrn_rate * delta_w[i]
+                print(curr_layer.weights_biases)
+                curr_layer.weights_biases += self.lrn_rate * delta_w[i]
+                print(curr_layer.weights_biases, '\n')
                 # equivalent to:
                 # for j in range(len(curr_layer.units)):
                 #     for k in range(len(curr_layer.units[j].w)):
