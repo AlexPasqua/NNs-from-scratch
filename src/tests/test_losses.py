@@ -1,6 +1,5 @@
 import unittest
-
-from src.losses import losses
+from losses import losses
 
 
 class TestLosses(unittest.TestCase):

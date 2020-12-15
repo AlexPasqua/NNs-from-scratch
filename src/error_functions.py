@@ -33,7 +33,7 @@ def mean_squared_error(predicted, target):
     if predicted.shape != target.shape:
         raise AttributeError(f"Mismatching shapes in MEE: predictions shape: "
                              f"{predicted.shape} - targets shape {target.shape}")
-    return np.sum(losses['squared'].func(predicted, target))
+    return np.sum(losses['squared'].func(predicted=predicted, target=target))
 
 
 # def mean_euclidean_error_deriv(pred, targ):
