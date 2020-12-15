@@ -1,5 +1,5 @@
 import numpy as np
-from src.Function import DerivableFunction
+from Function import DerivableFunction
 
 
 def squared_loss(predicted, target):
@@ -20,6 +20,8 @@ def squared_loss(predicted, target):
 
     # MSE of the whole net would be
     # np.sum(np.square(pred - targ)) / (targ.shape[0] * 2)
+    print(predicted - target)
+    print(np.square(predicted - target))
     return 0.5 * np.square(predicted - target)    # "0.5" is to make the gradient simpler
 
 
@@ -50,12 +52,12 @@ losses = {
 if __name__ == '__main__':
     # Test loss functions
     print('\nArrays for testing loss functions:')
-    pred = [1, 0, 0, 1]
-    targ = [1, 1, 0, 0]
+    pred = [[1, 0, 0, 1], [1, 0, 1, 1]]
+    targ = [[1, 0, 0, 0], [1, 1, 0, 1]]
 
     print(f"pred:\t{pred}\n")
-    print(f"targ:\t{targ}")
+    print(f"targ:\t{targ}\n")
     print('Loss functions test:')
-    print(f"squared loss:\t{losses['squared'].func(pred, targ)}")
+    print(f"squared loss:\t{losses['squared'].func(pred, targ)}\n")
     print(f"squared loss deriv:\t{losses['squared'].deriv(pred, targ)}")
 
