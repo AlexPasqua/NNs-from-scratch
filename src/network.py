@@ -106,25 +106,29 @@ class Layer:
         return self.__units
 
     @property
-    def weights_only(self):
+    def weights(self):
         """
         :return: vector of layer's weights (NOT biases)
         """
         return [u.w[i] for u in self.__units for i in range(len(u.w))]
 
     @property
-    def weights_biases(self):
-        """
-        :return: vector of layer's weights and biases
-        """
-        wb = np.zeros([len(self.units) * (len(self.units[0].w) + 1)])
-        for j in range(len(self.units)):
-            u = self.units[j]
-            offset = len(u.w) + 1
-            wb[offset * (j + 1) - 1] = u.b
-            for k in range(len(u.w)):
-                wb[k + offset * j] = u.w[k]
-        return wb
+    def biases(self):
+        return [u.b for u in self.__units]
+
+    # @property
+    # def weights_biases(self):
+    #     """
+    #     :return: vector of layer's weights and biases
+    #     """
+    #     wb = np.zeros([len(self.units) * (len(self.units[0].w) + 1)])
+    #     for j in range(len(self.units)):
+    #         u = self.units[j]
+    #         offset = len(u.w) + 1
+    #         wb[offset * (j + 1) - 1] = u.b
+    #         for k in range(len(u.w)):
+    #             wb[k + offset * j] = u.w[k]
+    #     return wb
 
     @staticmethod
     def __check_vectors(self, passed, own):
@@ -144,24 +148,30 @@ class Layer:
     def outputs(self):
         return self.__outputs
 
-    @weights_only.setter
-    def weights_only(self, value):
-        self.__check_vectors(self, passed=value, own=self.weights_only)
+    @weights.setter
+    def weights(self, value):
+        self.__check_vectors(self, passed=value, own=self.weights)
         for i in range(len(self.units)):
             n_weights = len(self.units[i].w)
             start = i * n_weights
             end = start + n_weights
             self.units[i].w = value[start: end]
 
-    @weights_biases.setter
-    def weights_biases(self, value):
-        self.__check_vectors(self, passed=value, own=self.weights_biases)
+    @biases.setter
+    def biases(self, value):
+        self.__check_vectors(self, passed=value, own=self.biases)
         for i in range(len(self.units)):
-            n = len(self.units[i].w)
-            start = i * n
-            end = start + n
-            self.units[i].w = value[start: end]
-            self.units[i].b = value[end]
+            self.units[i].b = value[i]
+
+    # @weights_biases.setter
+    # def weights_biases(self, value):
+    #     self.__check_vectors(self, passed=value, own=self.weights_biases)
+    #     for i in range(len(self.units)):
+    #         n = len(self.units[i].w)
+    #         start = i * n
+    #         end = start + n
+    #         self.units[i].w = value[start: end]
+    #         self.units[i].b = value[end]
 
     def forward_pass(self, inp):
         """

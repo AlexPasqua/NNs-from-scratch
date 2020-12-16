@@ -56,71 +56,48 @@ class SGD(Optimizer, ABC):
             targets = targets[np.newaxis, :]
 
         for pattern, target in zip(net_inp, targets):
-            net_outputs = self.__nn.forward(inp=pattern)
             output_layer = self.__nn.layers[-1]
             output_act = output_layer.act
-            n_out_units = len(output_layer.units)
+            net_outputs = self.__nn.forward(inp=pattern)
 
-            # dErr_dOut: gradient of the error wrt the net's outputs
-            # dOut_dNet: gradient of the net's outputs wrt the output units' weighted sums
+            err = self.loss.func(predicted=net_outputs, target=target)
+            print('Loss: ', np.sum(err) / len(err))
+
             dErr_dOut = self.loss.deriv(predicted=net_outputs, target=target)
             dOut_dNet = [output_act.deriv(u.net) for u in output_layer.units]
-
-            # it's normal mult because the vecs have the same dimension and they are 'numpy ndarray'
-            delta = dErr_dOut * dOut_dNet
-
-            # will contain all the delta_w to update the weights
-            delta_w = [None] * len(self.__nn.layers)
-
-            # retrieve output of the penultimate layer to compute the weights update of the last layer
-            if len(self.__nn.layers) > 1:
-                penult_layer = self.__nn.layers[-2]
-                offset = len(penult_layer.units) + 1    # + 1 for bias
-                dErr_dw = np.zeros([n_out_units * offset])
-                for j in range(n_out_units):
-                    # set dErr_dw wrt biases
-                    dErr_dw[offset * (j+1) - 1] = 1.
-                    # set dErr_dw wrt weights
-                    for k in range(offset - 1):
-                        dErr_dw[k + j * offset] = penult_layer.outputs[k] * delta[j]
-            else:
-                delta_w[-1] = [delta_j * pattern_k for delta_j in delta for pattern_k in pattern]
-                offset = len(pattern) + 1
-                dErr_dw = np.zeros([n_out_units * offset])
-                for j in range(n_out_units):
-                    dErr_dw[offset * (j+1) - 1] = 1.
-                    for k in range(offset - 1):
-                        dErr_dw[k + j * offset] = pattern[k] * delta[j]
-            delta_w[-1] = -dErr_dw
+            delta = -dErr_dOut * dOut_dNet
             delta_next = delta
 
+            # retrieve the inputs of the output layer to compute the weights update for the output layer
+            out_layer_inputs = self.__nn.layers[-2].outputs if len(self.__nn.layers) > 1 else pattern
+            dErr_dBiases = -delta
+            dErr_dWeights = [
+                -delta[j] * out_layer_inputs[i]
+                for j in range(len(delta))
+                for i in range(len(out_layer_inputs))
+            ]
+
+            # variables used for weights and biases updates
+            # delta_weights: list of lists --> layers x weights_in_layer
+            # delta_biases: list of lists --> layers x biases_in_layer
+            # delta_weights = delta_biases = [[]] * len(self.__nn.layers)
+            delta_weights = [[]] * len(self.__nn.layers)
+            delta_biases = [[]] * len(self.__nn.layers)
+            delta_weights[-1] = [-dErr_dWeights[i] for i in range(len(dErr_dWeights))]
+            delta_biases[-1] = [-dErr_dBiases[j] for j in range(len(dErr_dBiases))]
+
             # scan all layers from the penultimate to the first
-            for i in reversed(range(len(self.__nn.layers) - 1)):
-                curr_layer = self.__nn.layers[i]
-                next_layer = self.__nn.layers[i + 1]
-
-                # gradient of the error wrt the outputs of the CURRENT layer
-                dErr_dOut_new = np.zeros([len(curr_layer.units)])
-                for j in range(len(curr_layer.units)):
-                    for l in range(len(next_layer.units)):
-                        # dNet_dOut[offset * l + j]: weight (deriv of net wrt out) on the connection j --> l
-                        dErr_dOut_new[j] += dErr_dOut[l] * dOut_dNet[l] * next_layer.units[l].w[j]
-                dErr_dOut = dErr_dOut_new
-
-                # take new dOut_dNet and d_net wrt the current layer (no more the next)
+            for layer_index in reversed(range(len(self.__nn.layers) - 1)):
+                curr_layer = self.__nn.layers[layer_index]
+                next_layer = self.__nn.layers[layer_index + 1]
+                n_curr_units = len(curr_layer.units)    # number of units in the current layer
+                n_next_units = len(next_layer.units)    # number of units in the next layer
                 curr_act = curr_layer.act
-                dOut_dNet = [curr_act.deriv(u.net) for u in curr_layer.units]
-                if i > 0:
-                    prev_layer = self.__nn.layers[i - 1]
-                    curr_layer_inputs = prev_layer.outputs
-                    d_net = prev_layer.outputs
-                else:
-                    d_net = pattern
-                    curr_layer_inputs = pattern
 
-                # computer delta for the current layer
-                delta = [np.dot(delta_next, [u.w[j] for u in next_layer.units]) for j in range(len(curr_layer.units))]
-                delta = np.multiply(delta, dOut_dNet, dtype=np.float_)
+                dOut_dNet = [curr_act.deriv(u.net) for u in curr_layer.units]
+
+                delta = [np.dot(delta_next, [u.w[j] for u in next_layer.units]) for j in range(n_curr_units)]
+                delta = np.multiply(delta, dOut_dNet)
                 delta_next = delta
                 # equivalent to:
                 # delta = np.zeros([len(curr_layer.units)])
@@ -129,29 +106,21 @@ class SGD(Optimizer, ABC):
                 #         delta[j] += next_layer.units[l].w[j] * delta_next[l]
                 #     delta[j] *= dOut_dNet[j]
 
-                # compute gradient of the error wrt this layer's weights
-                dErr_dw = np.zeros([len(curr_layer.units) * len(curr_layer_inputs)])
-                offset = len(curr_layer_inputs)
-                for j in range(len(curr_layer.units)):
-                    for k in range(len(curr_layer_inputs)):
-                        dErr_dw[k + j * offset] = curr_layer_inputs[k] * delta[j]
+                curr_layer_inputs = self.__nn.layers[layer_index - 1].outputs if layer_index > 1 else pattern
+                dErr_dBiases = -delta
+                dErr_dWeights = [
+                    -delta[j] * curr_layer_inputs[i]
+                    for j in range(len(delta))
+                    for i in range(len(curr_layer_inputs))
+                ]
+                delta_weights[layer_index] = [-dErr_dWeights[i] for i in range(len(dErr_dWeights))]
+                delta_biases[layer_index] = [-dErr_dBiases[j] for j in range(len(dErr_dBiases))]
 
-                delta_w[i] = -dErr_dw
-
-            # weights update
-            for i in range(len(self.__nn.layers)):
-                curr_layer = self.__nn.layers[i]
-                if i == 0:
-                    curr_layer_inputs = pattern
-                else:
-                    prev_layer = self.__nn.layers[i - 1]
-                    curr_layer_inputs = prev_layer.outputs
-                offset = len(curr_layer_inputs)
-                curr_layer.weights_biases += self.lrn_rate * delta_w[i]
-                # equivalent to:
-                # for j in range(len(curr_layer.units)):
-                #     for k in range(len(curr_layer.units[j].w)):
-                #         curr_layer.units[j].w[k] += self.lrn_rate * delta_w[i][k + j * offset]
+            # update weights and biases
+            for layer_index in range(len(self.__nn.layers)):
+                curr_layer = self.__nn.layers[layer_index]
+                curr_layer.weights += self.lrn_rate * np.array(delta_weights[layer_index])
+                curr_layer.biases += self.lrn_rate * np.array(delta_biases[layer_index])
 
 
 optimizers = {
@@ -159,6 +128,19 @@ optimizers = {
 }
 
 if __name__ == '__main__':
-    opt = optimizers['sgd'](Network(input_dim=3, units_per_layer=[2], acts=['relu']), 'squared')
-    opt.optimize(net_inp=np.array([[0.1, 0.1, 0.1], [0.2, 4.1, 0.1], [0.1, 0.1, 1.1]]),
-                 targets=np.array([[5, 5], [5, 6], [5, 2]]))
+    opt = optimizers['sgd'](
+        Network(
+            input_dim=3,
+            units_per_layer=[3, 2, 2],
+            acts=['sigmoid', 'sigmoid', 'sigmoid'],
+            weights_init='uniform',
+            weights_value=0.5
+        ),
+        loss='squared',
+        lrn_rate=1
+    )
+    n_patterns = 20
+    inputs = np.reshape([0.1, 0.1, 0.1] * n_patterns, newshape=(n_patterns, 3))
+    targets = np.reshape([0.5, 0.5] * n_patterns, newshape=(n_patterns, 2))
+    opt.optimize(net_inp=np.array(inputs),
+                 targets=np.array(targets))

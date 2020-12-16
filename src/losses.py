@@ -16,11 +16,8 @@ def squared_loss(predicted, target):
     target = np.array(target)
     if predicted.shape != target.shape:
         raise AttributeError(f"Mismatching shapes in Squared Loss: predictions shape: "
-                        f"{predicted.shape} - targets shape {target.shape}")
-
-    # MSE of the whole net would be
-    # np.sum(np.square(pred - targ)) / (targ.shape[0] * 2)
-    return 0.5 * np.square(predicted - target)    # "0.5" is to make the gradient simpler
+                             f"{predicted.shape} - targets shape {target.shape}")
+    return 0.5 * np.square(target - predicted)  # "0.5" is to make the gradient simpler
 
 
 def squared_loss_deriv(predicted, target):
@@ -53,9 +50,8 @@ if __name__ == '__main__':
     pred = [[1, 0, 0, 1], [1, 0, 1, 1]]
     targ = [[1, 0, 0, 0], [1, 1, 0, 1]]
 
-    print(f"pred:\t{pred}\n")
+    print(f"pred:\t{pred}")
     print(f"targ:\t{targ}\n")
     print('Loss functions test:')
-    print(f"squared loss:\t{losses['squared'].func(pred, targ)}\n")
-    print(f"squared loss deriv:\t{losses['squared'].deriv(pred, targ)}")
-
+    print(f"squared loss:\n{losses['squared'].func(pred, targ)}\n")
+    print(f"squared loss deriv:\n{losses['squared'].deriv(pred, targ)}")
