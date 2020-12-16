@@ -282,7 +282,7 @@ class Network:
             inp = np.expand_dims(inp, 0)
         pattern_len = inp.shape[1] if len(inp.shape) > 1 else inp.shape[0]
         if pattern_len != self.input_dim:
-            raise AttributeError(f"Mismatching lengths --> len(net_inp) = {len(inp)} ; input_sim = {self.input_dim}")
+            raise AttributeError(f"Mismatching lengths --> len(net_inp) = {len(inp)} ; input_dim = {self.input_dim}")
 
         if verbose:
             print(f"Net's inputs: {inp}")

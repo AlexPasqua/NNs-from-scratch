@@ -4,6 +4,9 @@ from abc import ABC, abstractmethod
 from losses import losses
 from network import *
 import numpy as np
+import matplotlib.pyplot as plt
+
+from network import *
 
 
 class Optimizer(ABC):
@@ -55,12 +58,14 @@ class SGD(Optimizer, ABC):
         if len(targets.shape) < 2:
             targets = targets[np.newaxis, :]
 
+        losses = []
         for pattern, target in zip(net_inp, targets):
             output_layer = self.__nn.layers[-1]
             output_act = output_layer.act
             net_outputs = self.__nn.forward(inp=pattern)
 
             err = self.loss.func(predicted=net_outputs, target=target)
+            losses.append(err / len(err))
             print('Loss: ', np.sum(err) / len(err))
 
             dErr_dOut = self.loss.deriv(predicted=net_outputs, target=target)
@@ -106,7 +111,7 @@ class SGD(Optimizer, ABC):
                 #         delta[j] += next_layer.units[l].w[j] * delta_next[l]
                 #     delta[j] *= dOut_dNet[j]
 
-                curr_layer_inputs = self.__nn.layers[layer_index - 1].outputs if layer_index > 1 else pattern
+                curr_layer_inputs = self.__nn.layers[layer_index - 1].outputs if layer_index > 0 else pattern
                 dErr_dBiases = -delta
                 dErr_dWeights = [
                     -delta[j] * curr_layer_inputs[i]
@@ -122,6 +127,9 @@ class SGD(Optimizer, ABC):
                 curr_layer.weights += self.lrn_rate * np.array(delta_weights[layer_index])
                 curr_layer.biases += self.lrn_rate * np.array(delta_biases[layer_index])
 
+        plt.plot(losses)
+        plt.show()
+
 
 optimizers = {
     'sgd': SGD
@@ -131,8 +139,8 @@ if __name__ == '__main__':
     opt = optimizers['sgd'](
         Network(
             input_dim=3,
-            units_per_layer=[3, 2, 2],
-            acts=['sigmoid', 'sigmoid', 'sigmoid'],
+            units_per_layer=[3, 3, 3, 1],
+            acts=['sigmoid', 'sigmoid', 'sigmoid', 'sigmoid'],
             weights_init='uniform',
             weights_value=0.5
         ),
@@ -141,6 +149,6 @@ if __name__ == '__main__':
     )
     n_patterns = 20
     inputs = np.reshape([0.1, 0.1, 0.1] * n_patterns, newshape=(n_patterns, 3))
-    targets = np.reshape([0.5, 0.5] * n_patterns, newshape=(n_patterns, 2))
+    targets = np.reshape([1] * n_patterns, newshape=(n_patterns, 1))
     opt.optimize(net_inp=np.array(inputs),
                  targets=np.array(targets))
