@@ -119,8 +119,8 @@ class SGD(Optimizer, ABC):
             # update weights and biases
             for layer_index in range(len(self.__nn.layers)):
                 curr_layer = self.__nn.layers[layer_index]
-                curr_layer.weights = delta_weights[layer_index]
-                curr_layer.biases = delta_biases[layer_index]
+                curr_layer.weights += self.lrn_rate * np.array(delta_weights[layer_index])
+                curr_layer.biases += self.lrn_rate * np.array(delta_biases[layer_index])
 
 
 optimizers = {
@@ -136,7 +136,9 @@ if __name__ == '__main__':
             weights_init='uniform',
             weights_value=0.5
         ),
-        loss='squared')
+        loss='squared',
+        lrn_rate=1
+    )
     n_patterns = 20
     inputs = np.reshape([0.1, 0.1, 0.1] * n_patterns, newshape=(n_patterns, 3))
     targets = np.reshape([0.5, 0.5] * n_patterns, newshape=(n_patterns, 2))
