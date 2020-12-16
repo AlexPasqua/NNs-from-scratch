@@ -14,14 +14,15 @@ if __name__ == '__main__':
 
     # transform the dataset from pandas dataframe to numpy ndarray
     monk1_train = monk1_train.to_numpy()
-    labels = labels.to_numpy()
+    labels = labels.to_numpy()[:, np.newaxis]
 
     parameters = {
-        'input_dim': 3,
-        'units_per_layer': (3, 2),
+        'input_dim': 6,
+        'units_per_layer': (3, 1),
         'acts': ('relu', 'sigmoid'),
         'weights_init': 'uniform',
-        'weights_value': 0.1
+        'weights_value': 0.5
     }
     model = Network(**parameters)
-    # model.print_net()
+    model.compile(opt='sgd', loss='squared', lrn_rate=0.4)
+    model.fit(inp=monk1_train, target=labels)

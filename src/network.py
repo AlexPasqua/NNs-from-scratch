@@ -308,14 +308,14 @@ class Network:
         """
         target = np.array(target)
         inp = np.array(inp)
-        target_len = target.shape[1] if len(target.shape) > 1 else target.shape[0]
+        target_len = target.shape[1] if len(target.shape) > 1 else 1
         if target_len != len(self.layers[-1].units):
             raise AttributeError(
                 f"Mismatching shapes --> target: {target.shape} ; output units: {len(self.layers[-1].units)}")
         n_pattern = inp.shape[0] if len(inp.shape) > 1 else 1
         n_target = target.shape[0] if len(target.shape) > 1 else 1
         assert (n_pattern == n_target)
-        self.__opt.optimize(net_inp=inp, target=target)
+        self.__opt.optimize(net_inp=inp, targets=target)
 
     def print_net(self):
         """
