@@ -5,6 +5,8 @@ from losses import losses
 from network import *
 import numpy as np
 
+from network import Network
+
 
 class Optimizer(ABC):
     """
