@@ -299,7 +299,7 @@ class Network:
             raise AttributeError(f"opt must be within {optimizers.keys()} and loss must be in {losses.keys()}")
         self.__opt = optimizers[opt](nn=self, loss=loss, lrn_rate=lrn_rate)
 
-    def fit(self, inp, target):
+    def fit(self, inp, target, epochs=1, batch_size=1):
         """
         Execute the training of the network
         :param inp: inputs (training set)
@@ -315,7 +315,7 @@ class Network:
         n_pattern = inp.shape[0] if len(inp.shape) > 1 else 1
         n_target = target.shape[0] if len(target.shape) > 1 else 1
         assert (n_pattern == n_target)
-        self.__opt.optimize(train_set=inp, targets=target)
+        self.__opt.optimize(train_set=inp, targets=target, epochs=epochs, batch_size=batch_size)
 
     def print_net(self):
         """
