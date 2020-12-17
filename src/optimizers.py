@@ -57,15 +57,18 @@ class SGD(Optimizer, ABC):
         if len(targets.shape) < 2:
             targets = targets[np.newaxis, :]
 
+        errors = []
         net = self.__nn
 
         # cycle through epochs
         for epoch in range(epochs):
+            print(epoch)
             # TODO: shuffle dataset
 
-            error = 0.
+            epoch_error = [0.] * len(net.layers[-1].units)
 
             # cycle through batches
+            count = 0
             for batch_index in range(math.ceil(len(train_set) / batch_size)):
                 start = batch_index * batch_size
                 end = start + batch_size
@@ -75,11 +78,13 @@ class SGD(Optimizer, ABC):
 
                 # cycle through patterns and targets within a batch
                 for pattern, target in zip(train_batch, targets_batch):
+                    count += 1
                     net_outputs = self.__nn.forward(inp=pattern)
-                    error += self.loss.func(predicted=net_outputs, target=target)
+                    epoch_error += self.loss.func(predicted=net_outputs, target=target)
                     dErr_dOut = self.loss.deriv(predicted=net_outputs, target=target)
                     net.propagate_back(dErr_dOut)   # set the layers' gradients
 
+                    # add up layers' gradients
                     for i in range(len(net.layers)):
                         grad_net.layers[i].weights += net.layers[i].gradient_w
                         grad_net.layers[i].biases += net.layers[i].gradient_b
@@ -92,6 +97,14 @@ class SGD(Optimizer, ABC):
                     grad_net.layers[i].biases /= float(batch_size)
                     net.layers[i].weights += self.lrn_rate * grad_net.layers[i].weights
                     net.layers[i].biases += self.lrn_rate * grad_net.layers[i].biases
+
+            print(count, '\n')
+            epoch_error = np.sum(epoch_error) / len(epoch_error)
+            errors.append(epoch_error / float(len(train_set)))
+
+        print(errors)
+        plt.plot(range(epochs), errors)
+        plt.show()
 
         exit()
         losses = []

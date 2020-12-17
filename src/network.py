@@ -367,7 +367,7 @@ class Network:
         # output_act = output_layer.act
         # dOut_dNet = np.array([output_act.deriv(u.net) for u in output_layer.units])
         # curr_delta = dErr_dOut * dOut_dNet
-        curr_delta = dErr_dOut
+        curr_delta = -dErr_dOut
         for layer in reversed(self.layers):
             curr_delta = layer.backward_pass(curr_delta)
 

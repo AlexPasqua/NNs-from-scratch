@@ -23,5 +23,5 @@ if __name__ == '__main__':
         'weights_init': 'random',
     }
     model = Network(**parameters)
-    model.compile(opt='sgd', loss='squared', lrn_rate=1)
-    model.fit(inp=monk1_train, target=labels, epochs=3, batch_size=5)
+    model.compile(opt='sgd', loss='squared', lrn_rate=0.1)
+    model.fit(inp=monk1_train, target=labels, epochs=100, batch_size=1)
