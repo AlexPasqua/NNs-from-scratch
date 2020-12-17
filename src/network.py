@@ -1,3 +1,4 @@
+import copy
 from numbers import Number
 
 import numpy as np
@@ -110,11 +111,11 @@ class Layer:
         """
         :return: vector of layer's weights (NOT biases)
         """
-        return [u.w[i] for u in self.__units for i in range(len(u.w))]
+        return np.array([u.w[i] for u in self.__units for i in range(len(u.w))])
 
     @property
     def biases(self):
-        return [u.b for u in self.__units]
+        return np.array([u.b for u in self.__units])
 
     # @property
     # def weights_biases(self):
@@ -316,6 +317,13 @@ class Network:
         n_target = target.shape[0] if len(target.shape) > 1 else 1
         assert (n_pattern == n_target)
         self.__opt.optimize(train_set=inp, targets=target, epochs=epochs, batch_size=batch_size)
+
+    def get_struct(self):
+        structure = copy.deepcopy(self)
+        for layer in structure.layers:
+            layer.weights = [0.] * len(layer.weights)
+            layer.biases = [0.] * len(layer.biases)
+        return structure
 
     def print_net(self):
         """

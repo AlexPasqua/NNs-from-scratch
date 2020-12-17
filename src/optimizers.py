@@ -52,11 +52,12 @@ class SGD(Optimizer, ABC):
         :param batch_size: (int) number of patterns per single batch
         :return:
         """
-        # ONLINE VERSION
         if len(train_set.shape) < 2:
             train_set = train_set[np.newaxis, :]
         if len(targets.shape) < 2:
             targets = targets[np.newaxis, :]
+
+        net = self.__nn
 
         # cycle through epochs
         for epoch in range(epochs):
@@ -68,6 +69,7 @@ class SGD(Optimizer, ABC):
                 end = start + batch_size
                 train_batch = train_set[start : end]
                 targets_batch = targets[start : end]
+                grad_net = net.get_struct()
 
                 # cycle through patterns and targets within a batch
                 for pattern, target in zip(train_batch, targets_batch):

@@ -18,8 +18,8 @@ if __name__ == '__main__':
 
     parameters = {
         'input_dim': 6,
-        'units_per_layer': (10, 1),
-        'acts': ('sigmoid', 'sigmoid'),
+        'units_per_layer': (3, 3, 1),
+        'acts': ('relu', 'relu', 'sigmoid'),
         'weights_init': 'random',
     }
     model = Network(**parameters)
