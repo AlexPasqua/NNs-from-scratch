@@ -315,7 +315,7 @@ class Network:
         n_pattern = inp.shape[0] if len(inp.shape) > 1 else 1
         n_target = target.shape[0] if len(target.shape) > 1 else 1
         assert (n_pattern == n_target)
-        self.__opt.optimize(net_inp=inp, targets=target)
+        self.__opt.optimize(train_set=inp, targets=target)
 
     def print_net(self):
         """

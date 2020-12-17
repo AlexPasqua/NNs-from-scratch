@@ -1,5 +1,6 @@
 """ In this scripts are defined the optimizers used in the project """
-
+import math
+import random
 from abc import ABC, abstractmethod
 from losses import losses
 from network import *
@@ -32,9 +33,6 @@ class Optimizer(ABC):
     def lrn_rate(self):
         return self.__lrn_rate
 
-    def optimize(self, net_inp, target):
-        pass
-
 
 class SGD(Optimizer, ABC):
     """ Stochastic Gradient Descent """
@@ -46,20 +44,38 @@ class SGD(Optimizer, ABC):
         if lrn_rate <= 0 or lrn_rate > 1:
             raise ValueError('lrn_rate should be a value between 0 and 1, Got:{}'.format(lrn_rate))
 
-    def optimize(self, net_inp, targets):
+    def optimize(self, train_set, targets, epochs, batch_size=1):
         """
-        :param net_inp: (numpy ndarray) inputs
-        :param targets:
+        :param train_set: (numpy ndarray) network's inputs
+        :param targets: (numpy ndarray)
+        :param epochs: (int) number of training epochs
+        :param batch_size: (int) number of patterns per single batch
         :return:
         """
         # ONLINE VERSION
-        if len(net_inp.shape) < 2:
-            net_inp = net_inp[np.newaxis, :]
+        if len(train_set.shape) < 2:
+            train_set = train_set[np.newaxis, :]
         if len(targets.shape) < 2:
             targets = targets[np.newaxis, :]
 
+        # cycle through epochs
+        for epoch in range(epochs):
+            # TODO: shuffle dataset
+
+            # cycle through batches
+            for batch_index in range(math.ceil(len(train_set) / batch_size)):
+                start = batch_index * batch_size
+                end = start + batch_size
+                train_batch = train_set[start : end]
+                targets_batch = targets[start : end]
+
+                # cycle through patterns and targets within a batch
+                for pattern, target in zip(train_batch, targets_batch):
+                    pass
+
+        return
         losses = []
-        for pattern, target in zip(net_inp, targets):
+        for pattern, target in zip(train_set, targets):
             output_layer = self.__nn.layers[-1]
             output_act = output_layer.act
             net_outputs = self.__nn.forward(inp=pattern)
@@ -95,8 +111,8 @@ class SGD(Optimizer, ABC):
             for layer_index in reversed(range(len(self.__nn.layers) - 1)):
                 curr_layer = self.__nn.layers[layer_index]
                 next_layer = self.__nn.layers[layer_index + 1]
-                n_curr_units = len(curr_layer.units)    # number of units in the current layer
-                n_next_units = len(next_layer.units)    # number of units in the next layer
+                n_curr_units = len(curr_layer.units)  # number of units in the current layer
+                n_next_units = len(next_layer.units)  # number of units in the next layer
                 curr_act = curr_layer.act
 
                 dOut_dNet = [curr_act.deriv(u.net) for u in curr_layer.units]
@@ -150,5 +166,7 @@ if __name__ == '__main__':
     n_patterns = 20
     inputs = np.reshape([0.1, 0.1, 0.1] * n_patterns, newshape=(n_patterns, 3))
     targets = np.reshape([1] * n_patterns, newshape=(n_patterns, 1))
-    opt.optimize(net_inp=np.array(inputs),
-                 targets=np.array(targets))
+    opt.optimize(train_set=np.array(inputs),
+                 targets=np.array(targets),
+                 epochs=3,
+                 batch_size=1)
