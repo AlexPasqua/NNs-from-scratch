@@ -77,7 +77,7 @@ class SGD(Optimizer, ABC):
                     dErr_dOut = self.loss.deriv(predicted=net_outputs, target=target)
                     net.propagate_back(dErr_dOut)
 
-        return
+        exit()
         losses = []
         for pattern, target in zip(train_set, targets):
             output_layer = self.__nn.layers[-1]
