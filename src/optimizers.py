@@ -62,7 +62,7 @@ class SGD(Optimizer, ABC):
 
         # cycle through epochs
         for epoch in range(epochs):
-            print(epoch)
+            print(f"Epoch: {epoch + 1}")
             # TODO: shuffle dataset
 
             epoch_error = [0.] * len(net.layers[-1].units)
@@ -98,7 +98,6 @@ class SGD(Optimizer, ABC):
                     net.layers[i].weights += self.lrn_rate * grad_net.layers[i].weights
                     net.layers[i].biases += self.lrn_rate * grad_net.layers[i].biases
 
-            print(count, '\n')
             epoch_error = np.sum(epoch_error) / len(epoch_error)
             errors.append(epoch_error / float(len(train_set)))
 

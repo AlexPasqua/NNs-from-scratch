@@ -219,9 +219,9 @@ class Layer:
         """
         dOut_dNet = np.array([self.__act.deriv(u.net) for u in self.__units])
         delta = upstream_delta * dOut_dNet
-        self.gradient_b = delta
+        self.gradient_b = -delta
         self.gradient_w = [
-            delta[j] * self.__inputs[i]
+            -delta[j] * self.__inputs[i]
             for j in range(len(delta))
             for i in range(len(self.__inputs))
         ]
@@ -367,7 +367,7 @@ class Network:
         # output_act = output_layer.act
         # dOut_dNet = np.array([output_act.deriv(u.net) for u in output_layer.units])
         # curr_delta = dErr_dOut * dOut_dNet
-        curr_delta = -dErr_dOut
+        curr_delta = dErr_dOut
         for layer in reversed(self.layers):
             curr_delta = layer.backward_pass(curr_delta)
 

@@ -20,8 +20,9 @@ if __name__ == '__main__':
         'input_dim': 6,
         'units_per_layer': (3, 3, 1),
         'acts': ('relu', 'relu', 'sigmoid'),
-        'weights_init': 'random',
+        'weights_init': 'uniform',
+        'weights_value': 0.1
     }
     model = Network(**parameters)
-    model.compile(opt='sgd', loss='squared', lrn_rate=0.1)
-    model.fit(inp=monk1_train, target=labels, epochs=100, batch_size=1)
+    model.compile(opt='sgd', loss='squared', lrn_rate=0.8)
+    model.fit(inp=monk1_train, target=labels, epochs=50, batch_size=10)
