@@ -32,7 +32,8 @@ class Unit:
         self.__act = act
         self.__net = None
         self.__out = None
-        self.__upstream_grad = []
+        self.__grad_w = [0.] * len(self.__w)
+        self.__grad_b = 0.
 
     @property
     def w(self):
@@ -53,6 +54,14 @@ class Unit:
     @property
     def net(self):
         return self.__net
+    
+    @property
+    def grad_w(self):
+        return self.__grad_w
+    
+    @property
+    def grad_b(self):
+        return self.__grad_b
 
     @w.setter
     def w(self, value):
@@ -62,13 +71,13 @@ class Unit:
     def b(self, value):
         self.__b = value
 
-    # def net(self, inp):
-    #     """
-    #     Performs weighted sum
-    #     :param inp: unit's input vector
-    #     :return: weighted sum of the input + bias
-    #     """
-    #     return np.dot(inp, self.w) + self.b
+    @grad_w.setter
+    def grad_w(self, value):
+        self.__grad_w = value
+    
+    @grad_b.setter
+    def grad_b(self, value):
+        self.__grad_b = value
 
     def output(self, inp):
         """
@@ -101,6 +110,7 @@ class Layer:
         self.__units = units
         self.__act = self.__units[0].act
         self.__outputs = []
+        self.__inputs = []
 
     @property
     def units(self):
@@ -108,14 +118,19 @@ class Layer:
 
     @property
     def weights(self):
-        """
-        :return: vector of layer's weights (NOT biases)
-        """
         return np.array([u.w[i] for u in self.__units for i in range(len(u.w))])
 
     @property
     def biases(self):
         return np.array([u.b for u in self.__units])
+    
+    @property
+    def gradient_w(self):
+        return np.array([u.grad_w[i] for u in self.__units for i in range(len(u.grad_w))])
+
+    @property
+    def gradient_b(self):
+        return np.array([u.grad_b for u in self.__units])
 
     # @property
     # def weights_biases(self):
@@ -174,14 +189,40 @@ class Layer:
     #         self.units[i].w = value[start: end]
     #         self.units[i].b = value[end]
 
+    @gradient_w.setter
+    def gradient_w(self, value):
+        for i in range(len(self.__units)):
+            n_weights = len(self.__units[i].w)
+            start = i * n_weights
+            end = start + n_weights
+            self.__units[i].grad_w = value[start: end]
+
+    @gradient_b.setter
+    def gradient_b(self, value):
+        self.__check_vectors(self, passed=value, own=self.biases)
+        for i in range(len(self.__units)):
+            self.__units[i].grad_b = value[i]
+
     def forward_pass(self, inp):
         """
         Performs the forward pass on the current layer
         :param inp: (numpy ndarray) input vector
         :return: the vector of the current layer's soutputs
         """
+        self.__inputs = inp
         self.__outputs = [unit.output(inp) for unit in self.units]
         return self.__outputs
+
+    def backward_pass(self, upstream_delta):
+        """
+        Sets the layer's gradient
+        """
+        self.gradient_b = upstream_delta
+        self.gradient_w = [
+            upstream_delta[j] * self.__inputs[i]
+            for j in range(len(upstream_delta))
+            for i in range(len(self.__inputs))
+        ]
 
 
 class Network:
@@ -191,7 +232,6 @@ class Network:
     Attributes:
         layers: list of net's layers ('Layer' objects)
     """
-
     def __init__(self, input_dim=3, units_per_layer=(3, 2), acts=('relu', 'sigmoid'), weights_init='uniform',
                  weights_value=0.1, **kwargs):
         """
@@ -317,6 +357,14 @@ class Network:
         n_target = target.shape[0] if len(target.shape) > 1 else 1
         assert (n_pattern == n_target)
         self.__opt.optimize(train_set=inp, targets=target, epochs=epochs, batch_size=batch_size)
+
+    def propagate_back(self, dErr_dOut):
+        output_layer = self.layers[-1]
+        output_act = output_layer.act
+        dOut_dNet = np.array([output_act.deriv(u.net) for u in output_layer.units])
+        curr_delta = dErr_dOut * dOut_dNet
+        for layer in reversed(self.layers):
+            curr_delta = layer.backward_pass(curr_delta)
 
     def get_struct(self):
         structure = copy.deepcopy(self)
