@@ -60,7 +60,6 @@ class SGD(Optimizer, ABC):
 
         # cycle through epochs
         for epoch in range(epochs):
-            print(f"Epoch {epoch}:")
             # TODO: shuffle dataset
 
             # cycle through batches
@@ -72,8 +71,8 @@ class SGD(Optimizer, ABC):
 
                 # cycle through patterns and targets within a batch
                 for pattern, target in zip(train_batch, targets_batch):
-                    print(pattern, target)
-                print()
+                    net_outputs = self.__nn.forward(inp=pattern)
+                    dErr_dOut = self.loss.deriv(predicted=net_outputs, target=target)
 
         return
         losses = []
