@@ -63,6 +63,8 @@ class SGD(Optimizer, ABC):
         for epoch in range(epochs):
             # TODO: shuffle dataset
 
+            error = 0.
+
             # cycle through batches
             for batch_index in range(math.ceil(len(train_set) / batch_size)):
                 start = batch_index * batch_size
@@ -74,12 +76,22 @@ class SGD(Optimizer, ABC):
                 # cycle through patterns and targets within a batch
                 for pattern, target in zip(train_batch, targets_batch):
                     net_outputs = self.__nn.forward(inp=pattern)
+                    error += self.loss.func(predicted=net_outputs, target=target)
                     dErr_dOut = self.loss.deriv(predicted=net_outputs, target=target)
                     net.propagate_back(dErr_dOut)   # set the layers' gradients
 
                     for i in range(len(net.layers)):
                         grad_net.layers[i].weights += net.layers[i].gradient_w
                         grad_net.layers[i].biases += net.layers[i].gradient_b
+
+                # weights update
+                for i in range(len(net.layers)):
+                    grad_net.layers[i].weights = np.array(grad_net.layers[i].weights)
+                    grad_net.layers[i].biases = np.array(grad_net.layers[i].biases)
+                    grad_net.layers[i].weights /= float(batch_size)
+                    grad_net.layers[i].biases /= float(batch_size)
+                    net.layers[i].weights += self.lrn_rate * grad_net.layers[i].weights
+                    net.layers[i].biases += self.lrn_rate * grad_net.layers[i].biases
 
         exit()
         losses = []
