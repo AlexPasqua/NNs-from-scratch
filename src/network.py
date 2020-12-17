@@ -225,7 +225,7 @@ class Layer:
             for j in range(len(delta))
             for i in range(len(self.__inputs))
         ]
-        new_upstream_delta = [np.dot(delta, [u.w[j] for u in self.__units]) for j in range(len(self.__units))]
+        new_upstream_delta = [np.dot(delta, [u.w[j] for u in self.__units]) for j in range(len(self.__inputs))]
         return new_upstream_delta
 
 

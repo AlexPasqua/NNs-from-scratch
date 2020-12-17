@@ -62,13 +62,11 @@ class SGD(Optimizer, ABC):
 
         # cycle through epochs
         for epoch in range(epochs):
-            print(f"Epoch: {epoch + 1}")
             # TODO: shuffle dataset
 
             epoch_error = [0.] * len(net.layers[-1].units)
 
             # cycle through batches
-            count = 0
             for batch_index in range(math.ceil(len(train_set) / batch_size)):
                 start = batch_index * batch_size
                 end = start + batch_size
@@ -78,8 +76,7 @@ class SGD(Optimizer, ABC):
 
                 # cycle through patterns and targets within a batch
                 for pattern, target in zip(train_batch, targets_batch):
-                    count += 1
-                    net_outputs = self.__nn.forward(inp=pattern)
+                    net_outputs = net.forward(inp=pattern)
                     epoch_error += self.loss.func(predicted=net_outputs, target=target)
                     dErr_dOut = self.loss.deriv(predicted=net_outputs, target=target)
                     net.propagate_back(dErr_dOut)   # set the layers' gradients
