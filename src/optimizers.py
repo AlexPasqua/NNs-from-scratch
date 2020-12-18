@@ -21,8 +21,9 @@ class Optimizer(ABC):
     """
 
     @abstractmethod
-    def __init__(self, loss, lrn_rate=0.01):
+    def __init__(self, loss, metrics, lrn_rate=0.01):
         self.__loss = losses[loss]
+        self.__metrics = metrics
         self.__lrn_rate = lrn_rate
 
     @property
@@ -37,9 +38,9 @@ class Optimizer(ABC):
 class SGD(Optimizer, ABC):
     """ Stochastic Gradient Descent """
 
-    def __init__(self, nn, loss, lrn_rate=0.01):
+    def __init__(self, nn, loss, metrics, lrn_rate=0.01):
         self.__nn = nn
-        super(SGD, self).__init__(loss, lrn_rate)
+        super(SGD, self).__init__(loss, metrics, lrn_rate)
         # makes sure lrn_rate is a value between 0 and 1
         if lrn_rate <= 0 or lrn_rate > 1:
             raise ValueError('lrn_rate should be a value between 0 and 1, Got:{}'.format(lrn_rate))

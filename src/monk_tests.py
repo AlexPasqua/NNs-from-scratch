@@ -24,4 +24,4 @@ if __name__ == '__main__':
     }
     model = Network(**parameters)
     model.compile(opt='sgd', loss='squared', lrn_rate=0.5)
-    model.fit(inp=monk1_train, target=labels, epochs=50, batch_size=len(monk1_train))
+    model.fit(inp=monk1_train, target=labels, epochs=20, batch_size=len(monk1_train))
