@@ -18,11 +18,11 @@ if __name__ == '__main__':
 
     parameters = {
         'input_dim': 6,
-        'units_per_layer': (3, 3, 1),
-        'acts': ('relu', 'relu', 'sigmoid'),
+        'units_per_layer': (3, 1),
+        'acts': ('relu', 'sigmoid'),
         'weights_init': 'uniform',
         'weights_value': 0.1
     }
     model = Network(**parameters)
     model.compile(opt='sgd', loss='squared', lrn_rate=0.8)
-    model.fit(inp=monk1_train, target=labels, epochs=50, batch_size=10)
+    model.fit(inp=monk1_train, target=labels, epochs=10, batch_size=20)

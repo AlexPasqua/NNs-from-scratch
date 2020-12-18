@@ -2,11 +2,11 @@
 import math
 import random
 from abc import ABC, abstractmethod
+import tqdm as tqdm
 from losses import losses
 from network import *
 import numpy as np
 import matplotlib.pyplot as plt
-
 from network import *
 
 
@@ -61,7 +61,7 @@ class SGD(Optimizer, ABC):
         net = self.__nn
 
         # cycle through epochs
-        for epoch in range(epochs):
+        for epoch in tqdm.tqdm(range(epochs), desc="Iterating over epochs"):
             # TODO: shuffle dataset
 
             epoch_error = [0.] * len(net.layers[-1].units)
@@ -102,78 +102,78 @@ class SGD(Optimizer, ABC):
         plt.plot(range(epochs), errors)
         plt.show()
 
-        exit()
-        losses = []
-        for pattern, target in zip(train_set, targets):
-            output_layer = self.__nn.layers[-1]
-            output_act = output_layer.act
-            net_outputs = self.__nn.forward(inp=pattern)
-
-            err = self.loss.func(predicted=net_outputs, target=target)
-            losses.append(err / len(err))
-            print('Loss: ', np.sum(err) / len(err))
-
-            dErr_dOut = self.loss.deriv(predicted=net_outputs, target=target)
-            dOut_dNet = [output_act.deriv(u.net) for u in output_layer.units]
-            delta = -dErr_dOut * dOut_dNet
-            delta_next = delta
-
-            # retrieve the inputs of the output layer to compute the weights update for the output layer
-            out_layer_inputs = self.__nn.layers[-2].outputs if len(self.__nn.layers) > 1 else pattern
-            dErr_dBiases = -delta
-            dErr_dWeights = [
-                -delta[j] * out_layer_inputs[i]
-                for j in range(len(delta))
-                for i in range(len(out_layer_inputs))
-            ]
-
-            # variables used for weights and biases updates
-            # delta_weights: list of lists --> layers x weights_in_layer
-            # delta_biases: list of lists --> layers x biases_in_layer
-            # delta_weights = delta_biases = [[]] * len(self.__nn.layers)
-            delta_weights = [[]] * len(self.__nn.layers)
-            delta_biases = [[]] * len(self.__nn.layers)
-            delta_weights[-1] = [-dErr_dWeights[i] for i in range(len(dErr_dWeights))]
-            delta_biases[-1] = [-dErr_dBiases[j] for j in range(len(dErr_dBiases))]
-
-            # scan all layers from the penultimate to the first
-            for layer_index in reversed(range(len(self.__nn.layers) - 1)):
-                curr_layer = self.__nn.layers[layer_index]
-                next_layer = self.__nn.layers[layer_index + 1]
-                n_curr_units = len(curr_layer.units)  # number of units in the current layer
-                n_next_units = len(next_layer.units)  # number of units in the next layer
-                curr_act = curr_layer.act
-
-                dOut_dNet = [curr_act.deriv(u.net) for u in curr_layer.units]
-
-                delta = [np.dot(delta_next, [u.w[j] for u in next_layer.units]) for j in range(n_curr_units)]
-                delta = np.multiply(delta, dOut_dNet)
-                delta_next = delta
-                # equivalent to:
-                # delta = np.zeros([len(curr_layer.units)])
-                # for j in range(len(curr_layer.units)):
-                #     for l in range(len(next_layer.units)):
-                #         delta[j] += next_layer.units[l].w[j] * delta_next[l]
-                #     delta[j] *= dOut_dNet[j]
-
-                curr_layer_inputs = self.__nn.layers[layer_index - 1].outputs if layer_index > 0 else pattern
-                dErr_dBiases = -delta
-                dErr_dWeights = [
-                    -delta[j] * curr_layer_inputs[i]
-                    for j in range(len(delta))
-                    for i in range(len(curr_layer_inputs))
-                ]
-                delta_weights[layer_index] = [-dErr_dWeights[i] for i in range(len(dErr_dWeights))]
-                delta_biases[layer_index] = [-dErr_dBiases[j] for j in range(len(dErr_dBiases))]
-
-            # update weights and biases
-            for layer_index in range(len(self.__nn.layers)):
-                curr_layer = self.__nn.layers[layer_index]
-                curr_layer.weights += self.lrn_rate * np.array(delta_weights[layer_index])
-                curr_layer.biases += self.lrn_rate * np.array(delta_biases[layer_index])
-
-        plt.plot(losses)
-        plt.show()
+        # OLD BACKPROP --> keep it as reference
+        # losses = []
+        # for pattern, target in zip(train_set, targets):
+        #     output_layer = self.__nn.layers[-1]
+        #     output_act = output_layer.act
+        #     net_outputs = self.__nn.forward(inp=pattern)
+        #
+        #     err = self.loss.func(predicted=net_outputs, target=target)
+        #     losses.append(err / len(err))
+        #     print('Loss: ', np.sum(err) / len(err))
+        #
+        #     dErr_dOut = self.loss.deriv(predicted=net_outputs, target=target)
+        #     dOut_dNet = [output_act.deriv(u.net) for u in output_layer.units]
+        #     delta = -dErr_dOut * dOut_dNet
+        #     delta_next = delta
+        #
+        #     # retrieve the inputs of the output layer to compute the weights update for the output layer
+        #     out_layer_inputs = self.__nn.layers[-2].outputs if len(self.__nn.layers) > 1 else pattern
+        #     dErr_dBiases = -delta
+        #     dErr_dWeights = [
+        #         -delta[j] * out_layer_inputs[i]
+        #         for j in range(len(delta))
+        #         for i in range(len(out_layer_inputs))
+        #     ]
+        #
+        #     # variables used for weights and biases updates
+        #     # delta_weights: list of lists --> layers x weights_in_layer
+        #     # delta_biases: list of lists --> layers x biases_in_layer
+        #     # delta_weights = delta_biases = [[]] * len(self.__nn.layers)
+        #     delta_weights = [[]] * len(self.__nn.layers)
+        #     delta_biases = [[]] * len(self.__nn.layers)
+        #     delta_weights[-1] = [-dErr_dWeights[i] for i in range(len(dErr_dWeights))]
+        #     delta_biases[-1] = [-dErr_dBiases[j] for j in range(len(dErr_dBiases))]
+        #
+        #     # scan all layers from the penultimate to the first
+        #     for layer_index in reversed(range(len(self.__nn.layers) - 1)):
+        #         curr_layer = self.__nn.layers[layer_index]
+        #         next_layer = self.__nn.layers[layer_index + 1]
+        #         n_curr_units = len(curr_layer.units)  # number of units in the current layer
+        #         n_next_units = len(next_layer.units)  # number of units in the next layer
+        #         curr_act = curr_layer.act
+        #
+        #         dOut_dNet = [curr_act.deriv(u.net) for u in curr_layer.units]
+        #
+        #         delta = [np.dot(delta_next, [u.w[j] for u in next_layer.units]) for j in range(n_curr_units)]
+        #         delta = np.multiply(delta, dOut_dNet)
+        #         delta_next = delta
+        #         # equivalent to:
+        #         # delta = np.zeros([len(curr_layer.units)])
+        #         # for j in range(len(curr_layer.units)):
+        #         #     for l in range(len(next_layer.units)):
+        #         #         delta[j] += next_layer.units[l].w[j] * delta_next[l]
+        #         #     delta[j] *= dOut_dNet[j]
+        #
+        #         curr_layer_inputs = self.__nn.layers[layer_index - 1].outputs if layer_index > 0 else pattern
+        #         dErr_dBiases = -delta
+        #         dErr_dWeights = [
+        #             -delta[j] * curr_layer_inputs[i]
+        #             for j in range(len(delta))
+        #             for i in range(len(curr_layer_inputs))
+        #         ]
+        #         delta_weights[layer_index] = [-dErr_dWeights[i] for i in range(len(dErr_dWeights))]
+        #         delta_biases[layer_index] = [-dErr_dBiases[j] for j in range(len(dErr_dBiases))]
+        #
+        #     # update weights and biases
+        #     for layer_index in range(len(self.__nn.layers)):
+        #         curr_layer = self.__nn.layers[layer_index]
+        #         curr_layer.weights += self.lrn_rate * np.array(delta_weights[layer_index])
+        #         curr_layer.biases += self.lrn_rate * np.array(delta_biases[layer_index])
+        #
+        # plt.plot(losses)
+        # plt.show()
 
 
 optimizers = {
