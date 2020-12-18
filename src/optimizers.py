@@ -62,7 +62,11 @@ class SGD(Optimizer, ABC):
 
         # cycle through epochs
         for epoch in tqdm.tqdm(range(epochs), desc="Iterating over epochs"):
-            # TODO: shuffle dataset
+            # shuffle the dataset
+            indexes = list(range(len(targets)))
+            np.random.shuffle(indexes)
+            train_set = train_set[indexes]
+            targets = targets[indexes]
 
             epoch_error = [0.] * len(net.layers[-1].units)
 
@@ -98,7 +102,6 @@ class SGD(Optimizer, ABC):
             epoch_error = np.sum(epoch_error) / len(epoch_error)
             errors.append(epoch_error / float(len(train_set)))
 
-        print(errors)
         plt.plot(range(epochs), errors)
         plt.show()
 
