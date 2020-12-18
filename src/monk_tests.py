@@ -10,7 +10,6 @@ if __name__ == '__main__':
     monk1_train = pd.read_csv("../datasets/monks/monks-1.train", sep=' ', names=col_names)
     monk1_train.set_index('Id', inplace=True)
     labels = monk1_train.pop('class')
-    # print(monk1_train.describe().T)
 
     # transform the dataset from pandas dataframe to numpy ndarray
     monk1_train = monk1_train.to_numpy()
