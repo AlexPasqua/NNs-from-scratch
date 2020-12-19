@@ -339,10 +339,10 @@ class Network:
             print(f"Net's output: {x}")
         return x
 
-    def compile(self, opt='sgd', loss='squared', metrics=('class_acc',), lrn_rate=0.01):
+    def compile(self, opt='sgd', loss='squared', metr=('class_acc',), lrn_rate=0.01):
         if opt not in optimizers or loss not in losses:
             raise AttributeError(f"opt must be within {optimizers.keys()} and loss must be in {losses.keys()}")
-        self.__opt = optimizers[opt](nn=self, loss=loss, metrics=metrics, lrn_rate=lrn_rate)
+        self.__opt = optimizers[opt](nn=self, loss=loss, metr=metr, lrn_rate=lrn_rate)
 
     def fit(self, inp, target, epochs=1, batch_size=1):
         """

@@ -7,6 +7,7 @@ from losses import losses
 from network import *
 import numpy as np
 import matplotlib.pyplot as plt
+from metrics import metrics
 from network import *
 
 
@@ -21,14 +22,18 @@ class Optimizer(ABC):
     """
 
     @abstractmethod
-    def __init__(self, loss, metrics, lrn_rate=0.01):
+    def __init__(self, loss, metr, lrn_rate=0.01):
         self.__loss = losses[loss]
-        self.__metrics = metrics
+        self.__metr = metrics[metr]
         self.__lrn_rate = lrn_rate
 
     @property
     def loss(self):
         return self.__loss
+
+    @property
+    def metr(self):
+        return self.__metr
 
     @property
     def lrn_rate(self):
@@ -38,9 +43,9 @@ class Optimizer(ABC):
 class SGD(Optimizer, ABC):
     """ Stochastic Gradient Descent """
 
-    def __init__(self, nn, loss, metrics, lrn_rate=0.01):
+    def __init__(self, nn, loss, metr, lrn_rate=0.01):
         self.__nn = nn
-        super(SGD, self).__init__(loss, metrics, lrn_rate)
+        super(SGD, self).__init__(loss, metr, lrn_rate)
         # makes sure lrn_rate is a value between 0 and 1
         if lrn_rate <= 0 or lrn_rate > 1:
             raise ValueError('lrn_rate should be a value between 0 and 1, Got:{}'.format(lrn_rate))
@@ -59,6 +64,7 @@ class SGD(Optimizer, ABC):
             targets = targets[np.newaxis, :]
 
         errors = []
+        metrics = []
         net = self.__nn
 
         # cycle through epochs
@@ -69,7 +75,8 @@ class SGD(Optimizer, ABC):
             train_set = train_set[indexes]
             targets = targets[indexes]
 
-            epoch_error = [0.] * len(net.layers[-1].units)
+            epoch_error = np.array([0.] * len(net.layers[-1].units))
+            epoch_metric = np.array([0.] * len(net.layers[-1].units))
 
             # cycle through batches
             for batch_index in range(math.ceil(len(train_set) / batch_size)):
@@ -82,7 +89,8 @@ class SGD(Optimizer, ABC):
                 # cycle through patterns and targets within a batch
                 for pattern, target in zip(train_batch, targets_batch):
                     net_outputs = net.forward(inp=pattern)
-                    epoch_error += self.loss.func(predicted=net_outputs, target=target)
+                    epoch_error[:] += self.loss.func(predicted=net_outputs, target=target)
+                    epoch_metric[:] += self.metr.func(predicted=net_outputs, target=target)
                     dErr_dOut = self.loss.deriv(predicted=net_outputs, target=target)
                     net.propagate_back(dErr_dOut)   # set the layers' gradients
 
@@ -100,10 +108,12 @@ class SGD(Optimizer, ABC):
                     net.layers[i].weights += self.lrn_rate * grad_net.layers[i].weights
                     net.layers[i].biases += self.lrn_rate * grad_net.layers[i].biases
 
-            epoch_error = np.sum(epoch_error) / len(epoch_error)
+            epoch_error = np.sum(epoch_error) / float(len(epoch_error))
+            epoch_metric = np.sum(epoch_metric) / float(len(epoch_metric))
             errors.append(epoch_error / float(len(train_set)))
+            metrics.append(epoch_metric / float(len(train_set)))
 
-        plt.plot(range(epochs), errors)
+        plt.plot(range(epochs), metrics)
         plt.show()
 
         # OLD BACKPROP --> keep it as reference

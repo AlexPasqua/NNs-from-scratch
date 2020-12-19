@@ -16,6 +16,14 @@ class TestErrorFunctions(unittest.TestCase):
 
     def test_functions(self):
         self.assertAlmostEqual(metrics['mee'].func(self.predicted, self.target), 1.22474487139)
+        acc = np.array([0])
+        predicted = np.array([[0], [1], [1], [0.8]])
+        target = np.array([[1], [1], [1], [1]])
+        for i in range(len(predicted)):
+            acc += metrics['class_acc'].func(predicted[i], target[i])
+        self.assertEqual(3, acc)
+        acc = acc / float(len(predicted))
+        self.assertEqual(0.75, acc)
 
     def test_AttributeError(self):
         target_test = np.array(

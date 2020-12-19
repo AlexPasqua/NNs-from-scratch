@@ -34,13 +34,24 @@ def mean_euclidean_error(predicted, target):
 #     return np.sum(pred - targ) / (targ.shape[0] * np.linalg.norm(pred - targ))
 
 
-def classification_accuracy():
-    pass
+def binary_class_accuracy(predicted, target):
+    # lower_thresh = 0.4
+    # upper_thresh = 0.6
+    predicted = predicted[0]
+    target = target[0]
+    # if predicted < lower_thresh or predicted > upper_thresh:
+    #     if abs(predicted - target) < lower_thresh:
+    #         return [1]
+    if np.abs(predicted - target) < 0.2:
+        return np.array([1])
+    return np.array([0])
 
 
 MEE = Function(mean_euclidean_error, 'mee')
+ClassAcc = Function(binary_class_accuracy, 'class_acc')
 metrics = {
     'mee': MEE,
+    'class_acc': ClassAcc
 }
 
 if __name__ == '__main__':
