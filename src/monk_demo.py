@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-from network.network import Network
+from network import Network
 
 
 if __name__ == '__main__':

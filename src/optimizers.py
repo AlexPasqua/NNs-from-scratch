@@ -1,5 +1,9 @@
 """ In this scripts are defined the optimizers used in the project """
-from network.network import *
+import math
+from abc import ABC, abstractmethod
+import tqdm as tqdm
+from functions import losses, metrics
+from network import *
 import numpy as np
 import matplotlib.pyplot as plt
 
