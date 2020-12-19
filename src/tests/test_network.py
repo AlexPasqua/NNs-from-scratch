@@ -1,8 +1,7 @@
 import unittest
-from network import Network
+from network.network import Network
 from activation_functions import act_funcs
-import random
-from network import Layer, Unit
+from network.network import Layer, Unit
 
 
 class TestNetwork(unittest.TestCase):
