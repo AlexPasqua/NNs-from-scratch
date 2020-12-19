@@ -108,12 +108,25 @@ class SGD(Optimizer, ABC):
                     net.layers[i].weights += self.lrn_rate * grad_net.layers[i].weights
                     net.layers[i].biases += self.lrn_rate * grad_net.layers[i].biases
 
-            epoch_error = np.sum(epoch_error) / float(len(epoch_error))
-            epoch_metric = np.sum(epoch_metric) / float(len(epoch_metric))
-            errors.append(epoch_error / float(len(train_set)))
-            metrics.append(epoch_metric / float(len(train_set)))
+            #epoch_error = np.sum(epoch_error) / float(len(epoch_error))
+            epoch_error = np.mean(np.sum(epoch_error))
+            mse_epoch = (epoch_error/float(len(train_set)))
+            errors.append(mse_epoch)
+            print('\nEpoch:{}/{} [=========================] Loss:{}'.format((epoch + 1), epochs, mse_epoch))
+            metrics.append(epoch_metric/float(len(train_set)))
 
+        # plot learning curve
+        plt.plot(range(epochs), errors)
+        plt.xlabel('Epochs',fontweight='bold')
+        plt.ylabel('loss',fontweight='bold')
+        plt.title('Eta:{}  Alpha:/empty/  Lambda:/empty/  Hidden layers:{}'.format(self.lrn_rate, len(net.units_per_layer)),fontweight='bold')
+        plt.show()
+
+        # plot accuracy curve
         plt.plot(range(epochs), metrics)
+        plt.xlabel('Epochs',fontweight='bold')
+        plt.ylabel('accuracy',fontweight='bold')
+        plt.title('Eta:{}  Alpha:/empty/  Lambda:/empty/  Hidden layers:{}'.format(self.lrn_rate, len(net.units_per_layer)),fontweight='bold')
         plt.show()
 
         # OLD BACKPROP --> keep it as reference
