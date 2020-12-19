@@ -1,4 +1,3 @@
-""" Script to do tests with the Monk dataset """
 import pandas as pd
 import numpy as np
 from network import Network
@@ -19,9 +18,9 @@ if __name__ == '__main__':
         'input_dim': 6,
         'units_per_layer': (3, 1),
         'acts': ('sigmoid', 'sigmoid'),
-        'weights_init': 'random',
-        'weights_value': 0.1
+        'init_type': 'random',
+        'weights_value': 0.2
     }
     model = Network(**parameters)
-    model.compile(opt='sgd', loss='squared', metr='class_acc', lrn_rate=0.5)
-    model.fit(inp=monk1_train, target=labels, epochs=10, batch_size=len(monk1_train))
+    model.compile(opt='gd', loss='squared', metr='bin_class_acc', lrn_rate=0.5)
+    model.fit(inputs=monk1_train, targets=labels, epochs=1, batch_size=len(monk1_train))
