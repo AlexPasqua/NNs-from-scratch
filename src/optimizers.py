@@ -82,8 +82,8 @@ class SGD(Optimizer, ABC):
             for batch_index in range(math.ceil(len(train_set) / batch_size)):
                 start = batch_index * batch_size
                 end = start + batch_size
-                train_batch = train_set[start : end]
-                targets_batch = targets[start : end]
+                train_batch = train_set[start: end]
+                targets_batch = targets[start: end]
                 grad_net = net.get_struct()
 
                 # cycle through patterns and targets within a batch
@@ -91,8 +91,12 @@ class SGD(Optimizer, ABC):
                     net_outputs = net.forward(inp=pattern)
                     epoch_error[:] += self.loss.func(predicted=net_outputs, target=target)
                     epoch_metric[:] += self.metr.func(predicted=net_outputs, target=target)
+
+                    # TODO: DEBUG --> printing predicted and target for each forward pass
+                    print('predicted:', net_outputs, 'target', target)  # remove it once everything works
+
                     dErr_dOut = self.loss.deriv(predicted=net_outputs, target=target)
-                    net.propagate_back(dErr_dOut)   # set the layers' gradients
+                    net.propagate_back(dErr_dOut)  # set the layers' gradients
 
                     # add up layers' gradients
                     for i in range(len(net.layers)):
@@ -108,25 +112,30 @@ class SGD(Optimizer, ABC):
                     net.layers[i].weights += self.lrn_rate * grad_net.layers[i].weights
                     net.layers[i].biases += self.lrn_rate * grad_net.layers[i].biases
 
-            #epoch_error = np.sum(epoch_error) / float(len(epoch_error))
             epoch_error = np.mean(np.sum(epoch_error))
-            mse_epoch = (epoch_error/float(len(train_set)))
+            mse_epoch = (epoch_error / float(len(train_set)))
             errors.append(mse_epoch)
-            print('\nEpoch:{}/{} [=========================] Loss:{}'.format((epoch + 1), epochs, mse_epoch))
-            metrics.append(epoch_metric/float(len(train_set)))
+            epoch_acc = epoch_metric / float(len(train_set))
+            print('\nEpoch:{}/{} [=========================] Loss:{} Accuracy:{}'.format((epoch + 1), epochs, mse_epoch,
+                                                                                         float(epoch_acc)))
+            metrics.append(epoch_acc)
 
         # plot learning curve
         plt.plot(range(epochs), errors)
-        plt.xlabel('Epochs',fontweight='bold')
-        plt.ylabel('loss',fontweight='bold')
-        plt.title('Eta:{}  Alpha:/empty/  Lambda:/empty/  Hidden layers:{}'.format(self.lrn_rate, len(net.units_per_layer)),fontweight='bold')
+        plt.xlabel('Epochs', fontweight='bold')
+        plt.ylabel('loss', fontweight='bold')
+        plt.title(
+            'Eta:{}  Alpha:/empty/  Lambda:/empty/  Hidden layers:{}'.format(self.lrn_rate, len(net.units_per_layer)),
+            fontweight='bold')
         plt.show()
 
         # plot accuracy curve
         plt.plot(range(epochs), metrics)
-        plt.xlabel('Epochs',fontweight='bold')
-        plt.ylabel('accuracy',fontweight='bold')
-        plt.title('Eta:{}  Alpha:/empty/  Lambda:/empty/  Hidden layers:{}'.format(self.lrn_rate, len(net.units_per_layer)),fontweight='bold')
+        plt.xlabel('Epochs', fontweight='bold')
+        plt.ylabel('accuracy', fontweight='bold')
+        plt.title(
+            'Eta:{}  Alpha:/empty/  Lambda:/empty/  Hidden layers:{}'.format(self.lrn_rate, len(net.units_per_layer)),
+            fontweight='bold')
         plt.show()
 
         # OLD BACKPROP --> keep it as reference

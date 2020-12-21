@@ -265,10 +265,11 @@ class Network:
 
             # for every unit in the current layer create layer's units
             for j in range(units_per_layer[i]):
+                #TODO: this part needs to be checked. It overrites the values assigned by weight_init
                 units.append(
-                    Unit(w=weights_inits(type=weights_init, n_weights=n_weights, lower_lim=0., upper_lim=1.,
+                    Unit(w=weights_inits(type=weights_init, n_weights=n_weights, lower_lim=0.1, upper_lim=0.2,
                                          value=weights_value),
-                         b=weights_inits(type=weights_init, n_weights=1, lower_lim=0., upper_lim=1.,
+                         b=weights_inits(type=weights_init, n_weights=1, lower_lim=0., upper_lim=0.01,
                                          value=weights_value),
                          act=act_funcs[acts[i]])
                 )
