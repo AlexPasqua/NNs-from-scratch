@@ -40,12 +40,12 @@ if __name__ == '__main__':
     parameters = {
         'input_dim': 17,
         'units_per_layer': (5, 1),
-        'acts': ('sigmoid', 'sigmoid'),
+        'acts': ('relu', 'sigmoid'),
         'weights_init': 'random'
 
     }
 
     model = Network(**parameters)
     model.print_net()
-    model.compile(opt='sgd', loss='squared', metr='class_acc', lrn_rate=0.6)
-    model.fit(inp=monk1_train, target=labels, epochs=80, batch_size=40)
+    model.compile(opt='sgd', loss='squared', metr='class_acc', lrn_rate=0.8)
+    model.fit(inp=monk1_train, target=labels, epochs=40, batch_size=1)

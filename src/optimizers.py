@@ -9,6 +9,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from metrics import metrics
 from network import *
+from regularizations import regularization
 
 
 class Optimizer(ABC):
@@ -52,6 +53,7 @@ class SGD(Optimizer, ABC):
 
     def optimize(self, train_set, targets, epochs, batch_size=1):
         """
+        :param alpha:
         :param train_set: (numpy ndarray) network's inputs
         :param targets: (numpy ndarray)
         :param epochs: (int) number of training epochs
@@ -85,6 +87,7 @@ class SGD(Optimizer, ABC):
                 train_batch = train_set[start: end]
                 targets_batch = targets[start: end]
                 grad_net = net.get_struct()
+                momentum_net = net.get_struct()
 
                 # cycle through patterns and targets within a batch
                 for pattern, target in zip(train_batch, targets_batch):
@@ -109,8 +112,13 @@ class SGD(Optimizer, ABC):
                     grad_net.layers[i].biases = np.array(grad_net.layers[i].biases)
                     grad_net.layers[i].weights /= float(batch_size)
                     grad_net.layers[i].biases /= float(batch_size)
-                    net.layers[i].weights += self.lrn_rate * grad_net.layers[i].weights
-                    net.layers[i].biases += self.lrn_rate * grad_net.layers[i].biases
+                    # momentum update
+                    #TODO:we need to assign customizable variable alpha instead of single value (Alex's help required)
+                    momentum_net.layers[i].weights = grad_net.layers[i].weights * 0.4
+                    momentum_net.layers[i].biases = grad_net.layers[i].biases * 0.4
+
+                    net.layers[i].weights += self.lrn_rate * grad_net.layers[i].weights + momentum_net.layers[i].weights
+                    net.layers[i].biases += self.lrn_rate * grad_net.layers[i].biases + momentum_net.layers[i].biases
 
             epoch_error = np.mean(np.sum(epoch_error))
             mse_epoch = (epoch_error / float(len(train_set)))
