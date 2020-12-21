@@ -53,6 +53,26 @@ def relu_deriv(x):
     return 0 if x <= 0 else 1
 
 
+def leaky_relu(x):
+    """
+    Computes the leaky ReLu activation function
+
+    :param x: input's weighted sum
+    :return: leaky ReLu of x
+    """
+    check_is_number(x)
+    return x if x >= 0 else 0.01 * x
+
+
+def leaky_relu_deriv(x):
+    """
+    Computes the derivative of the leaky ReLu activation function
+
+    :param x: input's weighted sum
+    :return: derivative of the leaky ReLU in x
+    """
+    return 1 if x >= 0 else 0.01
+
 def tanh(x):
     """
     Computes the hyperbolic tangent function (tanh) of x
@@ -70,7 +90,7 @@ def tanh_deriv(x):
     :return: Tanh derivative of x
     """
     check_is_number(x)
-    return 1 - (math.tanh(x))**2
+    return 1 - (math.tanh(x)) ** 2
 
 
 def threshold(x):
@@ -93,21 +113,19 @@ def threshold_deriv(x):
     return 0
 
 
-
-
-
-
 # Objects that can be used many times just using their attributes (func, deriv)
 Sigmoid = DerivableFunction(sigmoid, sigmoid_deriv, 'Sigmoid')
 ReLU = DerivableFunction(relu, relu_deriv, 'ReLU')
 Tanh = DerivableFunction(tanh, tanh_deriv, 'Tanh')
 Threshold = DerivableFunction(threshold, threshold_deriv, 'Threshold')
+Leaky_ReLu = DerivableFunction(leaky_relu, leaky_relu_deriv, 'leaky_relu')
 
 act_funcs = {
     'relu': ReLU,
     'sigmoid': Sigmoid,
     'tanh': Tanh,
-    'threshold': Threshold
+    'threshold': Threshold,
+    'leaky_relu': Leaky_ReLu
 }
 
 if __name__ == '__main__':
@@ -124,3 +142,8 @@ if __name__ == '__main__':
     print(f"Threshold(-1.8): {act_funcs['threshold'].func(-1.8)}")
     print(f"Threshold(0.5): {act_funcs['threshold'].func(0.5)}")
     print(f"Derivative of threshold(1): {act_funcs['threshold'].deriv(1)}")
+    print(f"Leaky_ReLU(1): {act_funcs['leaky_relu'].func(1)}")
+    print(f"Leaky_ReLU(-1): {act_funcs['leaky_relu'].func(-1)}")
+    print(f"Derivative of Leaky_ReLu(1): {act_funcs['leaky_relu'].deriv(1)}")
+    print(f"Derivative of Leaky_ReLu(-1): {act_funcs['leaky_relu'].deriv(-1)}")
+
