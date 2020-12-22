@@ -14,6 +14,10 @@ class TestNetwork(unittest.TestCase):
 
     def test_creation(self):
         self.assertEqual(len(self.params['units_per_layer']), len(self.net.layers))
+        self.assertRaises(TypeError, Network, input_dim=2)  # if not all required arguments are passed
+        self.assertRaises(ValueError, Network, input_dim=-2, units_per_layer=2, acts='relu')
+        self.assertRaises(ValueError, Network, input_dim=2, units_per_layer=(2, -2), acts='relu')
+        self.assertRaises(AttributeError, Network, input_dim=2, units_per_layer=(2, 2), acts='relu')
 
     def test_forward(self):
         net = Network(input_dim=3, units_per_layer=[2, 2], acts=['relu', 'relu'], init_type='uniform', value=0.5)
@@ -29,6 +33,8 @@ class TestNetwork(unittest.TestCase):
     def test_compile(self):
         self.net.compile(opt='gd')
         self.assertEqual('gd', self.net.opt.type)
+        self.assertRaises(AttributeError, self.net.compile, opt='hello', loss='squared')
+        self.assertRaises(AttributeError, self.net.compile, opt='sgd', loss='hello')
 
     def test_fit(self):
         net = Network(input_dim=3, units_per_layer=[6, 2], acts=['relu', 'relu'])
@@ -36,6 +42,11 @@ class TestNetwork(unittest.TestCase):
         self.assertRaises(AssertionError, net.fit, inputs=[[1, 1], [1, 1]], targets=[[1, 2]])
 
     def test_propagate_back(self):
+        self.assertRaises(AttributeError,
+                          self.net.propagate_back,
+                          dErr_dOut=[0.5] * len(self.net.layers[-1].units),
+                          grad_net=self.net.get_empty_gradnet())
+        # perform a forward pass to initialize all the layers' outputs and then call again 'propagate_back'
         self.net.forward(inp=[0.2] * self.net.input_dim)
         self.net.propagate_back(dErr_dOut=[0.5] * len(self.net.layers[-1].units), grad_net=self.net.get_empty_gradnet())
 
@@ -48,13 +59,6 @@ class TestNetwork(unittest.TestCase):
                 self.assertEqual(0., gradnet[layer_index]['biases'][unit_index])
                 for weight_index in range(len(unit.w)):
                     self.assertEqual(0., gradnet[layer_index]['weights'][weight_index + unit_index * len(unit.w)])
-
-    def test_exceptions(self):
-        self.assertRaises(TypeError, Network, input_dim=2)  # if not all required arguments are passed
-        self.assertRaises(ValueError, Network, input_dim=-2, units_per_layer=2, acts='relu')
-        self.assertRaises(ValueError, Network, input_dim=2, units_per_layer=(2, -2), acts='relu')
-        self.assertRaises(AttributeError, Network, input_dim=2, units_per_layer=(2, 2), acts='relu')
-        self.assertRaises(AttributeError, self.net.compile, opt='hello')
 
 
 if __name__ == '__main__':
