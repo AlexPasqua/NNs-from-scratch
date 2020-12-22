@@ -10,13 +10,22 @@ class TestLayer(unittest.TestCase):
     layer = Layer(fanin=3, n_units=n_units, act='relu', init_type='uniform', value=value)
 
     def test_creation(self):
-        self.assertEqual(self.n_units, len(self.layer.units))
-        for u in self.layer.units:
-            self.assertEqual(self.value, u.b)
-            for weight in u.w:
-                self.assertEqual(self.value, weight)
-        layer = Layer(units=Unit(init_type='uniform', act='relu', n_weights=2, value=self.value))
-        self.assertEqual(self.value, layer.units.b)
+        lower_lim = 0.0001
+        upper_lim = 1.
+        layer1 = self.layer
+        layer2 = Layer(fanin=3, n_units=self.n_units, act='relu', init_type='random', lower_lim=lower_lim, upper_lim=upper_lim)
+        self.assertEqual(self.n_units, len(layer1.units))
+        self.assertEqual(self.n_units, len(layer2.units))
+        for unit_index in range(len(layer1.units)):
+            unit1 = layer1.units[unit_index]
+            unit2 = layer2.units[unit_index]
+            self.assertEqual(self.value, unit1.b)
+            self.assertGreaterEqual(unit2.b, lower_lim)
+            self.assertLess(unit2.b, upper_lim)
+            for weight_index in range(len(unit1.w)):
+                self.assertEqual(self.value, unit1.w[weight_index])
+                self.assertGreaterEqual(unit2.w[weight_index], lower_lim)
+                self.assertLess(unit2.w[weight_index], upper_lim)
 
     def test_forward_pass(self):
         inp = [0.5] * self.n_units

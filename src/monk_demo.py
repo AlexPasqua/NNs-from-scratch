@@ -19,7 +19,9 @@ if __name__ == '__main__':
         'units_per_layer': (3, 1),
         'acts': ('sigmoid', 'sigmoid'),
         'init_type': 'random',
-        'weights_value': 0.2
+        'weights_value': 0.2,
+        'lower_lim': 0.0001,
+        'upper_lim': 1.
     }
     model = Network(**parameters)
     model.compile(opt='gd', loss='squared', metr='bin_class_acc', lrn_rate=0.5)
