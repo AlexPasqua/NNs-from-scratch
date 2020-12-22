@@ -1,11 +1,9 @@
-""" In this scripts are defined the optimizers used in the project """
 import math
 from abc import ABC, abstractmethod
+import matplotlib.pyplot as plt
+import numpy as np
 import tqdm as tqdm
 from functions import losses, metrics
-from network import *
-import numpy as np
-import matplotlib.pyplot as plt
 
 
 class Optimizer(ABC):
@@ -122,8 +120,6 @@ class GradientDescent(Optimizer, ABC):
             epoch_error = np.sum(epoch_error) / float(len(epoch_error))
             epoch_metric = np.sum(epoch_metric) / float(len(epoch_metric))
             errors.append(epoch_error / float(len(train_set)))
-            print(epoch_metric)
-            print(epoch_metric / float(len(train_set)))
             metric_values.append(epoch_metric / float(len(train_set)))
 
         plt.plot(range(epochs), metric_values)
