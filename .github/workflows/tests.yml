@@ -55,9 +55,12 @@ jobs:
       - name: Run unit tests
         run: |
           cd src/
-          python -m unittest tests.test_activation_functions
-          python -m unittest tests.test_losses
-          python -m unittest tests.test_regularizations
-          python -m unittest tests.test_weights_inits
-          python -m unittest tests.test_network
+          python -m unittest unit_tests.test_function
+          python -m unittest unit_tests.test_layer
+          python -m unittest unit_tests.test_network
+          python -m unittest unit_tests.test_optimizers
+          python -m unittest unit_tests.test_regularizations
+          python -m unittest unit_tests.test_unit
+          python -m unittest unit_tests.test_weights_initializations
+          
         
