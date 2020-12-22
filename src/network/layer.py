@@ -95,6 +95,8 @@ class Layer:
             layer (that does not have access to this layer's weights), that will execute this method in the
             next iteration of Network.propagate_back()
         :return new_upstream_delta: delta already multiplied (dot product) by the current layer's weights
+        :return gradient_w: gradient wrt weights
+        :return gradient_b: gradient wrt biases
         """
         dOut_dNet = np.array([self.act.deriv(u.net) for u in self.__units])
         delta = upstream_delta * dOut_dNet
