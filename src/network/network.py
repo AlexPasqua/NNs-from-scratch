@@ -1,7 +1,7 @@
 import copy
 
 import numpy as np
-from layer import Layer
+from network.layer import Layer
 from functions import losses
 from optimizers import *
 

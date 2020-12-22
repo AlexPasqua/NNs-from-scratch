@@ -1,7 +1,7 @@
 import unittest
 import numpy as np
-from layer import Layer
-from unit import Unit
+from network.layer import Layer
+from network.unit import Unit
 
 
 class TestLayer(unittest.TestCase):

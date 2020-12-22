@@ -1,6 +1,6 @@
 import numpy as np
 from numbers import Number
-from unit import Unit
+from network.unit import Unit
 
 
 class Layer:

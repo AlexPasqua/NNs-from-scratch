@@ -1,6 +1,5 @@
 import unittest
-from network import Network
-from optimizers import *
+from network.network import Network
 
 
 class TestNetwork(unittest.TestCase):

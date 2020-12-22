@@ -1,6 +1,6 @@
 import unittest
 import numpy as np
-from unit import Unit
+from network.unit import Unit
 
 
 class TestUnit(unittest.TestCase):

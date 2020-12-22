@@ -1,7 +1,7 @@
 import unittest
 import numpy as np
 from optimizers import optimizers
-from network import Network
+from network.network import Network
 
 
 class TestOptimizers(unittest.TestCase):
