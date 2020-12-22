@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 from network.network import Network
-
+from sklearn.preprocessing import OneHotEncoder
 
 if __name__ == '__main__':
     # read the dataset
@@ -10,19 +10,21 @@ if __name__ == '__main__':
     monk1_train.set_index('Id', inplace=True)
     labels = monk1_train.pop('class')
 
-    # transform the dataset from pandas dataframe to numpy ndarray
-    monk1_train = monk1_train.to_numpy()
+    # 1-hot encoding (and transform dataframe to numpy array)
+    monk1_train = OneHotEncoder().fit_transform(monk1_train).toarray()
+
+    # transform labels from pandas dataframe to numpy ndarray
     labels = labels.to_numpy()[:, np.newaxis]
 
     parameters = {
-        'input_dim': 6,
+        'input_dim': 17,
         'units_per_layer': (3, 1),
         'acts': ('sigmoid', 'sigmoid'),
-        'init_type': 'random',
+        'init_type': 'uniform',
         'weights_value': 0.2,
         'lower_lim': 0.0001,
         'upper_lim': 1.
     }
     model = Network(**parameters)
     model.compile(opt='gd', loss='squared', metr='bin_class_acc', lrn_rate=0.5)
-    model.fit(inputs=monk1_train, targets=labels, epochs=1, batch_size=len(monk1_train))
+    model.fit(inputs=monk1_train, targets=labels, epochs=50, batch_size=len(monk1_train))

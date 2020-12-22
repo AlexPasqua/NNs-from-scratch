@@ -122,8 +122,8 @@ class GradientDescent(Optimizer, ABC):
             errors.append(epoch_error / float(len(train_set)))
             metric_values.append(epoch_metric / float(len(train_set)))
 
-        plt.plot(range(epochs), metric_values)
-        # plt.show()
+        plt.plot(range(epochs), errors)
+        plt.show()
 
 
 optimizers = {
