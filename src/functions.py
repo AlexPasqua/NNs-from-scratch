@@ -114,6 +114,26 @@ def tanh_deriv(x):
     return 1 - (math.tanh(x)) ** 2
 
 
+def leaky_relu(x):
+    """
+    Computes the leaky ReLu activation function
+    :param x: input's weighted sum
+    :return: leaky ReLu of x
+    """
+    check_is_number(x)
+    return x if x >= 0 else 0.01 * x
+
+
+def leaky_relu_deriv(x):
+    """
+    Computes the derivative of the leaky ReLu activation function
+    :param x: input's weighted sum
+    :return: derivative of the leaky ReLU in x
+    """
+    check_is_number(x)
+    return 1 if x >= 0 else 0.01
+
+
 """ Loss Functions """
 
 
@@ -175,11 +195,13 @@ metrics = {
     'bin_class_acc': BinClassAcc
 }
 
-Sigmoid = DerivableFunction(sigmoid, sigmoid_deriv, 'Sigmoid')
 ReLU = DerivableFunction(relu, relu_deriv, 'ReLU')
+LeakyReLU = DerivableFunction(leaky_relu, leaky_relu_deriv, 'LeakyReLU')
+Sigmoid = DerivableFunction(sigmoid, sigmoid_deriv, 'Sigmoid')
 Tanh = DerivableFunction(tanh, tanh_deriv, 'Tanh')
 act_funcs = {
     'relu': ReLU,
+    'leaky_relu': LeakyReLU,
     'sigmoid': Sigmoid,
     'tanh': Tanh,
 }

@@ -19,7 +19,7 @@ if __name__ == '__main__':
     parameters = {
         'input_dim': 17,
         'units_per_layer': (3, 1),
-        'acts': ('relu', 'sigmoid'),
+        'acts': ('leaky_relu', 'tanh'),
         'init_type': 'random',
         'weights_value': 0.2,
         'lower_lim': 0.01,
@@ -27,5 +27,5 @@ if __name__ == '__main__':
     }
     model = Network(**parameters)
     # model.print_net()
-    model.compile(opt='gd', loss='squared', metr='bin_class_acc', lrn_rate=0.8)
+    model.compile(opt='gd', loss='squared', metr='bin_class_acc', lrn_rate=0.5)
     model.fit(inputs=monk1_train, targets=labels, epochs=500, batch_size=len(monk1_train))

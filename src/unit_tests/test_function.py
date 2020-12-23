@@ -9,18 +9,22 @@ class TestFunctions(unittest.TestCase):
         self.assertEqual(act_funcs['relu'].func(-3.), 0.)
         self.assertAlmostEqual(act_funcs['tanh'].func(1.), 0.7615941559557649)
         self.assertEqual(act_funcs['relu'].func([[[2.]]]), 2.)
+        self.assertEqual(act_funcs['leaky_relu'].func(1.), 1.)
+        self.assertEqual(act_funcs['leaky_relu'].func(-1.), -0.01)
 
     def test_act_funcs_derivs(self):
         self.assertAlmostEqual(act_funcs['sigmoid'].deriv(1.), 0.19661193324148185)
         self.assertEqual(act_funcs['relu'].deriv(2.), 1.)
         self.assertEqual(act_funcs['relu'].deriv(-3.), 0.)
         self.assertAlmostEqual(act_funcs['tanh'].deriv(1.), 0.41997434161402614)
+        self.assertEqual(act_funcs['leaky_relu'].deriv(1.), 1.)
+        self.assertEqual(act_funcs['leaky_relu'].deriv(-1.), 0.01)
 
     def test_exceptions(self):
         # check many combination
         # it may be enough to test the function 'check_is_number', but this way we check also that
         # we call 'check_is_number' in every activation function and deriv
-        activation = ['sigmoid', 'relu', 'tanh']
+        activation = ['sigmoid', 'relu', 'leaky_relu', 'tanh']
         attribute_test = [[1, [1, 2, 3]], 'hello']
         for act in activation:
             for attr_test in attribute_test:
