@@ -93,17 +93,10 @@ class GradientDescent(Optimizer, ABC):
 
                 # cycle through patterns and targets within a batch
                 for pattern, target in zip(train_batch, targets_batch):
-                    net_outputs = net.forward(inp=pattern, verbose=True)
+                    net_outputs = net.forward(inp=pattern)
                     epoch_error[:] += self.loss.func(predicted=net_outputs, target=target)
                     epoch_metric[:] += self.metr.func(predicted=net_outputs, target=target)
-                    # print(f"Metric: {self.metr.func(predicted=net_outputs, target=target)}")
-                    # print(f"Loss: {self.loss.func(predicted=net_outputs, target=target)}")
-                    # print(f"predicted: {net_outputs}")
-                    # print(f"target: {target}")
-                    # print()
                     dErr_dOut = self.loss.deriv(predicted=net_outputs, target=target)
-                    print(net_outputs)
-                    exit()
                     # set the layers' gradients and add them into grad_net
                     # (emulate pass by reference of grad_net using return and reassign)
                     grad_net = net.propagate_back(dErr_dOut, grad_net)

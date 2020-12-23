@@ -132,7 +132,6 @@ class Network:
             curr_delta, grad_w, grad_b = self.__layers[layer_index].backward_pass(curr_delta)
             grad_net[layer_index]['weights'] += np.array(grad_w)
             grad_net[layer_index]['biases'] += np.array(grad_b)
-            print(grad_net, '\n\n')
         return grad_net
 
     def get_empty_gradnet(self):

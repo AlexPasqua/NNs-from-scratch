@@ -22,10 +22,10 @@ if __name__ == '__main__':
         'acts': ('relu', 'sigmoid'),
         'init_type': 'random',
         'weights_value': 0.2,
-        'lower_lim': 10,
-        'upper_lim': 12
+        'lower_lim': 0.01,
+        'upper_lim': 0.2
     }
     model = Network(**parameters)
-    model.print_net()
+    # model.print_net()
     model.compile(opt='gd', loss='squared', metr='bin_class_acc', lrn_rate=0.8)
-    model.fit(inputs=monk1_train, targets=labels, epochs=10, batch_size=len(monk1_train))
+    model.fit(inputs=monk1_train, targets=labels, epochs=500, batch_size=len(monk1_train))
