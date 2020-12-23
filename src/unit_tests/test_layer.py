@@ -10,8 +10,8 @@ class TestLayer(unittest.TestCase):
     layer = Layer(fanin=3, n_units=n_units, act='relu', init_type='uniform', value=value)
 
     def test_creation(self):
-        lower_lim = 0.0001
-        upper_lim = 1.
+        lower_lim = 10
+        upper_lim = 12
         layer1 = self.layer
         layer2 = Layer(fanin=3, n_units=self.n_units, act='relu', init_type='random', lower_lim=lower_lim, upper_lim=upper_lim)
         self.assertEqual(self.n_units, len(layer1.units))

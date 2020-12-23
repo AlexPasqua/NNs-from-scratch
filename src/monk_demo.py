@@ -19,12 +19,13 @@ if __name__ == '__main__':
     parameters = {
         'input_dim': 17,
         'units_per_layer': (3, 1),
-        'acts': ('sigmoid', 'sigmoid'),
-        'init_type': 'uniform',
+        'acts': ('relu', 'sigmoid'),
+        'init_type': 'random',
         'weights_value': 0.2,
-        'lower_lim': 0.0001,
-        'upper_lim': 1.
+        'lower_lim': 10,
+        'upper_lim': 12
     }
     model = Network(**parameters)
-    model.compile(opt='gd', loss='squared', metr='bin_class_acc', lrn_rate=0.5)
-    model.fit(inputs=monk1_train, targets=labels, epochs=50, batch_size=len(monk1_train))
+    model.print_net()
+    model.compile(opt='gd', loss='squared', metr='bin_class_acc', lrn_rate=0.8)
+    model.fit(inputs=monk1_train, targets=labels, epochs=10, batch_size=len(monk1_train))

@@ -28,6 +28,7 @@ class Network:
                                 acts=acts)
 
         self.__input_dim = input_dim
+        self.__units_per_layer = units_per_layer
         self.__layers = []
         self.__opt = None
         other_args = {**{'init_type': init_type, 'value': value}, **kwargs}   # merge 2 dictionaries
@@ -47,6 +48,10 @@ class Network:
     @property
     def input_dim(self):
         return self.__input_dim
+
+    @property
+    def units_per_layer(self):
+        return self.__units_per_layer
 
     @property
     def layers(self):
@@ -127,6 +132,7 @@ class Network:
             curr_delta, grad_w, grad_b = self.__layers[layer_index].backward_pass(curr_delta)
             grad_net[layer_index]['weights'] += np.array(grad_w)
             grad_net[layer_index]['biases'] += np.array(grad_b)
+            print(grad_net, '\n\n')
         return grad_net
 
     def get_empty_gradnet(self):
@@ -139,3 +145,12 @@ class Network:
             struct[layer_index]['weights'] = [0.] * len(self.__layers[layer_index].weights)
             struct[layer_index]['biases'] = [0.] * len(self.__layers[layer_index].biases)
         return struct
+
+    def print_net(self):
+        """ Prints the network's architecture and parameters """
+        print('Neural Network:')
+        for layer in self.layers:
+            print('  Layer:')
+            for unit in layer.units:
+                print(f"\tUnit:\n\t  weights: {unit.w}\n\t  bias: {unit.b}\n\t  activation function: {unit.act.name}")
+            print()

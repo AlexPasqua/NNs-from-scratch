@@ -100,7 +100,9 @@ class Layer:
         """
         dOut_dNet = np.array([self.act.deriv(u.net) for u in self.__units])
         delta = upstream_delta * dOut_dNet
+        print(self.__gradient_b)
         self.__gradient_b = -delta
+        print(self.__gradient_b)
         self.__gradient_w = [
             -delta[j] * self.__inputs[i]
             for j in range(len(delta))

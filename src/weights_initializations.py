@@ -19,8 +19,5 @@ def _uniform_init(n_weights, value, **kwargs):
 def _rand_init(n_weights, lower_lim=0., upper_lim=1., **kwargs):
     if lower_lim >= upper_lim:
         raise ValueError(f"lower_lim must be <= than upper_lim")
-    if n_weights > 1:
-        return np.random.uniform(lower_lim, upper_lim, n_weights)
-    else:
-        return np.random.randn() % upper_lim
+    return np.random.uniform(lower_lim, upper_lim, n_weights)
 

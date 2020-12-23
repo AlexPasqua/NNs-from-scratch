@@ -93,10 +93,17 @@ class GradientDescent(Optimizer, ABC):
 
                 # cycle through patterns and targets within a batch
                 for pattern, target in zip(train_batch, targets_batch):
-                    net_outputs = net.forward(inp=pattern)
+                    net_outputs = net.forward(inp=pattern, verbose=True)
                     epoch_error[:] += self.loss.func(predicted=net_outputs, target=target)
                     epoch_metric[:] += self.metr.func(predicted=net_outputs, target=target)
+                    # print(f"Metric: {self.metr.func(predicted=net_outputs, target=target)}")
+                    # print(f"Loss: {self.loss.func(predicted=net_outputs, target=target)}")
+                    # print(f"predicted: {net_outputs}")
+                    # print(f"target: {target}")
+                    # print()
                     dErr_dOut = self.loss.deriv(predicted=net_outputs, target=target)
+                    print(net_outputs)
+                    exit()
                     # set the layers' gradients and add them into grad_net
                     # (emulate pass by reference of grad_net using return and reassign)
                     grad_net = net.propagate_back(dErr_dOut, grad_net)
@@ -108,10 +115,6 @@ class GradientDescent(Optimizer, ABC):
 
                 # weights update
                 for layer_index in range(len(net.layers)):
-                    # grad_net.layers[i].weights = np.array(grad_net.layers[i].weights)
-                    # grad_net.layers[i].biases = np.array(grad_net.layers[i].biases)
-                    # grad_net.layers[i].weights /= float(batch_size)
-                    # grad_net.layers[i].biases /= float(batch_size)
                     grad_net[layer_index]['weights'] /= float(batch_size)
                     grad_net[layer_index]['biases'] /= float(batch_size)
                     net.layers[layer_index].weights += self.lrn_rate * grad_net[layer_index]['weights']
@@ -122,7 +125,17 @@ class GradientDescent(Optimizer, ABC):
             errors.append(epoch_error / float(len(train_set)))
             metric_values.append(epoch_metric / float(len(train_set)))
 
+        # plot learning curve
         plt.plot(range(epochs), errors)
+        plt.xlabel('Epochs', fontweight='bold')
+        plt.ylabel('loss', fontweight='bold')
+        plt.title(f"Eta:{self.lrn_rate}  Alpha:/empty/  Lambda:/empty/  Hidden layers:{len(net.units_per_layer)}", fontweight='bold')
+        plt.show()
+
+        plt.plot(range(epochs), metric_values)
+        plt.xlabel('Epochs', fontweight='bold')
+        plt.ylabel('accuracy', fontweight='bold')
+        plt.title(f"Eta:{self.lrn_rate}  Alpha:/empty/  Lambda:/empty/  Hidden layers:{len(net.units_per_layer)}", fontweight='bold')
         plt.show()
 
 
