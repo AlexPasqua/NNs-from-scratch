@@ -19,7 +19,7 @@ class Optimizer(ABC):
     """
 
     @abstractmethod
-    def __init__(self, net, loss, metr, lrn_rate=0.01):
+    def __init__(self, net, loss, metr, lrn_rate, momentum):
         # makes sure lrn_rate is a value between 0 and 1
         if lrn_rate <= 0 or lrn_rate > 1:
             raise ValueError('lrn_rate should be a value between 0 and 1, Got:{}'.format(lrn_rate))
@@ -27,6 +27,7 @@ class Optimizer(ABC):
         self.__loss = losses[loss]
         self.__metric = metrics[metr]
         self.__lrn_rate = lrn_rate
+        self.momentum = momentum
 
     @property
     def net(self):
@@ -47,8 +48,8 @@ class Optimizer(ABC):
 
 class GradientDescent(Optimizer, ABC):
     """ Gradient Descent """
-    def __init__(self, net, loss, metr, lrn_rate=0.01):
-        super(GradientDescent, self).__init__(net, loss, metr, lrn_rate)
+    def __init__(self, net, loss, metr, lrn_rate=0.01, momentum=0.):
+        super(GradientDescent, self).__init__(net, loss, metr, lrn_rate, momentum)
         self.__type = 'gd'
 
     @property
@@ -71,6 +72,7 @@ class GradientDescent(Optimizer, ABC):
         errors = []
         metric_values = []
         net = self.net
+        momentum_net = net.get_empty_struct()
 
         # cycle through epochs
         for epoch in tqdm.tqdm(range(epochs), desc="Iterating over epochs"):
@@ -89,7 +91,7 @@ class GradientDescent(Optimizer, ABC):
                 end = start + batch_size
                 train_batch = train_set[start: end]
                 targets_batch = targets[start: end]
-                grad_net = net.get_empty_gradnet()
+                grad_net = net.get_empty_struct()
 
                 # cycle through patterns and targets within a batch
                 for pattern, target in zip(train_batch, targets_batch):
@@ -110,8 +112,14 @@ class GradientDescent(Optimizer, ABC):
                 for layer_index in range(len(net.layers)):
                     grad_net[layer_index]['weights'] /= float(batch_size)
                     grad_net[layer_index]['biases'] /= float(batch_size)
-                    net.layers[layer_index].weights += self.lrn_rate * grad_net[layer_index]['weights']
-                    net.layers[layer_index].biases += self.lrn_rate * grad_net[layer_index]['biases']
+                    delta_w = self.lrn_rate * grad_net[layer_index]['weights']
+                    delta_b = self.lrn_rate * grad_net[layer_index]['biases']
+                    momentum_net[layer_index]['weights'] *= self.momentum
+                    momentum_net[layer_index]['biases'] *= self.momentum
+                    momentum_net[layer_index]['weights'] += delta_w
+                    momentum_net[layer_index]['biases'] += delta_b
+                    net.layers[layer_index].weights += momentum_net[layer_index]['weights']
+                    net.layers[layer_index].biases += momentum_net[layer_index]['biases']
 
             epoch_error = np.sum(epoch_error) / float(len(epoch_error))
             epoch_metric = np.sum(epoch_metric) / float(len(epoch_metric))
