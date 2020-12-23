@@ -130,13 +130,13 @@ class GradientDescent(Optimizer, ABC):
         plt.plot(range(epochs), errors)
         plt.xlabel('Epochs', fontweight='bold')
         plt.ylabel('loss', fontweight='bold')
-        plt.title(f"Eta:{self.lrn_rate}  Alpha:/empty/  Lambda:/empty/  Hidden layers:{len(net.units_per_layer)}", fontweight='bold')
+        plt.title(f"Eta:{self.lrn_rate}  Alpha:{self.momentum}  Lambda:/empty/  Hidden layers:{len(net.units_per_layer)}", fontweight='bold')
         plt.show()
 
         plt.plot(range(epochs), metric_values)
         plt.xlabel('Epochs', fontweight='bold')
         plt.ylabel('accuracy', fontweight='bold')
-        plt.title(f"Eta:{self.lrn_rate}  Alpha:/empty/  Lambda:/empty/  Hidden layers:{len(net.units_per_layer)}", fontweight='bold')
+        plt.title(f"Eta:{self.lrn_rate}  Alpha:{self.momentum}  Lambda:/empty/  Hidden layers:{len(net.units_per_layer)}", fontweight='bold')
         plt.show()
 
 
