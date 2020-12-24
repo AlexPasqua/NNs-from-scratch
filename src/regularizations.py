@@ -15,7 +15,6 @@ def lasso_l1_deriv(w, lambd):
     return w
 
 
-
 def ridge_l2(w, lambd):
     return lambd * np.sum(np.square(w))
 
@@ -45,8 +44,8 @@ def regularization(w, lambd, reg_type):
 
     return regularizations[reg_type](w, lambd)
 '''
-l2_regularization = DerivableFunction(ridge_l2, ridge_l2_deriv, 'l2_reg')
-l1_regularization = DerivableFunction(lasso_l1, lasso_l1_deriv, 'l1_reg')
+l2_regularization = DerivableFunction(ridge_l2, ridge_l2_deriv, 'l2')
+l1_regularization = DerivableFunction(lasso_l1, lasso_l1_deriv, 'l1')
 regularization = {
     'l2': l2_regularization,
     'l1': l1_regularization
@@ -59,5 +58,3 @@ if __name__ == '__main__':
     print(f"L2 regularization deriv (lambd = 0.2):{regularization['l2'].deriv(w=w, lambd=0.2)}")
     print(f"L1 regularization func (lambd = 0.2):{regularization['l1'].func(w=w, lambd=0.2)}")
     print(f"L1 regularization deriv (lambd = 0.2):{regularization['l1'].deriv(w=w, lambd=0.2)}")
-
-
