@@ -205,3 +205,4 @@ SquaredLoss = DerivableFunction(squared_loss, squared_loss_deriv, 'squared')
 losses = {
     'squared': SquaredLoss,
 }
+
