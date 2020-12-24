@@ -58,5 +58,23 @@ class TestMetrics(unittest.TestCase):
         self.assertEqual(0, metrics['bin_class_acc'].func(predicted=[1], target=[0.098]))
 
 
+class TestLRDecays(unittest.TestCase):
+    def test_lr_decays(self):
+        curr_lr = 0.5
+        base_lr = 0.5
+        final_lr = 0.05
+        curr_step = 10
+        limit_step = 100
+        self.assertEqual(
+            lr_decays['linear'].func(curr_lr=curr_lr, base_lr=base_lr, final_lr=final_lr, curr_step=curr_step, limit_step=limit_step),
+            (1 - curr_step / limit_step) * base_lr + curr_step / limit_step * final_lr
+        )
+        curr_step = limit_step + 1
+        self.assertEqual(
+            lr_decays['linear'].func(curr_lr=curr_lr, base_lr=base_lr, final_lr=final_lr, curr_step=curr_step, limit_step=limit_step),
+            final_lr
+        )
+
+
 if __name__ == '__main__':
     unittest.main()
