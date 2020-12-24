@@ -15,18 +15,21 @@ class Optimizer(ABC):
         net: ('Network' object) Neural Network to which apply the algorithm
         loss: ('DerivableFunction' object) loss function
         metr: ('Function' object) accuracy function
-        lrn_rate: (float) learning rate
+        lr: (float) learning rate
     """
-
     @abstractmethod
-    def __init__(self, net, loss, metr, lrn_rate=0.01):
-        # makes sure lrn_rate is a value between 0 and 1
-        if lrn_rate <= 0 or lrn_rate > 1:
-            raise ValueError('lrn_rate should be a value between 0 and 1, Got:{}'.format(lrn_rate))
+    def __init__(self, net, loss, metr, lr, lr_decay, limit_step):
+        # makes sure lr is a value between 0 and 1
+        if lr <= 0 or lr > 1:
+            raise ValueError('lr should be a value between 0 and 1, Got:{}'.format(lr))
         self.__net = net
         self.__loss = losses[loss]
         self.__metric = metrics[metr]
-        self.__lrn_rate = lrn_rate
+        self.lr = lr
+        self.base_lr = self.lr
+        self.final_lr = self.lr / 100.0
+        self.lr_decay = lr_decay
+        self.limit_step = limit_step
 
     @property
     def net(self):
@@ -40,15 +43,11 @@ class Optimizer(ABC):
     def metr(self):
         return self.__metric
 
-    @property
-    def lrn_rate(self):
-        return self.__lrn_rate
-
 
 class GradientDescent(Optimizer, ABC):
     """ Gradient Descent """
-    def __init__(self, net, loss, metr, lrn_rate=0.01):
-        super(GradientDescent, self).__init__(net, loss, metr, lrn_rate)
+    def __init__(self, net, loss, metr, lr, lr_decay, limit_step):
+        super(GradientDescent, self).__init__(net, loss, metr, lr, lr_decay, limit_step)
         self.__type = 'gd'
 
     @property
@@ -68,9 +67,10 @@ class GradientDescent(Optimizer, ABC):
         if len(targets.shape) < 2:
             targets = targets[np.newaxis, :]
 
-        errors = []
-        metric_values = []
         net = self.net
+        metric_values = []
+        error_values = []
+        step = 0
 
         # cycle through epochs
         for epoch in tqdm.tqdm(range(epochs), desc="Iterating over epochs"):
@@ -110,25 +110,30 @@ class GradientDescent(Optimizer, ABC):
                 for layer_index in range(len(net.layers)):
                     grad_net[layer_index]['weights'] /= float(batch_size)
                     grad_net[layer_index]['biases'] /= float(batch_size)
-                    net.layers[layer_index].weights += self.lrn_rate * grad_net[layer_index]['weights']
-                    net.layers[layer_index].biases += self.lrn_rate * grad_net[layer_index]['biases']
+                    # learning rate decay
+                    step += 1
+                    if self.lr_decay == 'linear' and step < self.limit_step and self.lr > self.final_lr:
+                        decay_rate = step / self.limit_step
+                        self.lr = (1. - decay_rate) * self.base_lr + decay_rate * self.final_lr
+                    net.layers[layer_index].weights += self.lr * grad_net[layer_index]['weights']
+                    net.layers[layer_index].biases += self.lr * grad_net[layer_index]['biases']
 
             epoch_error = np.sum(epoch_error) / float(len(epoch_error))
             epoch_metric = np.sum(epoch_metric) / float(len(epoch_metric))
-            errors.append(epoch_error / float(len(train_set)))
+            error_values.append(epoch_error / float(len(train_set)))
             metric_values.append(epoch_metric / float(len(train_set)))
 
         # plot learning curve
-        plt.plot(range(epochs), errors)
+        plt.plot(range(epochs), error_values)
         plt.xlabel('Epochs', fontweight='bold')
         plt.ylabel('loss', fontweight='bold')
-        plt.title(f"Eta:{self.lrn_rate}  Alpha:/empty/  Lambda:/empty/  Hidden layers:{len(net.units_per_layer)}", fontweight='bold')
+        plt.title(f"Base Eta:{self.base_lr}  Alpha:/empty/  Lambda:/empty/  Hidden layers:{len(net.units_per_layer)}", fontweight='bold')
         plt.show()
 
         plt.plot(range(epochs), metric_values)
         plt.xlabel('Epochs', fontweight='bold')
         plt.ylabel('accuracy', fontweight='bold')
-        plt.title(f"Eta:{self.lrn_rate}  Alpha:/empty/  Lambda:/empty/  Hidden layers:{len(net.units_per_layer)}", fontweight='bold')
+        plt.title(f"Base Eta:{self.base_lr}  Alpha:/empty/  Lambda:/empty/  Hidden layers:{len(net.units_per_layer)}", fontweight='bold')
         plt.show()
 
 

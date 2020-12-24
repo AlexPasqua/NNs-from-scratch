@@ -95,17 +95,19 @@ class Network:
             print(f"Net's output: {outputs}")
         return outputs
 
-    def compile(self, opt='gd', loss='squared', metr='bin_class_acc', lrn_rate=0.01):
+    def compile(self, opt='gd', loss='squared', metr='bin_class_acc', lr=0.01, lr_decay=None, limit_step=200):
         """
         Prepares the network for training by assigning an optimizer to it
         :param opt: ('Optimizer' object)
         :param loss: (str) the type of loss function
         :param metr: (str) the type of metric to track (accuracy etc)
-        :param lrn_rate: (float) learning rate value
+        :param lr: (float) learning rate value
+        :param lr_decay: type of decay for the learning rate
+        :param limit_step: number of steps of weights update to perform before stopping decaying the learning rate
         """
         if opt not in optimizers or loss not in losses:
             raise AttributeError(f"opt must be within {optimizers.keys()} and loss must be in {losses.keys()}")
-        self.__opt = optimizers[opt](net=self, loss=loss, metr=metr, lrn_rate=lrn_rate)
+        self.__opt = optimizers[opt](net=self, loss=loss, metr=metr, lr=lr, lr_decay=lr_decay, limit_step=limit_step)
 
     def fit(self, inputs, targets, epochs=1, batch_size=1):
         """

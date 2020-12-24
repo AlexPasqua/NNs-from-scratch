@@ -27,5 +27,17 @@ if __name__ == '__main__':
     }
     model = Network(**parameters)
     # model.print_net()
-    model.compile(opt='gd', loss='squared', metr='bin_class_acc', lrn_rate=0.5)
-    model.fit(inputs=monk1_train, targets=labels, epochs=500, batch_size=len(monk1_train))
+    model.compile(
+        opt='gd',
+        loss='squared',
+        metr='bin_class_acc',
+        lr=0.5,
+        lr_decay='linear',
+        limit_step=200,
+    )
+    model.fit(
+        inputs=monk1_train,
+        targets=labels,
+        epochs=300,
+        batch_size=len(monk1_train)
+    )
