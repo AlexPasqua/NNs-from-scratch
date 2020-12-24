@@ -197,7 +197,8 @@ def linear_lr_dec(curr_lr, base_lr, final_lr, curr_step, limit_step):
     if curr_step < limit_step and curr_lr > final_lr:
         decay_rate = curr_step / limit_step
         curr_lr = (1. - decay_rate) * base_lr + decay_rate * final_lr
-    return curr_lr
+        return curr_lr
+    return final_lr
 
 
 """ Function objects and dictionaries to use them in other scripts """
