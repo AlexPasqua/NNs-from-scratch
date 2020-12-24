@@ -190,10 +190,18 @@ def binary_class_accuracy(predicted, target):
     return np.array([0])
 
 
-BinClassAcc = Function(binary_class_accuracy, 'class_acc')
-metrics = {
-    'bin_class_acc': BinClassAcc
-}
+""" Learning rate decay """
+
+
+def linear_lr_dec(curr_lr, base_lr, final_lr, curr_step, limit_step):
+    if curr_step < limit_step and curr_lr > final_lr:
+        decay_rate = curr_step / limit_step
+        curr_lr = (1. - decay_rate) * base_lr + decay_rate * final_lr
+    return curr_lr
+
+
+""" Function objects and dictionaries to use them in other scripts """
+
 
 ReLU = DerivableFunction(relu, relu_deriv, 'ReLU')
 LeakyReLU = DerivableFunction(leaky_relu, leaky_relu_deriv, 'LeakyReLU')
@@ -209,4 +217,14 @@ act_funcs = {
 SquaredLoss = DerivableFunction(squared_loss, squared_loss_deriv, 'squared')
 losses = {
     'squared': SquaredLoss,
+}
+
+BinClassAcc = Function(binary_class_accuracy, 'class_acc')
+metrics = {
+    'bin_class_acc': BinClassAcc
+}
+
+LinearLRDecay = Function(linear_lr_dec, 'linear')
+lr_decays = {
+    'linear': LinearLRDecay
 }

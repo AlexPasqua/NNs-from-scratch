@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 import matplotlib.pyplot as plt
 import numpy as np
 import tqdm as tqdm
-from functions import losses, metrics
+from functions import losses, metrics, lr_decays
 
 
 class Optimizer(ABC):
@@ -17,6 +17,7 @@ class Optimizer(ABC):
         metr: ('Function' object) accuracy function
         lr: (float) learning rate
     """
+
     @abstractmethod
     def __init__(self, net, loss, metr, lr, lr_decay, limit_step):
         # makes sure lr is a value between 0 and 1
@@ -46,6 +47,7 @@ class Optimizer(ABC):
 
 class GradientDescent(Optimizer, ABC):
     """ Gradient Descent """
+
     def __init__(self, net, loss, metr, lr, lr_decay, limit_step):
         super(GradientDescent, self).__init__(net, loss, metr, lr, lr_decay, limit_step)
         self.__type = 'gd'
@@ -106,15 +108,18 @@ class GradientDescent(Optimizer, ABC):
                     #     grad_net.layers[i].weights += net.layers[i].__gradient_w
                     #     grad_net.layers[i].biases += net.layers[i].__gradient_b
 
-                # weights update
                 for layer_index in range(len(net.layers)):
+                    # learning rate decay
+                    if self.lr_decay is not None:
+                        step += 1
+                        self.lr = lr_decays[self.lr_decay].func(curr_lr=self.lr,
+                                                                base_lr=self.base_lr,
+                                                                final_lr=self.final_lr,
+                                                                curr_step=step,
+                                                                limit_step=self.limit_step)
+                    # weights update
                     grad_net[layer_index]['weights'] /= float(batch_size)
                     grad_net[layer_index]['biases'] /= float(batch_size)
-                    # learning rate decay
-                    step += 1
-                    if self.lr_decay == 'linear' and step < self.limit_step and self.lr > self.final_lr:
-                        decay_rate = step / self.limit_step
-                        self.lr = (1. - decay_rate) * self.base_lr + decay_rate * self.final_lr
                     net.layers[layer_index].weights += self.lr * grad_net[layer_index]['weights']
                     net.layers[layer_index].biases += self.lr * grad_net[layer_index]['biases']
 
@@ -127,13 +132,15 @@ class GradientDescent(Optimizer, ABC):
         plt.plot(range(epochs), error_values)
         plt.xlabel('Epochs', fontweight='bold')
         plt.ylabel('loss', fontweight='bold')
-        plt.title(f"Base Eta:{self.base_lr}  Alpha:/empty/  Lambda:/empty/  Hidden layers:{len(net.units_per_layer)}", fontweight='bold')
+        plt.title(f"Base Eta:{self.base_lr}  Alpha:/empty/  Lambda:/empty/  Hidden layers:{len(net.units_per_layer)}",
+                  fontweight='bold')
         plt.show()
 
         plt.plot(range(epochs), metric_values)
         plt.xlabel('Epochs', fontweight='bold')
         plt.ylabel('accuracy', fontweight='bold')
-        plt.title(f"Base Eta:{self.base_lr}  Alpha:/empty/  Lambda:/empty/  Hidden layers:{len(net.units_per_layer)}", fontweight='bold')
+        plt.title(f"Base Eta:{self.base_lr}  Alpha:/empty/  Lambda:/empty/  Hidden layers:{len(net.units_per_layer)}",
+                  fontweight='bold')
         plt.show()
 
 
