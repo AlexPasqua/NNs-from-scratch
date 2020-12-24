@@ -1,4 +1,5 @@
 import numpy as np
+from functions import DerivableFunction
 
 
 def lasso_l1(w, lambd):
@@ -9,6 +10,11 @@ def ridge_l2(w, lambd):
     return lambd * np.sum(np.square(w))
 
 
+def ridge_l2_deriv(w, lambd):
+    return 2 * lambd * w
+
+
+'''
 def regularization(w, lambd, reg_type):
     """
     Computes the regularization
@@ -28,10 +34,14 @@ def regularization(w, lambd, reg_type):
         raise ValueError(f"Wrong regularization parameter: {reg_type} --> Chose among {list(regularizations.keys())}")
 
     return regularizations[reg_type](w, lambd)
-
+'''
+l2_regularization = DerivableFunction(ridge_l2, ridge_l2_deriv, 'L2_reg')
+regularization = {
+    'l2': l2_regularization
+}
 
 if __name__ == '__main__':
-    w = [1, 0.2, -1]
+    w = np.array([1, 0.2, -1])
     print(f"Weights used for testing: {w}")
-    print(f"L2 regularization(lamb = 0.2): {regularization(w, 0.2, 'l2')}")
-    print(f"L1 regularization(lamb = 0.2): {regularization(w, 0.2, 'l1')}")
+    print(f"L2 regularization func (lambd = 0.2):{regularization['l2'].func(w=w, lambd=0.2)}")
+    print(f"L2 regularization deriv (lambd = 0.2):{regularization['l2'].deriv(w=w, lambd=0.2)}")
