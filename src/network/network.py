@@ -95,17 +95,18 @@ class Network:
             print(f"Net's output: {outputs}")
         return outputs
 
-    def compile(self, opt='gd', loss='squared', metr='bin_class_acc', lrn_rate=0.01):
+    def compile(self, opt='gd', loss='squared', metr='bin_class_acc', lrn_rate=0.01, momentum=0.):
         """
         Prepares the network for training by assigning an optimizer to it
         :param opt: ('Optimizer' object)
         :param loss: (str) the type of loss function
         :param metr: (str) the type of metric to track (accuracy etc)
         :param lrn_rate: (float) learning rate value
+        :param momentum: (float) momentum parameter
         """
         if opt not in optimizers or loss not in losses:
             raise AttributeError(f"opt must be within {optimizers.keys()} and loss must be in {losses.keys()}")
-        self.__opt = optimizers[opt](net=self, loss=loss, metr=metr, lrn_rate=lrn_rate)
+        self.__opt = optimizers[opt](net=self, loss=loss, metr=metr, lrn_rate=lrn_rate, momentum=momentum)
 
     def fit(self, inputs, targets, epochs=1, batch_size=1):
         """
@@ -134,15 +135,15 @@ class Network:
             grad_net[layer_index]['biases'] += np.array(grad_b)
         return grad_net
 
-    def get_empty_gradnet(self):
+    def get_empty_struct(self):
         """
         :return: a zeroed structure to contain all the layers' gradients
         """
         struct = np.array([{}] * len(self.__layers))
         for layer_index in range(len(self.__layers)):
-            struct[layer_index] = {'weights': np.array([]), 'biases': np.array([])}
-            struct[layer_index]['weights'] = [0.] * len(self.__layers[layer_index].weights)
-            struct[layer_index]['biases'] = [0.] * len(self.__layers[layer_index].biases)
+            struct[layer_index] = {'weights': [], 'biases': []}
+            struct[layer_index]['weights'] = np.array([0.] * len(self.__layers[layer_index].weights))
+            struct[layer_index]['biases'] = np.array([0.] * len(self.__layers[layer_index].biases))
         return struct
 
     def print_net(self):

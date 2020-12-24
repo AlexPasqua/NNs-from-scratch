@@ -11,14 +11,14 @@ class TestOptimizers(unittest.TestCase):
         'bin_class_acc',
         lrn_rate=0.2)
 
-    def test_gd(self):
-        training_set = np.array([[1, 1], [1, 0], [0, 1], [0, 0]])
-        training_labels = np.array([[1], [1], [0], [0]])
-        self.gd.optimize(
-            train_set=training_set,
-            targets=training_labels,
-            epochs=2,
-            batch_size=1)
+    # def test_gd(self):
+    #     training_set = np.array([[1, 1], [1, 0], [0, 1], [0, 0]])
+    #     training_labels = np.array([[1], [1], [0], [0]])
+    #     self.gd.optimize(
+    #         train_set=training_set,
+    #         targets=training_labels,
+    #         epochs=2,
+    #         batch_size=1)
 
 
 if __name__ == '__main__':
