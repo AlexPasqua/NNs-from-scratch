@@ -51,10 +51,3 @@ regularization = {
     'l1': l1_regularization
 }
 
-if __name__ == '__main__':
-    w = np.array([1, 0.2, -1])
-    print(f"Weights used for testing: {w}")
-    print(f"L2 regularization func (lambd = 0.2):{regularization['l2'].func(w=w, lambd=0.2)}")
-    print(f"L2 regularization deriv (lambd = 0.2):{regularization['l2'].deriv(w=w, lambd=0.2)}")
-    print(f"L1 regularization func (lambd = 0.2):{regularization['l1'].func(w=w, lambd=0.2)}")
-    print(f"L1 regularization deriv (lambd = 0.2):{regularization['l1'].deriv(w=w, lambd=0.2)}")
