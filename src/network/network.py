@@ -12,6 +12,7 @@ class Network:
     Attributes:
         layers: list of net's layers ('Layer' objects)
     """
+
     def __init__(self, input_dim, units_per_layer, acts, init_type='uniform', value=0.2, **kwargs):
         """
         Constructor
@@ -31,7 +32,7 @@ class Network:
         self.__units_per_layer = units_per_layer
         self.__layers = []
         self.__opt = None
-        other_args = {**{'init_type': init_type, 'value': value}, **kwargs}   # merge 2 dictionaries
+        other_args = {**{'init_type': init_type, 'value': value}, **kwargs}  # merge 2 dictionaries
         fanin = input_dim
         for i in range(len(units_per_layer)):
             self.__layers.append(Layer(fanin=fanin, n_units=units_per_layer[i], act=acts[i], **other_args))
@@ -106,6 +107,8 @@ class Network:
         """
         if opt not in optimizers or loss not in losses:
             raise AttributeError(f"opt must be within {optimizers.keys()} and loss must be in {losses.keys()}")
+        if momentum > 1. or momentum < 0.:
+            raise ValueError(f"momentum must be a value between 0 and 1. Got: {momentum}")
         self.__opt = optimizers[opt](net=self, loss=loss, metr=metr, lrn_rate=lrn_rate, momentum=momentum)
 
     def fit(self, inputs, targets, epochs=1, batch_size=1):
