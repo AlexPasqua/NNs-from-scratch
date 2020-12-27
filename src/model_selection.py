@@ -16,6 +16,8 @@ def cross_valid(net, inputs, targets, epochs=1, batch_size=1, k_folds=5):
     # initialize vectors for plots
     tr_error_values = np.zeros(epochs)
     tr_metric_values = np.zeros(epochs)
+    val_error_values = np.zeros(epochs)
+    val_metric_values = np.zeros(epochs)
 
     # CV cycle
     for i in range(k_folds):
@@ -30,22 +32,25 @@ def cross_valid(net, inputs, targets, epochs=1, batch_size=1, k_folds=5):
             train_targets = np.concatenate((train_targets, target_folds[j]))
 
         # training
-        net.compile(opt='gd', loss='squared', metr='bin_class_acc', lrn_rate=0.8, momentum=0.8)
-        tr_err, tr_metric = net.fit(tr_x=train_set,
-                                    tr_y=train_targets,
-                                    val_x=valid_set,
-                                    val_y=valid_targets,
-                                    epochs=epochs,
-                                    batch_size=batch_size)
+        # TODO: pass parameters of compile to "cross_valid" function
+        net.compile(opt='gd', loss='squared', metr='bin_class_acc', lrn_rate=0.3, momentum=0.7)
+        tr_err, tr_metric, val_err, val_metric = net.fit(tr_x=train_set,
+                                                         tr_y=train_targets,
+                                                         val_x=valid_set,
+                                                         val_y=valid_targets,
+                                                         epochs=epochs,
+                                                         batch_size=batch_size)
         tr_error_values += tr_err
         tr_metric_values += tr_metric
+        val_error_values += val_err
+        val_metric_values += val_metric
 
         # reset net's weights and compile the "new" model
         net = Network(**net.params)
 
-        # TODO: validation
-
     # average the validation results of every fold
     tr_error_values /= float(k_folds)
     tr_metric_values /= float(k_folds)
-    return tr_error_values, tr_metric_values
+    val_error_values /= float(k_folds)
+    val_metric_values /= float(k_folds)
+    return tr_error_values, tr_metric_values, val_error_values, val_metric_values

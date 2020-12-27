@@ -48,6 +48,7 @@ class Optimizer(ABC):
 
 class GradientDescent(Optimizer, ABC):
     """ Gradient Descent """
+
     def __init__(self, net, loss, metr, lrn_rate=0.01, momentum=0.):
         super(GradientDescent, self).__init__(net, loss, metr, lrn_rate, momentum)
         self.__type = 'gd'
@@ -56,10 +57,12 @@ class GradientDescent(Optimizer, ABC):
     def type(self):
         return self.__type
 
-    def optimize(self, tr_x, tr_y, epochs, batch_size=1):
+    def optimize(self, tr_x, tr_y, val_x, val_y, epochs, batch_size=1):
         """
-        :param tr_x: (numpy ndarray) network's inputs
-        :param tr_y: (numpy ndarray)
+        :param tr_x: (numpy ndarray) input training set
+        :param tr_y: (numpy ndarray) targets for each input training pattern
+        :param val_x: (numpy ndarray) input validation set
+        :param val_y: (numpy ndarray) targets for each input validation pattern
         :param epochs: (int) number of training epochs
         :param batch_size: (int) number of patterns per single batch
         :return:
@@ -69,15 +72,19 @@ class GradientDescent(Optimizer, ABC):
         if len(tr_y.shape) < 2:
             tr_y = tr_y[np.newaxis, :]
 
-        error_values = []
-        metric_values = []
+        tr_error_values = []
+        tr_metric_values = []
+        val_error_values = []
+        val_metric_values = []
         net = self.net
         momentum_net = net.get_empty_struct()
 
         # cycle through epochs
         for epoch in tqdm.tqdm(range(epochs), desc="Iterating over epochs"):
-            epoch_error = np.array([0.] * len(net.layers[-1].units))
-            epoch_metric = np.array([0.] * len(net.layers[-1].units))
+            epoch_tr_error = np.array([0.] * len(net.layers[-1].units))
+            epoch_tr_metric = np.array([0.] * len(net.layers[-1].units))
+            epoch_val_error = np.array([0.] * len(net.layers[-1].units))
+            epoch_val_metric = np.array([0.] * len(net.layers[-1].units))
 
             # cycle through batches
             for batch_index in range(math.ceil(len(tr_x) / batch_size)):
@@ -90,8 +97,8 @@ class GradientDescent(Optimizer, ABC):
                 # cycle through patterns and targets within a batch
                 for pattern, target in zip(train_batch, targets_batch):
                     net_outputs = net.forward(inp=pattern)
-                    epoch_error[:] += self.loss.func(predicted=net_outputs, target=target)
-                    epoch_metric[:] += self.metr.func(predicted=net_outputs, target=target)
+                    epoch_tr_error[:] += self.loss.func(predicted=net_outputs, target=target)
+                    epoch_tr_metric[:] += self.metr.func(predicted=net_outputs, target=target)
                     dErr_dOut = self.loss.deriv(predicted=net_outputs, target=target)
                     # set the layers' gradients and add them into grad_net
                     # (emulate pass by reference of grad_net using return and reassign)
@@ -110,14 +117,27 @@ class GradientDescent(Optimizer, ABC):
                     net.layers[layer_index].weights += momentum_net[layer_index]['weights']
                     net.layers[layer_index].biases += momentum_net[layer_index]['biases']
 
-            epoch_error = np.sum(epoch_error) / float(len(epoch_error))
-            epoch_metric = np.sum(epoch_metric) / float(len(epoch_metric))
-            error_values.append(epoch_error / float(len(tr_x)))
-            metric_values.append(epoch_metric / float(len(tr_x)))
+            # validation
+            for batch_index in range(math.ceil(len(val_x) / batch_size)):
+                start = batch_index * batch_size
+                end = start + batch_size
+                val_batch = val_x[start: end]
+                targets_batch = val_y[start: end]
+                for pattern, target in zip(val_batch, targets_batch):
+                    net_outputs = net.forward(inp=pattern)
+                    epoch_val_error[:] += self.loss.func(predicted=net_outputs, target=target)
+                    epoch_val_metric[:] += self.metr.func(predicted=net_outputs, target=target)
 
-        return error_values, metric_values
+            epoch_tr_error = np.sum(epoch_tr_error) / float(len(epoch_tr_error))
+            epoch_tr_metric = np.sum(epoch_tr_metric) / float(len(epoch_tr_metric))
+            epoch_val_error = np.sum(epoch_val_error) / float(len(epoch_val_error))
+            epoch_val_metric = np.sum(epoch_val_metric) / float(len(epoch_val_metric))
+            tr_error_values.append(epoch_tr_error / float(len(tr_x)))
+            tr_metric_values.append(epoch_tr_metric / float(len(tr_x)))
+            val_error_values.append(epoch_val_error / float(len(val_x)))
+            val_metric_values.append(epoch_val_metric / float(len(val_x)))
 
-
+        return tr_error_values, tr_metric_values, val_error_values, val_metric_values
 
 
 optimizers = {

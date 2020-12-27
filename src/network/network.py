@@ -143,7 +143,7 @@ class Network:
         n_pattern = tr_x.shape[0] if len(tr_x.shape) > 1 else 1
         n_target = tr_y.shape[0] if len(tr_y.shape) > 1 else 1
         assert (n_pattern == n_target)
-        return self.__opt.optimize(tr_x=tr_x, tr_y=tr_y, epochs=epochs, batch_size=batch_size)
+        return self.__opt.optimize(tr_x=tr_x, tr_y=tr_y, val_x=val_x, val_y=val_y, epochs=epochs, batch_size=batch_size)
 
     def propagate_back(self, dErr_dOut, grad_net):
         curr_delta = dErr_dOut
