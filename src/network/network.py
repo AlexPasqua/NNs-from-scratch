@@ -114,13 +114,14 @@ class Network:
         if momentum > 1. or momentum < 0.:
             raise ValueError(f"momentum must be a value between 0 and 1. Got: {momentum}")
 
-    def fit(self, inputs, targets, epochs=1, batch_size=1):
+    def fit(self, inputs, targets, epochs=1, batch_size=1, k_folds=5):
         """
         Execute the training of the network
         :param inputs: (numpy ndarray) input training set
         :param targets: (numpy ndarray) targets for each input pattern
         :param batch_size: (integer) the size of the batch
         :param epochs: (integer) number of epochs
+        :param k_folds: (integer) number of folds for k-fold cross validation
         """
         targets = np.array(targets)
         inputs = np.array(inputs)
@@ -131,7 +132,49 @@ class Network:
         n_pattern = inputs.shape[0] if len(inputs.shape) > 1 else 1
         n_target = targets.shape[0] if len(targets.shape) > 1 else 1
         assert (n_pattern == n_target)
-        return self.__opt.optimize(train_set=inputs, targets=targets, epochs=epochs, batch_size=batch_size)
+
+        # shuffle the dataset
+        indexes = list(range(len(targets)))
+        np.random.shuffle(indexes)
+        inputs = inputs[indexes]
+        targets = targets[indexes]
+
+        # split the dataset into folds
+        x_folds = np.array(np.array_split(inputs, k_folds), dtype=object)
+        y_folds = np.array(np.array_split(targets, k_folds), dtype=object)
+
+        # initialize vectors for plots
+        tr_error_values = np.zeros(epochs)
+        tr_metric_values = np.zeros(epochs)
+
+        # CV cycle
+        for i in range(k_folds):
+            valid_set = x_folds[i]
+            valid_targets = y_folds[i]
+            train_folds = np.concatenate((x_folds[: i], x_folds[i + 1:]))
+            target_folds = np.concatenate((y_folds[: i], y_folds[i + 1:]))
+            train_set = train_folds[0]
+            train_targets = target_folds[0]
+            for j in range(1, len(train_folds)):
+                train_set = np.concatenate((train_set, train_folds[j]))
+                train_targets = np.concatenate((train_targets, target_folds[j]))
+
+            # training
+            tr_err, tr_metric = self.__opt.optimize(train_set=train_set,
+                                                    targets=train_targets,
+                                                    epochs=epochs,
+                                                    batch_size=batch_size)
+            tr_error_values += tr_err
+            tr_metric_values += tr_metric
+
+            # validation
+
+        # average the validation results of every fold
+        tr_error_values /= float(k_folds)
+        tr_metric_values /= float(k_folds)
+        return tr_error_values, tr_metric_values
+
+        # return self.__opt.optimize(train_set=inputs, targets=targets, epochs=epochs, batch_size=batch_size)
 
     def propagate_back(self, dErr_dOut, grad_net):
         curr_delta = dErr_dOut

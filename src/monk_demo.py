@@ -32,7 +32,9 @@ if __name__ == '__main__':
     error_values, metric_values = model.fit(inputs=monk1_train,
                                             targets=labels,
                                             epochs=250,
-                                            batch_size=len(monk1_train))
+                                            batch_size=len(monk1_train),
+                                            k_folds=5
+                                            )
     # plot learning curve
     figure, ax = plt.subplots(1, 2, figsize=(12, 4))
     ax[0].plot(range(len(error_values)), error_values)

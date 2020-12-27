@@ -76,12 +76,6 @@ class GradientDescent(Optimizer, ABC):
 
         # cycle through epochs
         for epoch in tqdm.tqdm(range(epochs), desc="Iterating over epochs"):
-            # shuffle the dataset
-            indexes = list(range(len(targets)))
-            np.random.shuffle(indexes)
-            train_set = train_set[indexes]
-            targets = targets[indexes]
-
             epoch_error = np.array([0.] * len(net.layers[-1].units))
             epoch_metric = np.array([0.] * len(net.layers[-1].units))
 
