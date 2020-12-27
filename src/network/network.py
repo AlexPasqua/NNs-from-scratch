@@ -124,25 +124,26 @@ class Network:
         if momentum > 1. or momentum < 0.:
             raise ValueError(f"momentum must be a init_value between 0 and 1. Got: {momentum}")
 
-    def fit(self, inputs, targets, epochs=1, batch_size=1):
+    def fit(self, tr_x, tr_y, val_x, val_y, epochs=1, batch_size=1):
         """
         Execute the training of the network
-        :param inputs: (numpy ndarray) input training set
-        :param targets: (numpy ndarray) targets for each input pattern
+        :param tr_x: (numpy ndarray) input training set
+        :param tr_y: (numpy ndarray) targets for each input training pattern
+        :param val_x: (numpy ndarray) input validation set
+        :param val_y: (numpy ndarray) targets for each input validation pattern
         :param batch_size: (integer) the size of the batch
         :param epochs: (integer) number of epochs
-        :param k_folds: (integer) number of folds for k-fold cross validation
         """
-        targets = np.array(targets)
-        inputs = np.array(inputs)
-        target_len = targets.shape[1] if len(targets.shape) > 1 else 1
+        tr_y = np.array(tr_y)
+        tr_x = np.array(tr_x)
+        target_len = tr_y.shape[1] if len(tr_y.shape) > 1 else 1
         if target_len != len(self.layers[-1].units):
             raise AttributeError(
-                f"Mismatching shapes --> target: {targets.shape} ; output units: {len(self.layers[-1].units)}")
-        n_pattern = inputs.shape[0] if len(inputs.shape) > 1 else 1
-        n_target = targets.shape[0] if len(targets.shape) > 1 else 1
+                f"Mismatching shapes --> target: {tr_y.shape} ; output units: {len(self.layers[-1].units)}")
+        n_pattern = tr_x.shape[0] if len(tr_x.shape) > 1 else 1
+        n_target = tr_y.shape[0] if len(tr_y.shape) > 1 else 1
         assert (n_pattern == n_target)
-        return self.__opt.optimize(train_set=inputs, targets=targets, epochs=epochs, batch_size=batch_size)
+        return self.__opt.optimize(tr_x=tr_x, tr_y=tr_y, epochs=epochs, batch_size=batch_size)
 
     def propagate_back(self, dErr_dOut, grad_net):
         curr_delta = dErr_dOut

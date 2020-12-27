@@ -30,8 +30,8 @@ if __name__ == '__main__':
     }
     model = Network(**parameters)
     # model.compile(opt='gd', loss='squared', metr='bin_class_acc', lrn_rate=0.5, momentum=0.5)
-    # error_values, metric_values = model.fit(inputs=monk1_train,
-    #                                         targets=labels,
+    # error_values, metric_values = model.fit(tr_x=monk1_train,
+    #                                         tr_y=labels,
     #                                         epochs=250,
     #                                         batch_size=len(monk1_train),
     #                                         k_folds=5
@@ -39,7 +39,7 @@ if __name__ == '__main__':
     error_values, metric_values = cross_valid(net=model,
                                               inputs=monk1_train,
                                               targets=labels,
-                                              epochs=400,
+                                              epochs=40,
                                               batch_size=len(monk1_train),
                                               k_folds=5)
     # plot learning curve

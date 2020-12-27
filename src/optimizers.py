@@ -56,18 +56,18 @@ class GradientDescent(Optimizer, ABC):
     def type(self):
         return self.__type
 
-    def optimize(self, train_set, targets, epochs, batch_size=1):
+    def optimize(self, tr_x, tr_y, epochs, batch_size=1):
         """
-        :param train_set: (numpy ndarray) network's inputs
-        :param targets: (numpy ndarray)
+        :param tr_x: (numpy ndarray) network's inputs
+        :param tr_y: (numpy ndarray)
         :param epochs: (int) number of training epochs
         :param batch_size: (int) number of patterns per single batch
         :return:
         """
-        if len(train_set.shape) < 2:
-            train_set = train_set[np.newaxis, :]
-        if len(targets.shape) < 2:
-            targets = targets[np.newaxis, :]
+        if len(tr_x.shape) < 2:
+            tr_x = tr_x[np.newaxis, :]
+        if len(tr_y.shape) < 2:
+            tr_y = tr_y[np.newaxis, :]
 
         error_values = []
         metric_values = []
@@ -80,11 +80,11 @@ class GradientDescent(Optimizer, ABC):
             epoch_metric = np.array([0.] * len(net.layers[-1].units))
 
             # cycle through batches
-            for batch_index in range(math.ceil(len(train_set) / batch_size)):
+            for batch_index in range(math.ceil(len(tr_x) / batch_size)):
                 start = batch_index * batch_size
                 end = start + batch_size
-                train_batch = train_set[start: end]
-                targets_batch = targets[start: end]
+                train_batch = tr_x[start: end]
+                targets_batch = tr_y[start: end]
                 grad_net = net.get_empty_struct()
 
                 # cycle through patterns and targets within a batch
@@ -112,8 +112,8 @@ class GradientDescent(Optimizer, ABC):
 
             epoch_error = np.sum(epoch_error) / float(len(epoch_error))
             epoch_metric = np.sum(epoch_metric) / float(len(epoch_metric))
-            error_values.append(epoch_error / float(len(train_set)))
-            metric_values.append(epoch_metric / float(len(train_set)))
+            error_values.append(epoch_error / float(len(tr_x)))
+            metric_values.append(epoch_metric / float(len(tr_x)))
 
         return error_values, metric_values
 

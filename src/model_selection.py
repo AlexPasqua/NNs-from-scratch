@@ -3,9 +3,6 @@ from network.network import Network
 
 
 def cross_valid(net, inputs, targets, epochs=1, batch_size=1, k_folds=5):
-    # compile the model
-    net.compile(opt='gd', loss='squared', metr='bin_class_acc', lrn_rate=0.5, momentum=0.5)
-
     # shuffle the dataset
     indexes = list(range(len(targets)))
     np.random.shuffle(indexes)
@@ -33,8 +30,11 @@ def cross_valid(net, inputs, targets, epochs=1, batch_size=1, k_folds=5):
             train_targets = np.concatenate((train_targets, target_folds[j]))
 
         # training
-        tr_err, tr_metric = net.fit(inputs=train_set,
-                                    targets=train_targets,
+        net.compile(opt='gd', loss='squared', metr='bin_class_acc', lrn_rate=0.8, momentum=0.8)
+        tr_err, tr_metric = net.fit(tr_x=train_set,
+                                    tr_y=train_targets,
+                                    val_x=valid_set,
+                                    val_y=valid_targets,
                                     epochs=epochs,
                                     batch_size=batch_size)
         tr_error_values += tr_err
@@ -42,7 +42,6 @@ def cross_valid(net, inputs, targets, epochs=1, batch_size=1, k_folds=5):
 
         # reset net's weights and compile the "new" model
         net = Network(**net.params)
-        net.compile(opt='gd', loss='squared', metr='bin_class_acc', lrn_rate=0.8, momentum=0.8)
 
         # TODO: validation
 
