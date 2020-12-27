@@ -109,9 +109,6 @@ class GradientDescent(Optimizer, ABC):
                     net_outputs = net.forward(inp=pattern)
                     epoch_tr_error = np.add(epoch_tr_error, self.loss.func(predicted=net_outputs, target=target))
                     epoch_tr_metric = np.add(epoch_tr_metric, self.metr.func(predicted=net_outputs, target=target))
-                    # equivalent to the following, but it's deprecated
-                    # epoch_tr_error[:] += self.loss.func(predicted=net_outputs, target=target)
-                    # epoch_tr_metric[:] += self.metr.func(predicted=net_outputs, target=target)
                     dErr_dOut = self.loss.deriv(predicted=net_outputs, target=target)
                     # set the layers' gradients and add them into grad_net
                     # (emulate pass by reference of grad_net using return and reassign)
