@@ -1,6 +1,6 @@
 import unittest
 import numpy as np
-from functions import act_funcs, regs, losses
+from functions import act_funcs, regs, losses, metrics
 
 
 class TestFunctions(unittest.TestCase):
@@ -45,6 +45,24 @@ class TestFunctions(unittest.TestCase):
         self.assertAlmostEqual(regs['l2'].func(w, lambd=lambd), 0.658)
         np.testing.assert_array_almost_equal(regs['l1'].deriv(w, lambd=lambd), l1_deriv)
         np.testing.assert_array_almost_equal(regs['l2'].deriv(w, lambd=lambd), l2_deriv)
+
+    def test_metrics(self):
+        predicted = np.array(
+            [[1, 0, 0, 1],
+             [1, 1, 1, 1]]
+        )
+        target = np.array(
+            [[1, 1, 0, 0],
+             [0, 0, 0, 0]]
+        )
+        acc = np.array([0])
+        predicted = np.array([[0], [1], [1], [0.8]])
+        target = np.array([[1], [1], [1], [1]])
+        for i in range(len(predicted)):
+            acc += metrics['bin_class_acc'].func(predicted[i], target[i])
+        self.assertEqual(3, acc)
+        acc = acc / float(len(predicted))
+        self.assertEqual(0.75, acc)
 
     def test_exceptions(self):
         # check many combination
