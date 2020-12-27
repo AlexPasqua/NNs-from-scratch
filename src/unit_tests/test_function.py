@@ -1,5 +1,6 @@
 import unittest
-from functions import act_funcs
+import numpy as np
+from functions import act_funcs, regs, losses
 
 
 class TestFunctions(unittest.TestCase):
@@ -11,14 +12,39 @@ class TestFunctions(unittest.TestCase):
         self.assertEqual(act_funcs['relu'].func([[[2.]]]), 2.)
         self.assertEqual(act_funcs['leaky_relu'].func(1.), 1.)
         self.assertEqual(act_funcs['leaky_relu'].func(-1.), -0.01)
-
-    def test_act_funcs_derivs(self):
+        # test activation functions' derivatives
         self.assertAlmostEqual(act_funcs['sigmoid'].deriv(1.), 0.19661193324148185)
         self.assertEqual(act_funcs['relu'].deriv(2.), 1.)
         self.assertEqual(act_funcs['relu'].deriv(-3.), 0.)
         self.assertAlmostEqual(act_funcs['tanh'].deriv(1.), 0.41997434161402614)
         self.assertEqual(act_funcs['leaky_relu'].deriv(1.), 1.)
         self.assertEqual(act_funcs['leaky_relu'].deriv(-1.), 0.01)
+
+    def test_losses(self):
+        predicted = [1, 0, 0, 1]
+        target = [1, 1, 0, 0]
+        ground_truth = [0., 0.5, 0., 0.5]
+        for i in range(len(ground_truth)):
+            self.assertEqual(
+                losses['squared'].func(predicted, target)[i],
+                ground_truth[i]
+            )
+        ground_truth = [0., -1., 0., 1.]
+        for i in range(len(ground_truth)):
+            self.assertEqual(
+                losses['squared'].deriv(predicted, target)[i],
+                ground_truth[i]
+            )
+
+    def test_regularizations(self):
+        lambd = 0.2
+        w = np.array([[1, 0.2, -1], [1, 0, 0.5]])
+        l1_deriv = np.array([[1, 1, -1], [1, 0, 1]]) * lambd
+        l2_deriv = np.array([[0.4, 0.08, -0.4], [0.4, 0., 0.2]])
+        self.assertAlmostEqual(regs['l1'].func(w, lambd=lambd), 0.740000)
+        self.assertAlmostEqual(regs['l2'].func(w, lambd=lambd), 0.658)
+        np.testing.assert_array_almost_equal(regs['l1'].deriv(w, lambd=lambd), l1_deriv)
+        np.testing.assert_array_almost_equal(regs['l2'].deriv(w, lambd=lambd), l2_deriv)
 
     def test_exceptions(self):
         # check many combination
@@ -30,6 +56,10 @@ class TestFunctions(unittest.TestCase):
             for attr_test in attribute_test:
                 self.assertRaises(AttributeError, act_funcs[act].func, attr_test)
                 self.assertRaises(AttributeError, act_funcs[act].deriv, attr_test)
+        self.assertRaises(Exception, losses['squared'].func, [0, 0], [0, 0, 0])
+        self.assertRaises(Exception, losses['squared'].deriv, [0, 0], [0, 0, 0])
+        # self.assertRaises(KeyError, regularization['nonexistent_reg'].func, self.w, lambd=0.1)
+        # self.assertRaises(ValueError, regularization['l1'].func, self.w, lambd=-0.5)
 
 
 if __name__ == '__main__':
