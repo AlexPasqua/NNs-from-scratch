@@ -69,7 +69,7 @@ class GradientDescent(Optimizer, ABC):
         if len(targets.shape) < 2:
             targets = targets[np.newaxis, :]
 
-        errors = []
+        error_values = []
         metric_values = []
         net = self.net
         momentum_net = net.get_empty_struct()
@@ -103,11 +103,6 @@ class GradientDescent(Optimizer, ABC):
                     # (emulate pass by reference of grad_net using return and reassign)
                     grad_net = net.propagate_back(dErr_dOut, grad_net)
 
-                    # add up layers' gradients
-                    # for i in range(len(net.layers)):
-                    #     grad_net.layers[i].weights += net.layers[i].__gradient_w
-                    #     grad_net.layers[i].biases += net.layers[i].__gradient_b
-
                 # weights update
                 for layer_index in range(len(net.layers)):
                     grad_net[layer_index]['weights'] /= float(batch_size)
@@ -123,21 +118,12 @@ class GradientDescent(Optimizer, ABC):
 
             epoch_error = np.sum(epoch_error) / float(len(epoch_error))
             epoch_metric = np.sum(epoch_metric) / float(len(epoch_metric))
-            errors.append(epoch_error / float(len(train_set)))
+            error_values.append(epoch_error / float(len(train_set)))
             metric_values.append(epoch_metric / float(len(train_set)))
 
-        # plot learning curve
-        plt.plot(range(epochs), errors)
-        plt.xlabel('Epochs', fontweight='bold')
-        plt.ylabel('loss', fontweight='bold')
-        plt.title(f"Eta:{self.lrn_rate}  Alpha:{self.momentum}  Lambda:/empty/  Layers:{len(net.units_per_layer)}", fontweight='bold')
-        plt.show()
+        return error_values, metric_values
 
-        plt.plot(range(epochs), metric_values)
-        plt.xlabel('Epochs', fontweight='bold')
-        plt.ylabel('accuracy', fontweight='bold')
-        plt.title(f"Eta:{self.lrn_rate}  Alpha:{self.momentum}  Lambda:/empty/  Layers:{len(net.units_per_layer)}", fontweight='bold')
-        plt.show()
+
 
 
 optimizers = {

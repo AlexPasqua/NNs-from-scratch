@@ -1,7 +1,9 @@
 import pandas as pd
 import numpy as np
-from network.network import Network
 from sklearn.preprocessing import OneHotEncoder
+import matplotlib.pyplot as plt
+from network.network import Network
+
 
 if __name__ == '__main__':
     # read the dataset
@@ -26,6 +28,17 @@ if __name__ == '__main__':
         'upper_lim': 0.2
     }
     model = Network(**parameters)
-    # model.print_net()
-    model.compile(opt='gd', loss='squared', metr='bin_class_acc', lrn_rate=0.5, momentum=- 0.8)
-    model.fit(inputs=monk1_train, targets=labels, epochs=250, batch_size=len(monk1_train))
+    model.compile(opt='gd', loss='squared', metr='bin_class_acc', lrn_rate=0.5, momentum=0.5)
+    error_values, metric_values = model.fit(inputs=monk1_train,
+                                            targets=labels,
+                                            epochs=250,
+                                            batch_size=len(monk1_train))
+    # plot learning curve
+    figure, ax = plt.subplots(1, 2, figsize=(12, 4))
+    ax[0].plot(range(len(error_values)), error_values)
+    ax[0].set_xlabel('Epochs', fontweight='bold')
+    ax[0].set_ylabel('loss', fontweight='bold')
+    ax[1].plot(range(len(metric_values)), metric_values)
+    ax[1].set_xlabel('Epochs', fontweight='bold')
+    ax[1].set_ylabel('accuracy', fontweight='bold')
+    plt.show()
