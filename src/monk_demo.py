@@ -3,6 +3,7 @@ import numpy as np
 from sklearn.preprocessing import OneHotEncoder
 import matplotlib.pyplot as plt
 from network.network import Network
+from model_selection import cross_valid
 
 
 if __name__ == '__main__':
@@ -20,7 +21,7 @@ if __name__ == '__main__':
 
     parameters = {
         'input_dim': 17,
-        'units_per_layer': (3, 1),
+        'units_per_layer': (4, 1),
         'acts': ('leaky_relu', 'tanh'),
         'init_type': 'random',
         'weights_value': 0.2,
@@ -28,13 +29,19 @@ if __name__ == '__main__':
         'upper_lim': 0.2
     }
     model = Network(**parameters)
-    model.compile(opt='gd', loss='squared', metr='bin_class_acc', lrn_rate=0.5, momentum=0.5)
-    error_values, metric_values = model.fit(inputs=monk1_train,
-                                            targets=labels,
-                                            epochs=250,
-                                            batch_size=len(monk1_train),
-                                            k_folds=5
-                                            )
+    # model.compile(opt='gd', loss='squared', metr='bin_class_acc', lrn_rate=0.5, momentum=0.5)
+    # error_values, metric_values = model.fit(inputs=monk1_train,
+    #                                         targets=labels,
+    #                                         epochs=250,
+    #                                         batch_size=len(monk1_train),
+    #                                         k_folds=5
+    #                                         )
+    error_values, metric_values = cross_valid(net=model,
+                                              inputs=monk1_train,
+                                              targets=labels,
+                                              epochs=400,
+                                              batch_size=len(monk1_train),
+                                              k_folds=5)
     # plot learning curve
     figure, ax = plt.subplots(1, 2, figsize=(12, 4))
     ax[0].plot(range(len(error_values)), error_values)

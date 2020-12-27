@@ -12,8 +12,8 @@ def weights_inits(**kwargs):
     return inits[init_type](**kwargs)
 
 
-def _uniform_init(n_weights, value, **kwargs):
-    return [value] * n_weights if n_weights > 1 else value
+def _uniform_init(n_weights, init_value, **kwargs):
+    return [init_value] * n_weights if n_weights > 1 else init_value
 
 
 def _rand_init(n_weights, lower_lim=0., upper_lim=1., **kwargs):

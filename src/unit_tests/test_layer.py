@@ -7,7 +7,7 @@ from network.unit import Unit
 class TestLayer(unittest.TestCase):
     n_units = 3
     value = 0.2
-    layer = Layer(fanin=3, n_units=n_units, act='relu', init_type='uniform', value=value)
+    layer = Layer(fanin=3, n_units=n_units, act='relu', init_type='uniform', init_value=value)
 
     def test_creation(self):
         lower_lim = 10
@@ -42,7 +42,7 @@ class TestLayer(unittest.TestCase):
 
     def test_backward_pass(self):
         fanin = 2
-        layer = Layer(fanin=fanin, n_units=2, act='relu', init_type='uniform', value=0.5)
+        layer = Layer(fanin=fanin, n_units=2, act='relu', init_type='uniform', init_value=0.5)
         layer.forward_pass(inp=[0.5] * fanin)  # needed to initialize outputs and weighted sums
         upstream_delta = np.array([0.5] * len(layer.units))
         res = layer.backward_pass(upstream_delta)

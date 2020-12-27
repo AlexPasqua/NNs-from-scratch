@@ -20,9 +20,9 @@ class Optimizer(ABC):
 
     @abstractmethod
     def __init__(self, net, loss, metr, lrn_rate, momentum):
-        # makes sure lrn_rate is a value between 0 and 1
+        # makes sure lrn_rate is a init_value between 0 and 1
         if lrn_rate <= 0 or lrn_rate > 1:
-            raise ValueError('lrn_rate should be a value between 0 and 1, Got:{}'.format(lrn_rate))
+            raise ValueError('lrn_rate should be a init_value between 0 and 1, Got:{}'.format(lrn_rate))
         self.__net = net
         self.__loss = losses[loss]
         self.__metric = metrics[metr]

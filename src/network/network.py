@@ -13,7 +13,7 @@ class Network:
         layers: list of net's layers ('Layer' objects)
     """
 
-    def __init__(self, input_dim, units_per_layer, acts, init_type='uniform', value=0.2, **kwargs):
+    def __init__(self, input_dim, units_per_layer, acts, init_type='uniform', init_value=0.2, **kwargs):
         """
         Constructor
         :param input_dim: the input dimension
@@ -29,10 +29,16 @@ class Network:
                                 acts=acts)
 
         self.__input_dim = input_dim
-        self.__units_per_layer = units_per_layer
+        self.__params = {**{
+            'input_dim': input_dim,
+            'units_per_layer': units_per_layer,
+            'acts': acts,
+            'init_type': init_type,
+            'init_value': init_value
+        }, **kwargs}
         self.__layers = []
         self.__opt = None
-        other_args = {**{'init_type': init_type, 'value': value}, **kwargs}  # merge 2 dictionaries
+        other_args = {**{'init_type': init_type, 'init_value': init_value}, **kwargs}  # merge 2 dictionaries
         fanin = input_dim
         for i in range(len(units_per_layer)):
             self.__layers.append(Layer(fanin=fanin, n_units=units_per_layer[i], act=acts[i], **other_args))
@@ -41,7 +47,7 @@ class Network:
     @staticmethod
     def __check_attributes(self, input_dim, units_per_layer, acts):
         if input_dim < 1 or any(n_units < 1 for n_units in units_per_layer):
-            raise ValueError("input_dim and every value in units_per_layer must be positive")
+            raise ValueError("input_dim and every init_value in units_per_layer must be positive")
         if len(units_per_layer) != len(acts):
             raise AttributeError(
                 f"Mismatching lengths --> len(units_per_layer)={len(units_per_layer)}; len(acts)={len(acts)}")
@@ -52,7 +58,7 @@ class Network:
 
     @property
     def units_per_layer(self):
-        return self.__units_per_layer
+        return self.__params['units_per_layer']
 
     @property
     def layers(self):
@@ -61,6 +67,10 @@ class Network:
     @property
     def opt(self):
         return self.__opt
+
+    @property
+    def params(self):
+        return self.__params
 
     def forward(self, inp=(2, 2, 2), verbose=False):
         """
@@ -102,19 +112,19 @@ class Network:
         :param opt: ('Optimizer' object)
         :param loss: (str) the type of loss function
         :param metr: (str) the type of metric to track (accuracy etc)
-        :param lrn_rate: (float) learning rate value
+        :param lrn_rate: (float) learning rate init_value
         :param momentum: (float) momentum parameter
         """
         if opt not in optimizers or loss not in losses:
             raise AttributeError(f"opt must be within {optimizers.keys()} and loss must be in {losses.keys()}")
         if momentum > 1. or momentum < 0.:
-            raise ValueError(f"momentum must be a value between 0 and 1. Got: {momentum}")
+            raise ValueError(f"momentum must be a init_value between 0 and 1. Got: {momentum}")
         self.__opt = optimizers[opt](net=self, loss=loss, metr=metr, lrn_rate=lrn_rate, momentum=momentum)
 
         if momentum > 1. or momentum < 0.:
-            raise ValueError(f"momentum must be a value between 0 and 1. Got: {momentum}")
+            raise ValueError(f"momentum must be a init_value between 0 and 1. Got: {momentum}")
 
-    def fit(self, inputs, targets, epochs=1, batch_size=1, k_folds=5):
+    def fit(self, inputs, targets, epochs=1, batch_size=1):
         """
         Execute the training of the network
         :param inputs: (numpy ndarray) input training set
@@ -132,49 +142,7 @@ class Network:
         n_pattern = inputs.shape[0] if len(inputs.shape) > 1 else 1
         n_target = targets.shape[0] if len(targets.shape) > 1 else 1
         assert (n_pattern == n_target)
-
-        # shuffle the dataset
-        indexes = list(range(len(targets)))
-        np.random.shuffle(indexes)
-        inputs = inputs[indexes]
-        targets = targets[indexes]
-
-        # split the dataset into folds
-        x_folds = np.array(np.array_split(inputs, k_folds), dtype=object)
-        y_folds = np.array(np.array_split(targets, k_folds), dtype=object)
-
-        # initialize vectors for plots
-        tr_error_values = np.zeros(epochs)
-        tr_metric_values = np.zeros(epochs)
-
-        # CV cycle
-        for i in range(k_folds):
-            valid_set = x_folds[i]
-            valid_targets = y_folds[i]
-            train_folds = np.concatenate((x_folds[: i], x_folds[i + 1:]))
-            target_folds = np.concatenate((y_folds[: i], y_folds[i + 1:]))
-            train_set = train_folds[0]
-            train_targets = target_folds[0]
-            for j in range(1, len(train_folds)):
-                train_set = np.concatenate((train_set, train_folds[j]))
-                train_targets = np.concatenate((train_targets, target_folds[j]))
-
-            # training
-            tr_err, tr_metric = self.__opt.optimize(train_set=train_set,
-                                                    targets=train_targets,
-                                                    epochs=epochs,
-                                                    batch_size=batch_size)
-            tr_error_values += tr_err
-            tr_metric_values += tr_metric
-
-            # validation
-
-        # average the validation results of every fold
-        tr_error_values /= float(k_folds)
-        tr_metric_values /= float(k_folds)
-        return tr_error_values, tr_metric_values
-
-        # return self.__opt.optimize(train_set=inputs, targets=targets, epochs=epochs, batch_size=batch_size)
+        return self.__opt.optimize(train_set=inputs, targets=targets, epochs=epochs, batch_size=batch_size)
 
     def propagate_back(self, dErr_dOut, grad_net):
         curr_delta = dErr_dOut
