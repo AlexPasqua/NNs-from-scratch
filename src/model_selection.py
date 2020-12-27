@@ -3,12 +3,6 @@ from network.network import Network
 
 
 def cross_valid(net, inputs, targets, epochs=1, batch_size=1, k_folds=5):
-    # shuffle the dataset
-    indexes = list(range(len(targets)))
-    np.random.shuffle(indexes)
-    inputs = inputs[indexes]
-    targets = targets[indexes]
-
     # split the dataset into folds
     x_folds = np.array(np.array_split(inputs, k_folds), dtype=object)
     y_folds = np.array(np.array_split(targets, k_folds), dtype=object)

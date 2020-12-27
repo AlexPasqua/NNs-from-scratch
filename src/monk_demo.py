@@ -18,6 +18,12 @@ if __name__ == '__main__':
     # transform labels from pandas dataframe to numpy ndarray
     labels = labels.to_numpy()[:, np.newaxis]
 
+    # shuffle the dataset
+    indexes = list(range(len(monk1_train)))
+    np.random.shuffle(indexes)
+    monk1_train = monk1_train[indexes]
+    labels = labels[indexes]
+
     parameters = {
         'input_dim': 17,
         'units_per_layer': (4, 1),
