@@ -86,7 +86,7 @@ class GradientDescent(Optimizer, ABC):
             epoch_val_error = np.array([0.] * len(net.layers[-1].units))
             epoch_val_metric = np.array([0.] * len(net.layers[-1].units))
 
-            # shuffle the datasets
+            # shuffle the datasets (training & validation) internally
             indexes = list(range(len(tr_x)))
             np.random.shuffle(indexes)
             tr_x = tr_x[indexes]
@@ -107,8 +107,11 @@ class GradientDescent(Optimizer, ABC):
                 # cycle through patterns and targets within a batch
                 for pattern, target in zip(train_batch, targets_batch):
                     net_outputs = net.forward(inp=pattern)
-                    epoch_tr_error[:] += self.loss.func(predicted=net_outputs, target=target)
-                    epoch_tr_metric[:] += self.metr.func(predicted=net_outputs, target=target)
+                    epoch_tr_error = np.add(epoch_tr_error, self.loss.func(predicted=net_outputs, target=target))
+                    epoch_tr_metric = np.add(epoch_tr_metric, self.metr.func(predicted=net_outputs, target=target))
+                    # equivalent to the following, but it's deprecated
+                    # epoch_tr_error[:] += self.loss.func(predicted=net_outputs, target=target)
+                    # epoch_tr_metric[:] += self.metr.func(predicted=net_outputs, target=target)
                     dErr_dOut = self.loss.deriv(predicted=net_outputs, target=target)
                     # set the layers' gradients and add them into grad_net
                     # (emulate pass by reference of grad_net using return and reassign)
@@ -122,16 +125,18 @@ class GradientDescent(Optimizer, ABC):
                     delta_b = self.lrn_rate * grad_net[layer_index]['biases']
                     momentum_net[layer_index]['weights'] *= self.momentum
                     momentum_net[layer_index]['biases'] *= self.momentum
-                    momentum_net[layer_index]['weights'] += delta_w
-                    momentum_net[layer_index]['biases'] += delta_b
-                    net.layers[layer_index].weights += momentum_net[layer_index]['weights']
-                    net.layers[layer_index].biases += momentum_net[layer_index]['biases']
+                    momentum_net[layer_index]['weights'] = np.add(momentum_net[layer_index]['weights'], delta_w)
+                    momentum_net[layer_index]['biases'] = np.add(momentum_net[layer_index]['biases'], delta_b)
+                    net.layers[layer_index].weights = np.add(net.layers[layer_index].weights,
+                                                             momentum_net[layer_index]['weights'])
+                    net.layers[layer_index].biases = np.add(net.layers[layer_index].biases,
+                                                            momentum_net[layer_index]['biases'])
 
             # validation
             for pattern, target in zip(val_x, val_y):
                 net_outputs = net.forward(inp=pattern)
-                epoch_val_error[:] += self.loss.func(predicted=net_outputs, target=target)
-                epoch_val_metric[:] += self.metr.func(predicted=net_outputs, target=target)
+                epoch_val_error = np.add(epoch_val_error, self.loss.func(predicted=net_outputs, target=target))
+                epoch_val_metric = np.add(epoch_val_metric, self.metr.func(predicted=net_outputs, target=target))
 
             epoch_tr_error = np.sum(epoch_tr_error) / float(len(epoch_tr_error))
             epoch_tr_metric = np.sum(epoch_tr_metric) / float(len(epoch_tr_metric))

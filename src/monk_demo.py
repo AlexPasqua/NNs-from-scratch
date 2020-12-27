@@ -18,7 +18,7 @@ if __name__ == '__main__':
     # transform labels from pandas dataframe to numpy ndarray
     labels = labels.to_numpy()[:, np.newaxis]
 
-    # shuffle the dataset
+    # shuffle the whole dataset once
     indexes = list(range(len(monk1_train)))
     np.random.shuffle(indexes)
     monk1_train = monk1_train[indexes]
@@ -34,19 +34,12 @@ if __name__ == '__main__':
         'upper_lim': 0.1
     }
     model = Network(**parameters)
-    # model.compile(opt='gd', loss='squared', metr='bin_class_acc', lrn_rate=0.5, momentum=0.5)
-    # tr_error_values, tr_metric_values = model.fit(tr_x=monk1_train,
-    #                                         tr_y=labels,
-    #                                         epochs=250,
-    #                                         batch_size=len(monk1_train),
-    #                                         k_folds=5
-    #                                         )
     tr_error_values, tr_metric_values, val_error_values, val_metric_values = cross_valid(net=model,
                                                                                          inputs=monk1_train,
                                                                                          targets=labels,
                                                                                          epochs=400,
                                                                                          batch_size=len(monk1_train),
-                                                                                         k_folds=5)
+                                                                                         k_folds=4)
     # plot learning curve
     figure, ax = plt.subplots(1, 2, figsize=(12, 4))
     ax[0].plot(range(len(tr_error_values)), tr_error_values, val_error_values)

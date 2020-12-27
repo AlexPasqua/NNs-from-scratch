@@ -149,8 +149,8 @@ class Network:
         curr_delta = dErr_dOut
         for layer_index in reversed(range(len(self.__layers))):
             curr_delta, grad_w, grad_b = self.__layers[layer_index].backward_pass(curr_delta)
-            grad_net[layer_index]['weights'] += np.array(grad_w)
-            grad_net[layer_index]['biases'] += np.array(grad_b)
+            grad_net[layer_index]['weights'] = np.add(grad_net[layer_index]['weights'], grad_w)
+            grad_net[layer_index]['biases'] = np.add(grad_net[layer_index]['biases'], grad_b)
         return grad_net
 
     def get_empty_struct(self):
