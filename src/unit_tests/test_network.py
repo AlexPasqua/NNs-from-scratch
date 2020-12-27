@@ -35,6 +35,9 @@ class TestNetwork(unittest.TestCase):
         self.assertEqual('gd', self.net.opt.type)
         self.assertRaises(AttributeError, self.net.compile, opt='hello', loss='squared')
         self.assertRaises(AttributeError, self.net.compile, opt='sgd', loss='hello')
+        self.assertRaises(ValueError, self.net.compile, momentum=-1)
+        self.assertRaises(ValueError, self.net.compile, momentum=2)
+
 
     def test_fit(self):
         net = Network(input_dim=3, units_per_layer=[6, 2], acts=['relu', 'relu'])
