@@ -109,11 +109,14 @@ class GradientDescent(Optimizer, ABC):
                     #     grad_net.layers[i].weights += net.layers[i].__gradient_w
                     #     grad_net.layers[i].biases += net.layers[i].__gradient_b
 
+                step += 1
                 for layer_index in range(len(net.layers)):
                     # learning rate decay
                     if self.lr_decay is not None:
-                        step += 1
                         self.lr = lr_decays[self.lr_decay].func(curr_lr=self.lr,
+                                                                base_lr=self.base_lr,
+                                                                final_lr=self.final_lr,
+                                                                curr_step=step,
                                                                 limit_step=self.limit_step)
                     # weights update
                     grad_net[layer_index]['weights'] /= float(batch_size)

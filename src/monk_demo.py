@@ -18,12 +18,12 @@ if __name__ == '__main__':
 
     parameters = {
         'input_dim': 17,
-        'units_per_layer': (3, 1),
+        'units_per_layer': (4, 1),
         'acts': ('leaky_relu', 'tanh'),
         'init_type': 'random',
         'weights_value': 0.2,
         'lower_lim': 0.01,
-        'upper_lim': 0.2
+        'upper_lim': 0.1
     }
     model = Network(**parameters)
     # model.print_net()
@@ -33,12 +33,12 @@ if __name__ == '__main__':
         metr='bin_class_acc',
         lr=0.5,
         lr_decay='linear',
-        limit_step=200,
+        limit_step=600,
         momentum=0.8
     )
     model.fit(
         inputs=monk1_train,
         targets=labels,
-        epochs=250,
+        epochs=800,
         batch_size=len(monk1_train)
     )
