@@ -11,7 +11,8 @@ class TestOptimizers(unittest.TestCase):
         'bin_class_acc',
         lr=0.2,
         lr_decay='linear',
-        limit_step=400
+        limit_step=400,
+        momentum=0.5
     )
 
     # def test_gd(self):
