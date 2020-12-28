@@ -58,9 +58,9 @@ class Layer:
             if not all(isinstance(n, Number) for n in passed):
                 raise ValueError("layer's weights must be numeric. Got: ", type(passed[0]))
             if len(passed) != len(own):
-                raise AttributeError("'init_value' must have the same length of the layer's weights")
+                raise AttributeError("'value' must have the same length of the layer's weights")
         else:
-            raise AttributeError(f"'init_value' must be a iterable, got {type(passed)}")
+            raise AttributeError(f"'value' must be a iterable, got {type(passed)}")
 
     @weights.setter
     def weights(self, value):
@@ -108,4 +108,3 @@ class Layer:
         ]
         new_upstream_delta = [np.dot(delta, [u.w[j] for u in self.units]) for j in range(len(self.__inputs))]
         return new_upstream_delta, self.__gradient_w, self.__gradient_b
-

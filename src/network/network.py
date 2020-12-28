@@ -112,17 +112,15 @@ class Network:
         :param opt: ('Optimizer' object)
         :param loss: (str) the type of loss function
         :param metr: (str) the type of metric to track (accuracy etc)
-        :param lrn_rate: (float) learning rate init_value
+        :param lrn_rate: (float) learning rate value
         :param momentum: (float) momentum parameter
         """
         if opt not in optimizers or loss not in losses:
             raise AttributeError(f"opt must be within {optimizers.keys()} and loss must be in {losses.keys()}")
         if momentum > 1. or momentum < 0.:
-            raise ValueError(f"momentum must be a init_value between 0 and 1. Got: {momentum}")
+            raise ValueError(f"momentum must be a value between 0 and 1. Got: {momentum}")
         self.__opt = optimizers[opt](net=self, loss=loss, metr=metr, lrn_rate=lrn_rate, momentum=momentum)
 
-        if momentum > 1. or momentum < 0.:
-            raise ValueError(f"momentum must be a init_value between 0 and 1. Got: {momentum}")
 
     def fit(self, tr_x, tr_y, val_x, val_y, epochs=1, batch_size=1):
         """
