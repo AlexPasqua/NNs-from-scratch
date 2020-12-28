@@ -34,10 +34,11 @@ if __name__ == '__main__':
         lr=0.5,
         lr_decay='linear',
         limit_step=200,
+        momentum=0.8
     )
     model.fit(
         inputs=monk1_train,
         targets=labels,
-        epochs=300,
+        epochs=250,
         batch_size=len(monk1_train)
     )

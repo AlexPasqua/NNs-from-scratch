@@ -19,7 +19,7 @@ class Optimizer(ABC):
     """
 
     @abstractmethod
-    def __init__(self, net, loss, metr, lr, lr_decay, limit_step):
+    def __init__(self, net, loss, metr, lr, lr_decay, limit_step, momentum):
         # makes sure lr is a value between 0 and 1
         if lr <= 0 or lr > 1:
             raise ValueError('lr should be a value between 0 and 1, Got:{}'.format(lr))
@@ -31,6 +31,7 @@ class Optimizer(ABC):
         self.final_lr = self.lr / 100.0
         self.lr_decay = lr_decay
         self.limit_step = limit_step
+        self.momentum = momentum
 
     @property
     def net(self):
@@ -47,9 +48,8 @@ class Optimizer(ABC):
 
 class GradientDescent(Optimizer, ABC):
     """ Gradient Descent """
-
-    def __init__(self, net, loss, metr, lr, lr_decay, limit_step):
-        super(GradientDescent, self).__init__(net, loss, metr, lr, lr_decay, limit_step)
+    def __init__(self, net, loss, metr, lr, lr_decay, limit_step, momentum):
+        super(GradientDescent, self).__init__(net, loss, metr, lr, lr_decay, limit_step, momentum)
         self.__type = 'gd'
 
     @property
@@ -72,6 +72,7 @@ class GradientDescent(Optimizer, ABC):
         net = self.net
         metric_values = []
         error_values = []
+        momentum_net = net.get_empty_struct()
         step = 0
 
         # cycle through epochs
@@ -91,7 +92,7 @@ class GradientDescent(Optimizer, ABC):
                 end = start + batch_size
                 train_batch = train_set[start: end]
                 targets_batch = targets[start: end]
-                grad_net = net.get_empty_gradnet()
+                grad_net = net.get_empty_struct()
 
                 # cycle through patterns and targets within a batch
                 for pattern, target in zip(train_batch, targets_batch):
@@ -113,15 +114,18 @@ class GradientDescent(Optimizer, ABC):
                     if self.lr_decay is not None:
                         step += 1
                         self.lr = lr_decays[self.lr_decay].func(curr_lr=self.lr,
-                                                                base_lr=self.base_lr,
-                                                                final_lr=self.final_lr,
-                                                                curr_step=step,
                                                                 limit_step=self.limit_step)
                     # weights update
                     grad_net[layer_index]['weights'] /= float(batch_size)
                     grad_net[layer_index]['biases'] /= float(batch_size)
-                    net.layers[layer_index].weights += self.lr * grad_net[layer_index]['weights']
-                    net.layers[layer_index].biases += self.lr * grad_net[layer_index]['biases']
+                    delta_w = self.lr * grad_net[layer_index]['weights']
+                    delta_b = self.lr * grad_net[layer_index]['biases']
+                    momentum_net[layer_index]['weights'] *= self.momentum
+                    momentum_net[layer_index]['biases'] *= self.momentum
+                    momentum_net[layer_index]['weights'] += delta_w
+                    momentum_net[layer_index]['biases'] += delta_b
+                    net.layers[layer_index].weights += momentum_net[layer_index]['weights']
+                    net.layers[layer_index].biases += momentum_net[layer_index]['biases']
 
             epoch_error = np.sum(epoch_error) / float(len(epoch_error))
             epoch_metric = np.sum(epoch_metric) / float(len(epoch_metric))
@@ -132,14 +136,14 @@ class GradientDescent(Optimizer, ABC):
         plt.plot(range(epochs), error_values)
         plt.xlabel('Epochs', fontweight='bold')
         plt.ylabel('loss', fontweight='bold')
-        plt.title(f"Base Eta:{self.base_lr}  Alpha:/empty/  Lambda:/empty/  Hidden layers:{len(net.units_per_layer)}",
+        plt.title(f"Base Eta:{self.base_lr}  Alpha:{self.momentum}  Lambda:/empty/  Layers:{len(net.units_per_layer)}",
                   fontweight='bold')
         plt.show()
 
         plt.plot(range(epochs), metric_values)
         plt.xlabel('Epochs', fontweight='bold')
         plt.ylabel('accuracy', fontweight='bold')
-        plt.title(f"Base Eta:{self.base_lr}  Alpha:/empty/  Lambda:/empty/  Hidden layers:{len(net.units_per_layer)}",
+        plt.title(f"Base Eta:{self.base_lr}  Alpha:{self.momentum}  Lambda:/empty/  Layers:{len(net.units_per_layer)}",
                   fontweight='bold')
         plt.show()
 

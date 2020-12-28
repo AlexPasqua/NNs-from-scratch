@@ -95,7 +95,7 @@ class Network:
             print(f"Net's output: {outputs}")
         return outputs
 
-    def compile(self, opt='gd', loss='squared', metr='bin_class_acc', lr=0.01, lr_decay=None, limit_step=200):
+    def compile(self, opt='gd', loss='squared', metr='bin_class_acc', lr=0.01, lr_decay=None, limit_step=200, momentum=0.):
         """
         Prepares the network for training by assigning an optimizer to it
         :param opt: ('Optimizer' object)
@@ -104,9 +104,12 @@ class Network:
         :param lr: (float) learning rate value
         :param lr_decay: type of decay for the learning rate
         :param limit_step: number of steps of weights update to perform before stopping decaying the learning rate
+        :param momentum: (float) momentum parameter
         """
         if opt not in optimizers or loss not in losses:
             raise AttributeError(f"opt must be within {optimizers.keys()} and loss must be in {losses.keys()}")
+        if momentum > 1. or momentum < 0.:
+            raise ValueError(f"momentum must be a value between 0 and 1. Got: {momentum}")
         self.__opt = optimizers[opt](net=self, loss=loss, metr=metr, lr=lr, lr_decay=lr_decay, limit_step=limit_step)
 
     def fit(self, inputs, targets, epochs=1, batch_size=1):
@@ -136,15 +139,15 @@ class Network:
             grad_net[layer_index]['biases'] += np.array(grad_b)
         return grad_net
 
-    def get_empty_gradnet(self):
+    def get_empty_struct(self):
         """
         :return: a zeroed structure to contain all the layers' gradients
         """
         struct = np.array([{}] * len(self.__layers))
         for layer_index in range(len(self.__layers)):
-            struct[layer_index] = {'weights': np.array([]), 'biases': np.array([])}
-            struct[layer_index]['weights'] = [0.] * len(self.__layers[layer_index].weights)
-            struct[layer_index]['biases'] = [0.] * len(self.__layers[layer_index].biases)
+            struct[layer_index] = {'weights': [], 'biases': []}
+            struct[layer_index]['weights'] = np.array([0.] * len(self.__layers[layer_index].weights))
+            struct[layer_index]['biases'] = np.array([0.] * len(self.__layers[layer_index].biases))
         return struct
 
     def print_net(self):

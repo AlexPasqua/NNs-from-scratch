@@ -35,6 +35,9 @@ class TestNetwork(unittest.TestCase):
         self.assertEqual('gd', self.net.opt.type)
         self.assertRaises(AttributeError, self.net.compile, opt='hello', loss='squared')
         self.assertRaises(AttributeError, self.net.compile, opt='sgd', loss='hello')
+        self.assertRaises(ValueError, self.net.compile, momentum=-1)
+        self.assertRaises(ValueError, self.net.compile, momentum=2)
+
 
     def test_fit(self):
         net = Network(input_dim=3, units_per_layer=[6, 2], acts=['relu', 'relu'])
@@ -45,13 +48,13 @@ class TestNetwork(unittest.TestCase):
         self.assertRaises(AttributeError,
                           self.net.propagate_back,
                           dErr_dOut=[0.5] * len(self.net.layers[-1].units),
-                          grad_net=self.net.get_empty_gradnet())
+                          grad_net=self.net.get_empty_struct())
         # perform a forward pass to initialize all the layers' outputs and then call again 'propagate_back'
         self.net.forward(inp=[0.2] * self.net.input_dim)
-        self.net.propagate_back(dErr_dOut=[0.5] * len(self.net.layers[-1].units), grad_net=self.net.get_empty_gradnet())
+        self.net.propagate_back(dErr_dOut=[0.5] * len(self.net.layers[-1].units), grad_net=self.net.get_empty_struct())
 
     def test_get_empty_gradnet(self):
-        gradnet = self.net.get_empty_gradnet()
+        gradnet = self.net.get_empty_struct()
         for layer_index in range(len(self.net.layers)):
             layer = self.net.layers[layer_index]
             for unit_index in range(len(layer.units)):
