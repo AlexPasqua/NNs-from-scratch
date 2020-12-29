@@ -101,8 +101,9 @@ class GradientDescent(Optimizer, ABC):
                     net_outputs = net.forward(inp=pattern)
 
                     # computes penalty term
-                    for index in range(len(net.layers) - 1):
-                        w_tot = np.concatenate((net.layers[index].weights, net.layers[index + 1].weights))
+                    w_tot = []
+                    for layer in net.layers:
+                        w_tot = np.concatenate((w_tot, layer.weights))
                     regularization = regs[self.reg_type].func(w=w_tot, lambd=self.lambd)
 
                     epoch_error[:] += self.loss.func(predicted=net_outputs, target=target) + regularization
