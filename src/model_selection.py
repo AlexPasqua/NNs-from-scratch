@@ -15,6 +15,7 @@ def cross_valid(net, inputs, targets, epochs=1, batch_size=1, k_folds=5):
 
     # CV cycle
     for i in range(k_folds):
+        # create validation set and training set using the folds
         valid_set = x_folds[i]
         valid_targets = y_folds[i]
         train_folds = np.concatenate((x_folds[: i], x_folds[i + 1:]))

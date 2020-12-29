@@ -121,7 +121,6 @@ class Network:
             raise ValueError(f"momentum must be a value between 0 and 1. Got: {momentum}")
         self.__opt = optimizers[opt](net=self, loss=loss, metr=metr, lrn_rate=lrn_rate, momentum=momentum)
 
-
     def fit(self, tr_x, tr_y, val_x, val_y, epochs=1, batch_size=1):
         """
         Execute the training of the network
