@@ -47,7 +47,7 @@ class Network:
     @staticmethod
     def __check_attributes(self, input_dim, units_per_layer, acts):
         if input_dim < 1 or any(n_units < 1 for n_units in units_per_layer):
-            raise ValueError("input_dim and every init_value in units_per_layer must be positive")
+            raise ValueError("input_dim and every value in units_per_layer must be positive")
         if len(units_per_layer) != len(acts):
             raise AttributeError(
                 f"Mismatching lengths --> len(units_per_layer)={len(units_per_layer)}; len(acts)={len(acts)}")
@@ -106,20 +106,22 @@ class Network:
             print(f"Net's output: {outputs}")
         return outputs
 
-    def compile(self, opt='gd', loss='squared', metr='bin_class_acc', lrn_rate=0.01, momentum=0.):
+    def compile(self, opt='gd', loss='squared', metr='bin_class_acc', lr=0.01, lr_decay=None, limit_step=200, momentum=0.):
         """
         Prepares the network for training by assigning an optimizer to it
         :param opt: ('Optimizer' object)
         :param loss: (str) the type of loss function
         :param metr: (str) the type of metric to track (accuracy etc)
-        :param lrn_rate: (float) learning rate value
+        :param lr: (float) learning rate value
+        :param lr_decay: type of decay for the learning rate
+        :param limit_step: number of steps of weights update to perform before stopping decaying the learning rate
         :param momentum: (float) momentum parameter
         """
         if opt not in optimizers or loss not in losses:
             raise AttributeError(f"opt must be within {optimizers.keys()} and loss must be in {losses.keys()}")
         if momentum > 1. or momentum < 0.:
             raise ValueError(f"momentum must be a value between 0 and 1. Got: {momentum}")
-        self.__opt = optimizers[opt](net=self, loss=loss, metr=metr, lrn_rate=lrn_rate, momentum=momentum)
+        self.__opt = optimizers[opt](net=self, loss=loss, metr=metr, lr=lr, lr_decay=lr_decay, limit_step=limit_step, momentum=momentum)
 
     def fit(self, tr_x, tr_y, val_x, val_y, epochs=1, batch_size=1):
         """

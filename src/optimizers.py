@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 import matplotlib.pyplot as plt
 import numpy as np
 import tqdm as tqdm
-from functions import losses, metrics
+from functions import losses, metrics, lr_decays
 
 
 class Optimizer(ABC):
@@ -15,18 +15,22 @@ class Optimizer(ABC):
         net: ('Network' object) Neural Network to which apply the algorithm
         loss: ('DerivableFunction' object) loss function
         metr: ('Function' object) accuracy function
-        lrn_rate: (float) learning rate
+        lr: (float) learning rate
     """
 
     @abstractmethod
-    def __init__(self, net, loss, metr, lrn_rate, momentum):
-        # makes sure lrn_rate is a value between 0 and 1
-        if lrn_rate <= 0 or lrn_rate > 1:
-            raise ValueError('lrn_rate should be a value between 0 and 1, Got:{}'.format(lrn_rate))
+    def __init__(self, net, loss, metr, lr, lr_decay, limit_step, momentum):
+        # makes sure lr is a value between 0 and 1
+        if lr <= 0 or lr > 1:
+            raise ValueError('lr should be a value between 0 and 1, Got:{}'.format(lr))
         self.__net = net
         self.__loss = losses[loss]
         self.__metric = metrics[metr]
-        self.__lrn_rate = lrn_rate
+        self.lr = lr
+        self.base_lr = self.lr
+        self.final_lr = self.base_lr / 100.0
+        self.lr_decay = lr_decay
+        self.limit_step = limit_step
         self.momentum = momentum
 
     @property
@@ -41,16 +45,11 @@ class Optimizer(ABC):
     def metr(self):
         return self.__metric
 
-    @property
-    def lrn_rate(self):
-        return self.__lrn_rate
-
 
 class GradientDescent(Optimizer, ABC):
     """ Gradient Descent """
-
-    def __init__(self, net, loss, metr, lrn_rate=0.01, momentum=0.):
-        super(GradientDescent, self).__init__(net, loss, metr, lrn_rate, momentum)
+    def __init__(self, net, loss, metr, lr, lr_decay, limit_step, momentum):
+        super(GradientDescent, self).__init__(net, loss, metr, lr, lr_decay, limit_step, momentum)
         self.__type = 'gd'
 
     @property
@@ -78,6 +77,7 @@ class GradientDescent(Optimizer, ABC):
         val_metric_values = []
         net = self.net
         momentum_net = net.get_empty_struct()
+        step = 0
 
         # cycle through epochs
         for epoch in tqdm.tqdm(range(epochs), desc="Iterating over epochs"):
@@ -114,12 +114,25 @@ class GradientDescent(Optimizer, ABC):
                     # (emulate pass by reference of grad_net using return and reassign)
                     grad_net = net.propagate_back(dErr_dOut, grad_net)
 
+                # learning rate decay
+                step += 1
+                if self.lr_decay is not None:
+                    self.lr = lr_decays[self.lr_decay].func(curr_lr=self.lr,
+                                                            base_lr=self.base_lr,
+                                                            final_lr=self.final_lr,
+                                                            curr_step=step,
+                                                            limit_step=self.limit_step)
                 # weights update
                 for layer_index in range(len(net.layers)):
+                    # grad_net contains the gradients of all the layers (and units) in the network
                     grad_net[layer_index]['weights'] /= float(batch_size)
                     grad_net[layer_index]['biases'] /= float(batch_size)
-                    delta_w = self.lrn_rate * grad_net[layer_index]['weights']
-                    delta_b = self.lrn_rate * grad_net[layer_index]['biases']
+                    # delta_w is equivalent to lrn_rate * local_grad * input_on_that_connection (local_grad = delta)
+                    delta_w = self.lr * grad_net[layer_index]['weights']
+                    delta_b = self.lr * grad_net[layer_index]['biases']
+                    # momentum_net[layer_index]['weights'] is the new delta_w --> it adds the momentum
+                    # Since it acts as delta_w, it multiplies itself by the momentum constant and then adds
+                    # lrn_rate * local_grad * input_on_that_connection (i.e. "delta_w")
                     momentum_net[layer_index]['weights'] *= self.momentum
                     momentum_net[layer_index]['biases'] *= self.momentum
                     momentum_net[layer_index]['weights'] = np.add(momentum_net[layer_index]['weights'], delta_w)

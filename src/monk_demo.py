@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+from network.network import Network
 from sklearn.preprocessing import OneHotEncoder
 import matplotlib.pyplot as plt
 from network.network import Network
