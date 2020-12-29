@@ -107,7 +107,7 @@ class GradientDescent(Optimizer, ABC):
                     regularization = regs[self.reg_type].func(w=w_tot, lambd=self.lambd)
 
                     epoch_error[:] += self.loss.func(predicted=net_outputs, target=target) + regularization
-                    epoch_metric[:] += self.metr.func(predicted=net_outputs, target=target) + regularization
+                    epoch_metric[:] += self.metr.func(predicted=net_outputs, target=target)
                     dErr_dOut = self.loss.deriv(predicted=net_outputs, target=target)
                     # set the layers' gradients and add them into grad_net
                     # (emulate pass by reference of grad_net using return and reassign)
@@ -128,9 +128,9 @@ class GradientDescent(Optimizer, ABC):
                     momentum_net[layer_index]['biases'] *= self.momentum
                     momentum_net[layer_index]['weights'] += delta_w
                     momentum_net[layer_index]['biases'] += delta_b
-                    net.layers[layer_index].weights += momentum_net[layer_index]['weights'] - regs[self.reg_type].deriv(
-                                                                                    w=net.layers[layer_index].weights,
-                                                                                    lambd=self.lambd)
+                    net.layers[layer_index].weights += momentum_net[layer_index]['weights'] - \
+                                                       regs[self.reg_type].deriv(w=net.layers[layer_index].weights,
+                                                                                 lambd=self.lambd)
 
                     net.layers[layer_index].biases += momentum_net[layer_index]['biases']
 
