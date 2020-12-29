@@ -18,14 +18,14 @@ if __name__ == '__main__':
 
     parameters = {
         'input_dim': 17,
-        'units_per_layer': (3, 1),
+        'units_per_layer': (4, 1),
         'acts': ('leaky_relu', 'tanh'),
         'init_type': 'random',
         'weights_value': 0.2,
         'lower_lim': 0.01,
-        'upper_lim': 0.2
+        'upper_lim': 0.1
     }
     model = Network(**parameters)
     # model.print_net()
-    model.compile(opt='gd', loss='squared', metr='bin_class_acc', lrn_rate=0.5, momentum=0.7)
-    model.fit(inputs=monk1_train, targets=labels, epochs=250, batch_size=len(monk1_train))
+    model.compile(opt='gd', loss='squared', metr='bin_class_acc', lrn_rate=0.4, momentum=0.6, lambd= 0., reg_type='l2')
+    model.fit(inputs=monk1_train, targets=labels, epochs=300, batch_size=len(monk1_train))

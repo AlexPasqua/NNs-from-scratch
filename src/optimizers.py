@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 import matplotlib.pyplot as plt
 import numpy as np
 import tqdm as tqdm
-from functions import losses, metrics
+from functions import losses, metrics, regs
 
 
 class Optimizer(ABC):
@@ -19,7 +19,7 @@ class Optimizer(ABC):
     """
 
     @abstractmethod
-    def __init__(self, net, loss, metr, lrn_rate, momentum):
+    def __init__(self, net, loss, metr, lrn_rate, momentum, lambd, reg_type):
         # makes sure lrn_rate is a value between 0 and 1
         if lrn_rate <= 0 or lrn_rate > 1:
             raise ValueError('lrn_rate should be a value between 0 and 1, Got:{}'.format(lrn_rate))
@@ -28,6 +28,8 @@ class Optimizer(ABC):
         self.__metric = metrics[metr]
         self.__lrn_rate = lrn_rate
         self.momentum = momentum
+        self.lambd = lambd
+        self.reg_type = reg_type
 
     @property
     def net(self):
@@ -48,8 +50,9 @@ class Optimizer(ABC):
 
 class GradientDescent(Optimizer, ABC):
     """ Gradient Descent """
-    def __init__(self, net, loss, metr, lrn_rate=0.01, momentum=0.):
-        super(GradientDescent, self).__init__(net, loss, metr, lrn_rate, momentum)
+
+    def __init__(self, net, loss, metr, lrn_rate=0.01, momentum=0., lambd=0., reg_type='l2'):
+        super(GradientDescent, self).__init__(net, loss, metr, lrn_rate, momentum, lambd, reg_type)
         self.__type = 'gd'
 
     @property
@@ -96,8 +99,14 @@ class GradientDescent(Optimizer, ABC):
                 # cycle through patterns and targets within a batch
                 for pattern, target in zip(train_batch, targets_batch):
                     net_outputs = net.forward(inp=pattern)
-                    epoch_error[:] += self.loss.func(predicted=net_outputs, target=target)
-                    epoch_metric[:] += self.metr.func(predicted=net_outputs, target=target)
+
+                    # computes penalty term
+                    for index in range(len(net.layers) - 1):
+                        w_tot = np.concatenate((net.layers[index].weights, net.layers[index + 1].weights))
+                    regularization = regs[self.reg_type].func(w=w_tot, lambd=self.lambd)
+
+                    epoch_error[:] += self.loss.func(predicted=net_outputs, target=target) + regularization
+                    epoch_metric[:] += self.metr.func(predicted=net_outputs, target=target) + regularization
                     dErr_dOut = self.loss.deriv(predicted=net_outputs, target=target)
                     # set the layers' gradients and add them into grad_net
                     # (emulate pass by reference of grad_net using return and reassign)
@@ -118,7 +127,10 @@ class GradientDescent(Optimizer, ABC):
                     momentum_net[layer_index]['biases'] *= self.momentum
                     momentum_net[layer_index]['weights'] += delta_w
                     momentum_net[layer_index]['biases'] += delta_b
-                    net.layers[layer_index].weights += momentum_net[layer_index]['weights']
+                    net.layers[layer_index].weights += momentum_net[layer_index]['weights'] - regs[self.reg_type].deriv(
+                                                                                    w=net.layers[layer_index].weights,
+                                                                                    lambd=self.lambd)
+
                     net.layers[layer_index].biases += momentum_net[layer_index]['biases']
 
             epoch_error = np.sum(epoch_error) / float(len(epoch_error))
@@ -130,13 +142,15 @@ class GradientDescent(Optimizer, ABC):
         plt.plot(range(epochs), errors)
         plt.xlabel('Epochs', fontweight='bold')
         plt.ylabel('loss', fontweight='bold')
-        plt.title(f"Eta:{self.lrn_rate}  Alpha:{self.momentum}  Lambda:/empty/  Layers:{len(net.units_per_layer)}", fontweight='bold')
+        plt.title(f"Eta:{self.lrn_rate}  Alpha:{self.momentum}  Lambda:  Layers:{len(net.units_per_layer)}",
+                  fontweight='bold')
         plt.show()
 
         plt.plot(range(epochs), metric_values)
         plt.xlabel('Epochs', fontweight='bold')
         plt.ylabel('accuracy', fontweight='bold')
-        plt.title(f"Eta:{self.lrn_rate}  Alpha:{self.momentum}  Lambda:/empty/  Layers:{len(net.units_per_layer)}", fontweight='bold')
+        plt.title(f"Eta:{self.lrn_rate}  Alpha:{self.momentum}  Lambda:/empty/  Layers:{len(net.units_per_layer)}",
+                  fontweight='bold')
         plt.show()
 
 

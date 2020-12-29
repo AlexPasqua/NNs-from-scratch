@@ -95,7 +95,7 @@ class Network:
             print(f"Net's output: {outputs}")
         return outputs
 
-    def compile(self, opt='gd', loss='squared', metr='bin_class_acc', lrn_rate=0.01, momentum=0.):
+    def compile(self, opt='gd', loss='squared', metr='bin_class_acc', lrn_rate=0.01, momentum=0., lambd=0., reg_type='l2'):
         """
         Prepares the network for training by assigning an optimizer to it
         :param opt: ('Optimizer' object)
@@ -103,10 +103,14 @@ class Network:
         :param metr: (str) the type of metric to track (accuracy etc)
         :param lrn_rate: (float) learning rate value
         :param momentum: (float) momentum parameter
+        :param lambd: (float) regularization parameter
+        :param reg_type: (string) regularization type
         """
         if opt not in optimizers or loss not in losses:
             raise AttributeError(f"opt must be within {optimizers.keys()} and loss must be in {losses.keys()}")
-        self.__opt = optimizers[opt](net=self, loss=loss, metr=metr, lrn_rate=lrn_rate, momentum=momentum)
+        if reg_type not in regs.keys():
+            raise AttributeError(f"reg_type must be one of {regs.keys()}. Got:{reg_type}")
+        self.__opt = optimizers[opt](net=self, loss=loss, metr=metr, lrn_rate=lrn_rate, momentum=momentum, lambd=lambd, reg_type=reg_type)
 
     def fit(self, inputs, targets, epochs=1, batch_size=1):
         """
