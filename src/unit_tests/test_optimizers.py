@@ -19,8 +19,8 @@ class TestOptimizers(unittest.TestCase):
     #     training_set = np.array([[1, 1], [1, 0], [0, 1], [0, 0]])
     #     training_labels = np.array([[1], [1], [0], [0]])
     #     self.gd.optimize(
-    #         train_set=training_set,
-    #         targets=training_labels,
+    #         tr_x=training_set,
+    #         tr_y=training_labels,
     #         epochs=2,
     #         batch_size=1)
 

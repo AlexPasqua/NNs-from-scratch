@@ -108,4 +108,3 @@ class Layer:
         ]
         new_upstream_delta = [np.dot(delta, [u.w[j] for u in self.units]) for j in range(len(self.__inputs))]
         return new_upstream_delta, self.__gradient_w, self.__gradient_b
-

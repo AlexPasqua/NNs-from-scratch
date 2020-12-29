@@ -13,7 +13,7 @@ class TestWeightsInitializations(unittest.TestCase):
 
     def test_values(self):
         value = 0.2
-        self.assertEqual(weights_inits(type='uniform', value=value, n_weights=1), value)
+        self.assertEqual(weights_inits(type='uniform', init_value=value, n_weights=1), value)
         self.assertLessEqual(weights_inits(type='random', lower_lim=0., upper_lim=value, n_weights=1), value)
 
 

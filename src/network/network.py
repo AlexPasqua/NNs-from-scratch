@@ -12,7 +12,8 @@ class Network:
     Attributes:
         layers: list of net's layers ('Layer' objects)
     """
-    def __init__(self, input_dim, units_per_layer, acts, init_type='uniform', value=0.2, **kwargs):
+
+    def __init__(self, input_dim, units_per_layer, acts, init_type='uniform', init_value=0.2, **kwargs):
         """
         Constructor
         :param input_dim: the input dimension
@@ -28,10 +29,16 @@ class Network:
                                 acts=acts)
 
         self.__input_dim = input_dim
-        self.__units_per_layer = units_per_layer
+        self.__params = {**{
+            'input_dim': input_dim,
+            'units_per_layer': units_per_layer,
+            'acts': acts,
+            'init_type': init_type,
+            'init_value': init_value
+        }, **kwargs}
         self.__layers = []
         self.__opt = None
-        other_args = {**{'init_type': init_type, 'value': value}, **kwargs}   # merge 2 dictionaries
+        other_args = {**{'init_type': init_type, 'init_value': init_value}, **kwargs}  # merge 2 dictionaries
         fanin = input_dim
         for i in range(len(units_per_layer)):
             self.__layers.append(Layer(fanin=fanin, n_units=units_per_layer[i], act=acts[i], **other_args))
@@ -51,7 +58,7 @@ class Network:
 
     @property
     def units_per_layer(self):
-        return self.__units_per_layer
+        return self.__params['units_per_layer']
 
     @property
     def layers(self):
@@ -60,6 +67,10 @@ class Network:
     @property
     def opt(self):
         return self.__opt
+
+    @property
+    def params(self):
+        return self.__params
 
     def forward(self, inp=(2, 2, 2), verbose=False):
         """
@@ -112,31 +123,33 @@ class Network:
             raise ValueError(f"momentum must be a value between 0 and 1. Got: {momentum}")
         self.__opt = optimizers[opt](net=self, loss=loss, metr=metr, lr=lr, lr_decay=lr_decay, limit_step=limit_step, momentum=momentum)
 
-    def fit(self, inputs, targets, epochs=1, batch_size=1):
+    def fit(self, tr_x, tr_y, val_x, val_y, epochs=1, batch_size=1):
         """
         Execute the training of the network
-        :param inputs: (numpy ndarray) input training set
-        :param targets: (numpy ndarray) targets for each input pattern
+        :param tr_x: (numpy ndarray) input training set
+        :param tr_y: (numpy ndarray) targets for each input training pattern
+        :param val_x: (numpy ndarray) input validation set
+        :param val_y: (numpy ndarray) targets for each input validation pattern
         :param batch_size: (integer) the size of the batch
         :param epochs: (integer) number of epochs
         """
-        targets = np.array(targets)
-        inputs = np.array(inputs)
-        target_len = targets.shape[1] if len(targets.shape) > 1 else 1
+        tr_y = np.array(tr_y)
+        tr_x = np.array(tr_x)
+        target_len = tr_y.shape[1] if len(tr_y.shape) > 1 else 1
         if target_len != len(self.layers[-1].units):
             raise AttributeError(
-                f"Mismatching shapes --> target: {targets.shape} ; output units: {len(self.layers[-1].units)}")
-        n_pattern = inputs.shape[0] if len(inputs.shape) > 1 else 1
-        n_target = targets.shape[0] if len(targets.shape) > 1 else 1
+                f"Mismatching shapes --> target: {tr_y.shape} ; output units: {len(self.layers[-1].units)}")
+        n_pattern = tr_x.shape[0] if len(tr_x.shape) > 1 else 1
+        n_target = tr_y.shape[0] if len(tr_y.shape) > 1 else 1
         assert (n_pattern == n_target)
-        self.__opt.optimize(train_set=inputs, targets=targets, epochs=epochs, batch_size=batch_size)
+        return self.__opt.optimize(tr_x=tr_x, tr_y=tr_y, val_x=val_x, val_y=val_y, epochs=epochs, batch_size=batch_size)
 
     def propagate_back(self, dErr_dOut, grad_net):
         curr_delta = dErr_dOut
         for layer_index in reversed(range(len(self.__layers))):
             curr_delta, grad_w, grad_b = self.__layers[layer_index].backward_pass(curr_delta)
-            grad_net[layer_index]['weights'] += np.array(grad_w)
-            grad_net[layer_index]['biases'] += np.array(grad_b)
+            grad_net[layer_index]['weights'] = np.add(grad_net[layer_index]['weights'], grad_w)
+            grad_net[layer_index]['biases'] = np.add(grad_net[layer_index]['biases'], grad_b)
         return grad_net
 
     def get_empty_struct(self):

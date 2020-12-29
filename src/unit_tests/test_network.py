@@ -8,7 +8,7 @@ class TestNetwork(unittest.TestCase):
         'units_per_layer': (3, 1),
         'acts': ('sigmoid', 'sigmoid'),
         'init_type': 'uniform',
-        'value': 0.2,
+        'init_value': 0.2,
     }
     net = Network(**params)
 
@@ -20,7 +20,7 @@ class TestNetwork(unittest.TestCase):
         self.assertRaises(AttributeError, Network, input_dim=2, units_per_layer=(2, 2), acts='relu')
 
     def test_forward(self):
-        net = Network(input_dim=3, units_per_layer=[2, 2], acts=['relu', 'relu'], init_type='uniform', value=0.5)
+        net = Network(input_dim=3, units_per_layer=[2, 2], acts=['relu', 'relu'], init_type='uniform', init_value=0.5)
         self.assertRaises(AttributeError, net.forward, inp='hello')
         self.assertRaises(AttributeError, net.forward, inp=2)
         self.assertRaises(AttributeError, net.forward, inp=(1, 1))
@@ -38,11 +38,10 @@ class TestNetwork(unittest.TestCase):
         self.assertRaises(ValueError, self.net.compile, momentum=-1)
         self.assertRaises(ValueError, self.net.compile, momentum=2)
 
-
     def test_fit(self):
         net = Network(input_dim=3, units_per_layer=[6, 2], acts=['relu', 'relu'])
-        self.assertRaises(AttributeError, net.fit, inputs=[1, 1], targets=[1, 2, 3])
-        self.assertRaises(AssertionError, net.fit, inputs=[[1, 1], [1, 1]], targets=[[1, 2]])
+        self.assertRaises(AttributeError, net.fit, tr_x=[1, 1], tr_y=[1, 2, 3], val_x=[1, 1], val_y=[1, 1])
+        self.assertRaises(AssertionError, net.fit, tr_x=[[1, 1], [1, 1]], tr_y=[[1, 2]], val_x=[1, 1], val_y=[1, 1])
 
     def test_propagate_back(self):
         self.assertRaises(AttributeError,
