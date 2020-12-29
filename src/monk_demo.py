@@ -1,6 +1,5 @@
 import pandas as pd
 import numpy as np
-from network.network import Network
 from sklearn.preprocessing import OneHotEncoder
 import matplotlib.pyplot as plt
 from network.network import Network
@@ -39,7 +38,7 @@ if __name__ == '__main__':
                                                                                          inputs=monk1_train,
                                                                                          targets=labels,
                                                                                          epochs=400,
-                                                                                         batch_size=len(monk1_train),
+                                                                                         batch_size=15,
                                                                                          k_folds=4)
     # plot learning curve
     figure, ax = plt.subplots(1, 2, figsize=(12, 4))

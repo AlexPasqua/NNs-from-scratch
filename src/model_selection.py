@@ -28,7 +28,13 @@ def cross_valid(net, inputs, targets, epochs=1, batch_size=1, k_folds=5):
 
         # training
         # TODO: pass parameters of compile to "cross_valid" function
-        net.compile(opt='gd', loss='squared', metr='bin_class_acc', lrn_rate=0.3, momentum=0.7)
+        net.compile(opt='gd',
+                    loss='squared',
+                    metr='bin_class_acc',
+                    lr=0.5,
+                    lr_decay='linear',
+                    limit_step=500,
+                    momentum=0.7)
         tr_err, tr_metric, val_err, val_metric = net.fit(tr_x=train_set,
                                                          tr_y=train_targets,
                                                          val_x=valid_set,
