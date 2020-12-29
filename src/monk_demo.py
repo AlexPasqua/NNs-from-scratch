@@ -33,12 +33,12 @@ if __name__ == '__main__':
         metr='bin_class_acc',
         lr=0.5,
         lr_decay='linear',
-        limit_step=600,
-        momentum=0.8
+        limit_step=700,
+        momentum=0.5
     )
     model.fit(
         inputs=monk1_train,
         targets=labels,
-        epochs=800,
-        batch_size=len(monk1_train)
+        epochs=300,
+        batch_size=20
     )

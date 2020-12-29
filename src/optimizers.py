@@ -28,7 +28,7 @@ class Optimizer(ABC):
         self.__metric = metrics[metr]
         self.lr = lr
         self.base_lr = self.lr
-        self.final_lr = self.lr / 100.0
+        self.final_lr = self.base_lr / 100.0
         self.lr_decay = lr_decay
         self.limit_step = limit_step
         self.momentum = momentum
@@ -109,16 +109,16 @@ class GradientDescent(Optimizer, ABC):
                     #     grad_net.layers[i].weights += net.layers[i].__gradient_w
                     #     grad_net.layers[i].biases += net.layers[i].__gradient_b
 
+                # learning rate decay
                 step += 1
+                if self.lr_decay is not None:
+                    self.lr = lr_decays[self.lr_decay].func(curr_lr=self.lr,
+                                                            base_lr=self.base_lr,
+                                                            final_lr=self.final_lr,
+                                                            curr_step=step,
+                                                            limit_step=self.limit_step)
+                # weights update
                 for layer_index in range(len(net.layers)):
-                    # learning rate decay
-                    if self.lr_decay is not None:
-                        self.lr = lr_decays[self.lr_decay].func(curr_lr=self.lr,
-                                                                base_lr=self.base_lr,
-                                                                final_lr=self.final_lr,
-                                                                curr_step=step,
-                                                                limit_step=self.limit_step)
-                    # weights update
                     # grad_net contains the gradients of all the layers (and units) in the network
                     grad_net[layer_index]['weights'] /= float(batch_size)
                     grad_net[layer_index]['biases'] /= float(batch_size)
