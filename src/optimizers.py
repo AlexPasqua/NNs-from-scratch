@@ -119,10 +119,15 @@ class GradientDescent(Optimizer, ABC):
                                                                 curr_step=step,
                                                                 limit_step=self.limit_step)
                     # weights update
+                    # grad_net contains the gradients of all the layers (and units) in the network
                     grad_net[layer_index]['weights'] /= float(batch_size)
                     grad_net[layer_index]['biases'] /= float(batch_size)
+                    # delta_w is equivalent to lrn_rate * local_grad * input_on_that_connection (local_grad = delta)
                     delta_w = self.lr * grad_net[layer_index]['weights']
                     delta_b = self.lr * grad_net[layer_index]['biases']
+                    # momentum_net[layer_index]['weights'] is the new delta_w --> it adds the momentum
+                    # Since it acts as delta_w, it multiplies itself by the momentum constant and then adds
+                    # lrn_rate * local_grad * input_on_that_connection (i.e. "delta_w")
                     momentum_net[layer_index]['weights'] *= self.momentum
                     momentum_net[layer_index]['biases'] *= self.momentum
                     momentum_net[layer_index]['weights'] += delta_w
