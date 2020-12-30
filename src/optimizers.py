@@ -73,17 +73,18 @@ class GradientDescent(Optimizer, ABC):
             val_x = val_x[np.newaxis, :] if len(val_x.shape) < 2 else val_x
             val_y = val_y[np.newaxis, :] if len(val_y.shape) < 2 else val_y
 
+        # initialize some variables
         tr_error_values, tr_metric_values, val_error_values, val_metric_values = [], [], [], []
-        net = self.net
+        net = self.net  # just to be shorter
         momentum_net = net.get_empty_struct()
         step = 0
 
         # cycle through epochs
         for epoch in tqdm.tqdm(range(epochs), desc="Iterating over epochs"):
-            epoch_tr_error = np.array([0.] * len(net.layers[-1].units))
-            epoch_tr_metric = np.array([0.] * len(net.layers[-1].units))
-            epoch_val_error = np.array([0.] * len(net.layers[-1].units))
-            epoch_val_metric = np.array([0.] * len(net.layers[-1].units))
+            epoch_tr_error = np.zeros(len(net.layers[-1].units))
+            epoch_tr_metric = np.zeros(len(net.layers[-1].units))
+            epoch_val_error = np.zeros(len(net.layers[-1].units))
+            epoch_val_metric = np.zeros(len(net.layers[-1].units))
 
             # shuffle the datasets (training & validation) internally
             indexes = list(range(len(tr_x)))
