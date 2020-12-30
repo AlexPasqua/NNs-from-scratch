@@ -39,8 +39,15 @@ if __name__ == '__main__':
     # cross validation
     tr_error_values, tr_metric_values, val_error_values, val_metric_values = cross_valid(
         net=model,
-        inputs=monk1_train,
-        targets=labels,
+        tr_val_x=monk1_train,
+        tr_val_y=labels,
+        loss='squared',
+        metr='bin_class_acc',
+        lr=0.3,
+        lr_decay=None,
+        limit_step=None,
+        opt='gd',
+        momentum=0.75,
         epochs=500,
         batch_size='full',
         k_folds=8
