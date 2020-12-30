@@ -47,10 +47,12 @@ if __name__ == '__main__':
     # hold-out validation
     model.compile(opt='gd', loss='squared', metr='bin_class_acc', lr=0.2, momentum=0.5)
     tr_error_values, tr_metric_values, val_error_values, val_metric_values = model.fit(
-        tr_x=monk1_train,
-        tr_y=labels,
+        tr_x=monk1_train[: 105],
+        tr_y=labels[: 105],
+        val_x=monk1_train[105 :],
+        val_y=labels[105 :],
         epochs=1000,
-        batch_size=len(monk1_train)
+        batch_size=len(monk1_train[:105])
     )
 
     # plot learning curve

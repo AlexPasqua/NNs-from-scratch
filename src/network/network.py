@@ -147,10 +147,10 @@ class Network:
 
         # check that the shape of the target matches the net's architecture
         target_len = tr_y.shape[1] if len(tr_y.shape) > 1 else 1
-        n_pattern = tr_x.shape[0] if len(tr_x.shape) > 1 else 1
-        n_target = tr_y.shape[0] if len(tr_y.shape) > 1 else 1
-        if target_len != len(self.layers[-1].units) or n_pattern != n_target:
-            raise AttributeError(f"Mismatching shapes (check target_len, n_out_units, n_pattern, n_target)")
+        n_patterns = tr_x.shape[0] if len(tr_x.shape) > 1 else 1
+        n_targets = tr_y.shape[0] if len(tr_y.shape) > 1 else 1
+        if target_len != len(self.layers[-1].units) or n_patterns != n_targets or batch_size > n_patterns:
+            raise AttributeError(f"Mismatching shapes")
 
         return self.__opt.optimize(
             tr_x=tr_x,
