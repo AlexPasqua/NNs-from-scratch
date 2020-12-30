@@ -8,10 +8,8 @@ def cross_valid(net, inputs, targets, epochs=1, batch_size=1, k_folds=5):
     y_folds = np.array(np.array_split(targets, k_folds), dtype=object)
 
     # initialize vectors for plots
-    tr_error_values = np.zeros(epochs)
-    tr_metric_values = np.zeros(epochs)
-    val_error_values = np.zeros(epochs)
-    val_metric_values = np.zeros(epochs)
+    tr_error_values, tr_metric_values = np.zeros(epochs), np.zeros(epochs)
+    val_error_values, val_metric_values = np.zeros(epochs), np.zeros(epochs)
 
     # CV cycle
     for i in range(k_folds):
@@ -31,9 +29,9 @@ def cross_valid(net, inputs, targets, epochs=1, batch_size=1, k_folds=5):
         net.compile(opt='gd',
                     loss='squared',
                     metr='bin_class_acc',
-                    lr=0.65,
+                    lr=0.3,
                     # lr_decay='linear',
-                    # limit_step=800,
+                    # limit_step=100,
                     momentum=0.8)
         tr_err, tr_metric, val_err, val_metric = net.fit(tr_x=train_set,
                                                          tr_y=train_targets,
