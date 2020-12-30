@@ -36,12 +36,17 @@ if __name__ == '__main__':
     monk1_train = monk1_train[indexes]
     labels = labels[indexes]
 
-    tr_error_values, tr_metric_values, val_error_values, val_metric_values = cross_valid(net=model,
-                                                                                         inputs=monk1_train,
-                                                                                         targets=labels,
-                                                                                         epochs=1000,
-                                                                                         batch_size=len(monk1_train),
-                                                                                         k_folds=4)
+    # cross valdation
+    # tr_error_values, tr_metric_values, val_error_values, val_metric_values = cross_valid(net=model,
+    #                                                                                      inputs=monk1_train,
+    #                                                                                      targets=labels,
+    #                                                                                      epochs=1000,
+    #                                                                                      batch_size=len(monk1_train),
+    #                                                                                      k_folds=4)
+
+    # hold-out validation
+    model.compile(opt='gd', loss='squared', metr='bin_class_acc', lr=0.2)
+
     # plot learning curve
     figure, ax = plt.subplots(1, 2, figsize=(12, 4))
     ax[0].plot(range(len(tr_error_values)), tr_error_values, val_error_values)
