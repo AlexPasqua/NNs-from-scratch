@@ -106,7 +106,8 @@ class Network:
             print(f"Net's output: {outputs}")
         return outputs
 
-    def compile(self, opt='gd', loss='squared', metr='bin_class_acc', lr=0.01, lr_decay=None, limit_step=200, momentum=0.):
+    def compile(self, opt='gd', loss='squared', metr='bin_class_acc', lr=0.01, lr_decay=None, limit_step=None,
+                momentum=0.):
         """
         Prepares the network for training by assigning an optimizer to it
         :param opt: ('Optimizer' object)
@@ -119,9 +120,17 @@ class Network:
         """
         if momentum > 1. or momentum < 0.:
             raise ValueError(f"momentum must be a value between 0 and 1. Got: {momentum}")
-        self.__opt = optimizers[opt](net=self, loss=loss, metr=metr, lr=lr, lr_decay=lr_decay, limit_step=limit_step, momentum=momentum)
+        self.__opt = optimizers[opt](
+            net=self,
+            loss=loss,
+            metr=metr,
+            lr=lr,
+            lr_decay=lr_decay,
+            limit_step=limit_step,
+            momentum=momentum
+        )
 
-    def fit(self, tr_x, tr_y, val_x, val_y, epochs=1, batch_size=1):
+    def fit(self, tr_x, tr_y, val_x=None, val_y=None, epochs=1, batch_size=1):
         """
         Execute the training of the network
         :param tr_x: (numpy ndarray) input training set
@@ -131,16 +140,26 @@ class Network:
         :param batch_size: (integer) the size of the batch
         :param epochs: (integer) number of epochs
         """
-        tr_y = np.array(tr_y)
-        tr_x = np.array(tr_x)
+        # transform sets to numpy array (if they're not already)
+        tr_x, tr_y = np.array(tr_x), np.array(tr_y)
+        if val_x is not None:
+            val_x, val_y = np.array(val_x), np.array(val_y)
+
+        # check that the shape of the target matches the net's architecture
         target_len = tr_y.shape[1] if len(tr_y.shape) > 1 else 1
-        if target_len != len(self.layers[-1].units):
-            raise AttributeError(
-                f"Mismatching shapes --> target: {tr_y.shape} ; output units: {len(self.layers[-1].units)}")
         n_pattern = tr_x.shape[0] if len(tr_x.shape) > 1 else 1
         n_target = tr_y.shape[0] if len(tr_y.shape) > 1 else 1
-        assert (n_pattern == n_target)
-        return self.__opt.optimize(tr_x=tr_x, tr_y=tr_y, val_x=val_x, val_y=val_y, epochs=epochs, batch_size=batch_size)
+        if target_len != len(self.layers[-1].units) or n_pattern != n_target:
+            raise AttributeError(f"Mismatching shapes (check target_len, n_out_units, n_pattern, n_target)")
+
+        return self.__opt.optimize(
+            tr_x=tr_x,
+            tr_y=tr_y,
+            val_x=val_x,
+            val_y=val_y,
+            epochs=epochs,
+            batch_size=batch_size
+        )
 
     def propagate_back(self, dErr_dOut, grad_net):
         curr_delta = dErr_dOut

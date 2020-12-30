@@ -12,8 +12,8 @@ if __name__ == '__main__':
         'acts': ('leaky_relu', 'tanh'),
         'init_type': 'random',
         'weights_value': 0.2,
-        'lower_lim': 0.01,
-        'upper_lim': 0.2
+        'lower_lim': -0.1,
+        'upper_lim': 0.1
     }
     model = Network(**parameters)
 
@@ -36,7 +36,7 @@ if __name__ == '__main__':
     monk1_train = monk1_train[indexes]
     labels = labels[indexes]
 
-    # cross valdation
+    # cross validation
     # tr_error_values, tr_metric_values, val_error_values, val_metric_values = cross_valid(net=model,
     #                                                                                      inputs=monk1_train,
     #                                                                                      targets=labels,
@@ -45,7 +45,13 @@ if __name__ == '__main__':
     #                                                                                      k_folds=4)
 
     # hold-out validation
-    model.compile(opt='gd', loss='squared', metr='bin_class_acc', lr=0.2)
+    model.compile(opt='gd', loss='squared', metr='bin_class_acc', lr=0.2, momentum=0.5)
+    tr_error_values, tr_metric_values, val_error_values, val_metric_values = model.fit(
+        tr_x=monk1_train,
+        tr_y=labels,
+        epochs=1000,
+        batch_size=len(monk1_train)
+    )
 
     # plot learning curve
     figure, ax = plt.subplots(1, 2, figsize=(12, 4))
