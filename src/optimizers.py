@@ -66,35 +66,36 @@ class GradientDescent(Optimizer, ABC):
         :param batch_size: (int) number of patterns per single batch
         :return:
         """
-        if len(tr_x.shape) < 2:
-            tr_x = tr_x[np.newaxis, :]
-        if len(tr_y.shape) < 2:
-            tr_y = tr_y[np.newaxis, :]
+        # add one dimension to the sets if they are one-dimensional
+        tr_x = tr_x[np.newaxis, :] if len(tr_x.shape) < 2 else tr_x
+        tr_y = tr_y[np.newaxis, :] if len(tr_y.shape) < 2 else tr_y
+        if val_x is not None:
+            val_x = val_x[np.newaxis, :] if len(val_x.shape) < 2 else val_x
+            val_y = val_y[np.newaxis, :] if len(val_y.shape) < 2 else val_y
 
-        tr_error_values = []
-        tr_metric_values = []
-        val_error_values = []
-        val_metric_values = []
-        net = self.net
+        # initialize some variables
+        tr_error_values, tr_metric_values, val_error_values, val_metric_values = [], [], [], []
+        net = self.net  # just to be shorter
         momentum_net = net.get_empty_struct()
         step = 0
 
         # cycle through epochs
         for epoch in tqdm.tqdm(range(epochs), desc="Iterating over epochs"):
-            epoch_tr_error = np.array([0.] * len(net.layers[-1].units))
-            epoch_tr_metric = np.array([0.] * len(net.layers[-1].units))
-            epoch_val_error = np.array([0.] * len(net.layers[-1].units))
-            epoch_val_metric = np.array([0.] * len(net.layers[-1].units))
+            epoch_tr_error = np.zeros(len(net.layers[-1].units))
+            epoch_tr_metric = np.zeros(len(net.layers[-1].units))
+            epoch_val_error = np.zeros(len(net.layers[-1].units))
+            epoch_val_metric = np.zeros(len(net.layers[-1].units))
 
             # shuffle the datasets (training & validation) internally
             indexes = list(range(len(tr_x)))
             np.random.shuffle(indexes)
             tr_x = tr_x[indexes]
             tr_y = tr_y[indexes]
-            indexes = list(range(len(val_x)))
-            np.random.shuffle(indexes)
-            val_x = val_x[indexes]
-            val_y = val_y[indexes]
+            if val_x is not None:
+                indexes = list(range(len(val_x)))
+                np.random.shuffle(indexes)
+                val_x = val_x[indexes]
+                val_y = val_y[indexes]
 
             # cycle through batches
             for batch_index in range(math.ceil(len(tr_x) / batch_size)):
@@ -104,7 +105,7 @@ class GradientDescent(Optimizer, ABC):
                 targets_batch = tr_y[start: end]
                 grad_net = net.get_empty_struct()
 
-                # cycle through patterns and targets within a batch
+                # cycle through patterns and targets within a batch and accumulate the gradients
                 for pattern, target in zip(train_batch, targets_batch):
                     net_outputs = net.forward(inp=pattern)
                     epoch_tr_error = np.add(epoch_tr_error, self.loss.func(predicted=net_outputs, target=target))
@@ -115,13 +116,16 @@ class GradientDescent(Optimizer, ABC):
                     grad_net = net.propagate_back(dErr_dOut, grad_net)
 
                 # learning rate decay
-                step += 1
                 if self.lr_decay is not None:
-                    self.lr = lr_decays[self.lr_decay].func(curr_lr=self.lr,
-                                                            base_lr=self.base_lr,
-                                                            final_lr=self.final_lr,
-                                                            curr_step=step,
-                                                            limit_step=self.limit_step)
+                    step += 1
+                    self.lr = lr_decays[self.lr_decay].func(
+                        curr_lr=self.lr,
+                        base_lr=self.base_lr,
+                        final_lr=self.final_lr,
+                        curr_step=step,
+                        limit_step=self.limit_step
+                    )
+
                 # weights update
                 for layer_index in range(len(net.layers)):
                     # grad_net contains the gradients of all the layers (and units) in the network
@@ -143,19 +147,20 @@ class GradientDescent(Optimizer, ABC):
                                                             momentum_net[layer_index]['biases'])
 
             # validation
-            for pattern, target in zip(val_x, val_y):
-                net_outputs = net.forward(inp=pattern)
-                epoch_val_error = np.add(epoch_val_error, self.loss.func(predicted=net_outputs, target=target))
-                epoch_val_metric = np.add(epoch_val_metric, self.metr.func(predicted=net_outputs, target=target))
+            if val_x is not None:
+                for pattern, target in zip(val_x, val_y):
+                    net_outputs = net.forward(inp=pattern)
+                    epoch_val_error = np.add(epoch_val_error, self.loss.func(predicted=net_outputs, target=target))
+                    epoch_val_metric = np.add(epoch_val_metric, self.metr.func(predicted=net_outputs, target=target))
+                epoch_val_error = np.sum(epoch_val_error) / float(len(epoch_val_error))
+                epoch_val_metric = np.sum(epoch_val_metric) / float(len(epoch_val_metric))
+                val_error_values.append(epoch_val_error / float(len(val_x)))
+                val_metric_values.append(epoch_val_metric / float(len(val_x)))
 
             epoch_tr_error = np.sum(epoch_tr_error) / float(len(epoch_tr_error))
             epoch_tr_metric = np.sum(epoch_tr_metric) / float(len(epoch_tr_metric))
-            epoch_val_error = np.sum(epoch_val_error) / float(len(epoch_val_error))
-            epoch_val_metric = np.sum(epoch_val_metric) / float(len(epoch_val_metric))
             tr_error_values.append(epoch_tr_error / float(len(tr_x)))
             tr_metric_values.append(epoch_tr_metric / float(len(tr_x)))
-            val_error_values.append(epoch_val_error / float(len(val_x)))
-            val_metric_values.append(epoch_val_metric / float(len(val_x)))
 
         return tr_error_values, tr_metric_values, val_error_values, val_metric_values
 

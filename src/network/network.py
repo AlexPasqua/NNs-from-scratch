@@ -1,4 +1,5 @@
 import copy
+import warnings
 
 import numpy as np
 from network.layer import Layer
@@ -106,7 +107,8 @@ class Network:
             print(f"Net's output: {outputs}")
         return outputs
 
-    def compile(self, opt='gd', loss='squared', metr='bin_class_acc', lr=0.01, lr_decay=None, limit_step=200, momentum=0.):
+    def compile(self, opt='gd', loss='squared', metr='bin_class_acc', lr=0.01, lr_decay=None, limit_step=None,
+                momentum=0.):
         """
         Prepares the network for training by assigning an optimizer to it
         :param opt: ('Optimizer' object)
@@ -117,13 +119,19 @@ class Network:
         :param limit_step: number of steps of weights update to perform before stopping decaying the learning rate
         :param momentum: (float) momentum parameter
         """
-        if opt not in optimizers or loss not in losses:
-            raise AttributeError(f"opt must be within {optimizers.keys()} and loss must be in {losses.keys()}")
         if momentum > 1. or momentum < 0.:
             raise ValueError(f"momentum must be a value between 0 and 1. Got: {momentum}")
-        self.__opt = optimizers[opt](net=self, loss=loss, metr=metr, lr=lr, lr_decay=lr_decay, limit_step=limit_step, momentum=momentum)
+        self.__opt = optimizers[opt](
+            net=self,
+            loss=loss,
+            metr=metr,
+            lr=lr,
+            lr_decay=lr_decay,
+            limit_step=limit_step,
+            momentum=momentum
+        )
 
-    def fit(self, tr_x, tr_y, val_x, val_y, epochs=1, batch_size=1):
+    def fit(self, tr_x, tr_y, val_x=None, val_y=None, epochs=1, batch_size=1, val_split=0):
         """
         Execute the training of the network
         :param tr_x: (numpy ndarray) input training set
@@ -132,17 +140,48 @@ class Network:
         :param val_y: (numpy ndarray) targets for each input validation pattern
         :param batch_size: (integer) the size of the batch
         :param epochs: (integer) number of epochs
+        :param val_split: percentage of training data to use as validation data (alternative to val_x and val_y)
         """
-        tr_y = np.array(tr_y)
-        tr_x = np.array(tr_x)
+        # transform sets to numpy array (if they're not already)
+        tr_x, tr_y = np.array(tr_x), np.array(tr_y)
+
+        # use validation data
+        if val_x is not None and val_y is not None:
+            if val_split != 0:
+                warnings.warn(f"A validation split was given, but instead val_x and val_y will be used")
+            val_x, val_y = np.array(val_x), np.array(val_y)
+            n_patterns = val_x.shape[0] if len(val_x.shape) > 1 else 1
+            n_targets = val_y.shape[0] if len(val_y.shape) > 1 else 1
+            if n_patterns != n_targets:
+                raise AttributeError(f"Mismatching shapes {n_patterns} {n_targets}")
+        else:
+            # use validation split
+            if val_split != 0:
+                if val_split < 0 or val_split > 1:
+                    raise ValueError(f"val_split must be between 0 and 1, got {val_split}")
+                indexes = np.random.randint(low=0, high=len(tr_x), size=math.floor(val_split * len(tr_x)))
+                val_x = tr_x[indexes]
+                val_y = tr_y[indexes]
+                tr_x = np.delete(tr_x, indexes, axis=0)
+                tr_y = np.delete(tr_y, indexes, axis=0)
+
+        # check that the shape of the target matches the net's architecture
+        if batch_size == 'full':
+            batch_size = len(tr_x)
         target_len = tr_y.shape[1] if len(tr_y.shape) > 1 else 1
-        if target_len != len(self.layers[-1].units):
-            raise AttributeError(
-                f"Mismatching shapes --> target: {tr_y.shape} ; output units: {len(self.layers[-1].units)}")
-        n_pattern = tr_x.shape[0] if len(tr_x.shape) > 1 else 1
-        n_target = tr_y.shape[0] if len(tr_y.shape) > 1 else 1
-        assert (n_pattern == n_target)
-        return self.__opt.optimize(tr_x=tr_x, tr_y=tr_y, val_x=val_x, val_y=val_y, epochs=epochs, batch_size=batch_size)
+        n_patterns = tr_x.shape[0] if len(tr_x.shape) > 1 else 1
+        n_targets = tr_y.shape[0] if len(tr_y.shape) > 1 else 1
+        if target_len != len(self.layers[-1].units) or n_patterns != n_targets or batch_size > n_patterns:
+            raise AttributeError(f"Mismatching shapes")
+
+        return self.__opt.optimize(
+            tr_x=tr_x,
+            tr_y=tr_y,
+            val_x=val_x,
+            val_y=val_y,
+            epochs=epochs,
+            batch_size=batch_size
+        )
 
     def propagate_back(self, dErr_dOut, grad_net):
         curr_delta = dErr_dOut

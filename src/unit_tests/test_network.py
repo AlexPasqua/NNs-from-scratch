@@ -33,15 +33,17 @@ class TestNetwork(unittest.TestCase):
     def test_compile(self):
         self.net.compile(opt='gd')
         self.assertEqual('gd', self.net.opt.type)
-        self.assertRaises(AttributeError, self.net.compile, opt='hello', loss='squared')
-        self.assertRaises(AttributeError, self.net.compile, opt='sgd', loss='hello')
+        self.assertRaises(KeyError, self.net.compile, opt='hello', loss='squared')
+        self.assertRaises(KeyError, self.net.compile, opt='gd', loss='hello')
         self.assertRaises(ValueError, self.net.compile, momentum=-1)
         self.assertRaises(ValueError, self.net.compile, momentum=2)
 
     def test_fit(self):
         net = Network(input_dim=3, units_per_layer=[6, 2], acts=['relu', 'relu'])
-        self.assertRaises(AttributeError, net.fit, tr_x=[1, 1], tr_y=[1, 2, 3], val_x=[1, 1], val_y=[1, 1])
-        self.assertRaises(AssertionError, net.fit, tr_x=[[1, 1], [1, 1]], tr_y=[[1, 2]], val_x=[1, 1], val_y=[1, 1])
+        self.assertRaises(AttributeError, net.fit, tr_x=[1, 1], tr_y=[1, 2, 3])
+        self.assertRaises(AttributeError, net.fit, tr_x=[[1, 1], [1, 1]], tr_y=[[1, 2]])
+        self.assertRaises(AttributeError, net.fit, tr_x=[[1, 1], [1, 1]], tr_y=[1, 2], val_x=[1, 1], val_y=[1, 2, 3])
+        self.assertRaises(ValueError, net.fit, tr_x=[1, 1], tr_y=[1, 2], val_split=12)
 
     def test_propagate_back(self):
         self.assertRaises(AttributeError,

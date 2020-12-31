@@ -2,16 +2,15 @@ import numpy as np
 from network.network import Network
 
 
-def cross_valid(net, inputs, targets, epochs=1, batch_size=1, k_folds=5):
+def cross_valid(net, tr_val_x, tr_val_y, loss, metr, lr, lr_decay=None, limit_step=None, opt='gd', momentum=0.,
+                epochs=1, batch_size=1, k_folds=5):
     # split the dataset into folds
-    x_folds = np.array(np.array_split(inputs, k_folds), dtype=object)
-    y_folds = np.array(np.array_split(targets, k_folds), dtype=object)
+    x_folds = np.array(np.array_split(tr_val_x, k_folds), dtype=object)
+    y_folds = np.array(np.array_split(tr_val_y, k_folds), dtype=object)
 
     # initialize vectors for plots
-    tr_error_values = np.zeros(epochs)
-    tr_metric_values = np.zeros(epochs)
-    val_error_values = np.zeros(epochs)
-    val_metric_values = np.zeros(epochs)
+    tr_error_values, tr_metric_values = np.zeros(epochs), np.zeros(epochs)
+    val_error_values, val_metric_values = np.zeros(epochs), np.zeros(epochs)
 
     # CV cycle
     for i in range(k_folds):
@@ -27,20 +26,23 @@ def cross_valid(net, inputs, targets, epochs=1, batch_size=1, k_folds=5):
             train_targets = np.concatenate((train_targets, target_folds[j]))
 
         # training
-        # TODO: pass parameters of compile to "cross_valid" function
-        net.compile(opt='gd',
-                    loss='squared',
-                    metr='bin_class_acc',
-                    lr=0.65,
-                    # lr_decay='linear',
-                    # limit_step=800,
-                    momentum=0.8)
-        tr_err, tr_metric, val_err, val_metric = net.fit(tr_x=train_set,
-                                                         tr_y=train_targets,
-                                                         val_x=valid_set,
-                                                         val_y=valid_targets,
-                                                         epochs=epochs,
-                                                         batch_size=batch_size)
+        net.compile(
+            opt=opt,
+            loss=loss,
+            metr=metr,
+            lr=lr,
+            lr_decay=lr_decay,
+            limit_step=limit_step,
+            momentum=momentum
+        )
+        tr_err, tr_metric, val_err, val_metric = net.fit(
+            tr_x=train_set,
+            tr_y=train_targets,
+            val_x=valid_set,
+            val_y=valid_targets,
+            epochs=epochs,
+            batch_size=batch_size
+        )
         tr_error_values += tr_err
         tr_metric_values += tr_metric
         val_error_values += val_err
