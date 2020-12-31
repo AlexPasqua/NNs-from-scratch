@@ -5,7 +5,7 @@ from network.unit import Unit
 class TestUnit(unittest.TestCase):
     value = 0.2
     n_weights = 3
-    unit = Unit(act='relu', init_type='uniform', value=value, n_weights=n_weights)
+    unit = Unit(act='relu', init_type='uniform', init_value=value, n_weights=n_weights)
 
     def test_creation(self):
         self.assertEqual(self.value, self.unit.b)

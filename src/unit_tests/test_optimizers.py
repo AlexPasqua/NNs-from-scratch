@@ -9,14 +9,18 @@ class TestOptimizers(unittest.TestCase):
         Network(input_dim=2, units_per_layer=(2, 1), acts=('relu', 'sigmoid')),
         'squared',
         'bin_class_acc',
-        lrn_rate=0.2)
+        lr=0.2,
+        lr_decay='linear',
+        limit_step=400,
+        momentum=0.5
+    )
 
     # def test_gd(self):
     #     training_set = np.array([[1, 1], [1, 0], [0, 1], [0, 0]])
     #     training_labels = np.array([[1], [1], [0], [0]])
     #     self.gd.optimize(
-    #         train_set=training_set,
-    #         targets=training_labels,
+    #         tr_x=training_set,
+    #         tr_y=training_labels,
     #         epochs=2,
     #         batch_size=1)
 
