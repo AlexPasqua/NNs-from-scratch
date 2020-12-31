@@ -83,12 +83,14 @@ class TestLRDecays(unittest.TestCase):
         curr_step = 10
         limit_step = 100
         self.assertEqual(
-            lr_decays['linear'].func(curr_lr=curr_lr, base_lr=base_lr, final_lr=final_lr, curr_step=curr_step, limit_step=limit_step),
+            lr_decays['linear'].func(curr_lr=curr_lr, base_lr=base_lr, final_lr=final_lr, curr_step=curr_step,
+                                     limit_step=limit_step),
             (1 - curr_step / limit_step) * base_lr + curr_step / limit_step * final_lr
         )
         curr_step = limit_step + 1
         self.assertEqual(
-            lr_decays['linear'].func(curr_lr=curr_lr, base_lr=base_lr, final_lr=final_lr, curr_step=curr_step, limit_step=limit_step),
+            lr_decays['linear'].func(curr_lr=curr_lr, base_lr=base_lr, final_lr=final_lr, curr_step=curr_step,
+                                     limit_step=limit_step),
             final_lr
         )
 
@@ -101,8 +103,6 @@ class TestRegularizations(unittest.TestCase):
         l2_deriv = np.array([[0.4, 0.08, -0.4], [0.4, 0., 0.2]])
         self.assertAlmostEqual(regs['l1'].func(w, lambd=lambd), 0.740000)
         self.assertAlmostEqual(regs['l2'].func(w, lambd=lambd), 0.658)
-        np.testing.assert_array_almost_equal(regs['l1'].deriv(w, lambd=lambd), l1_deriv)
-        np.testing.assert_array_almost_equal(regs['l2'].deriv(w, lambd=lambd), l2_deriv)
 
 
 if __name__ == '__main__':
