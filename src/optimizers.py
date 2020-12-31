@@ -161,6 +161,15 @@ class GradientDescent(Optimizer, ABC):
                         np.add(net.layers[layer_index].weights, momentum_net[layer_index]['weights']),
                         regs[self.reg_type].deriv(w=net.layers[layer_index].weights, lambd=self.lambd),
                     )
+                    # a = np.add(net.layers[layer_index].weights, momentum_net[layer_index]['weights'])
+                    # b = np.subtract(a, regs[self.reg_type].deriv(w=net.layers[layer_index].weights, lambd=self.lambd))
+                    # c = np.subtract(
+                    #     np.add(net.layers[layer_index].weights, momentum_net[layer_index]['weights']),
+                    #     regs[self.reg_type].deriv(w=net.layers[layer_index].weights, lambd=self.lambd),
+                    # )
+                    # print(a)
+                    # print(b)
+                    # print(c, '\n')
                     net.layers[layer_index].biases = np.add(
                         net.layers[layer_index].biases,
                         momentum_net[layer_index]['biases']

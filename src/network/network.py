@@ -107,7 +107,7 @@ class Network:
         return outputs
 
     def compile(self, opt='gd', loss='squared', metr='bin_class_acc', lr=0.01, lr_decay=None, limit_step=None,
-                momentum=0., reg_type='l2', lambd=0.):
+                momentum=0., reg_type='l2', lambd=0):
         """
         Prepares the network for training by assigning an optimizer to it
         :param opt: ('Optimizer' object)

@@ -36,40 +36,42 @@ if __name__ == '__main__':
     monk1_train = monk1_train[indexes]
     labels = labels[indexes]
 
-    # # cross validation
-    # tr_error_values, tr_metric_values, val_error_values, val_metric_values = cross_valid(
-    #     net=model,
-    #     tr_val_x=monk1_train,
-    #     tr_val_y=labels,
-    #     loss='squared',
-    #     metr='bin_class_acc',
-    #     lr=0.5,
-    #     lr_decay='linear',
-    #     limit_step=350,
-    #     opt='gd',
-    #     momentum=0.75,
-    #     epochs=50,
-    #     batch_size='full',
-    #     k_folds=8
-    # )
-
-    # hold-out validation
-    model.compile(
-        opt='gd',
+    # cross validation
+    tr_error_values, tr_metric_values, val_error_values, val_metric_values = cross_valid(
+        net=model,
+        tr_val_x=monk1_train,
+        tr_val_y=labels,
         loss='squared',
         metr='bin_class_acc',
-        lr=0.2,
-        momentum=0.6,
+        lr=0.1,
+        # lr_decay='linear',
+        # limit_step=100,
+        opt='gd',
+        momentum=0.65,
         # reg_type='l2',
-        # lambd=0.1
-    )
-    tr_error_values, tr_metric_values, val_error_values, val_metric_values = model.fit(
-        tr_x=monk1_train,
-        tr_y=labels,
-        epochs=800,
-        val_split=0.2,
+        # lambd=0.2,
+        epochs=1000,
         batch_size='full',
+        k_folds=5
     )
+
+    # # hold-out validation
+    # model.compile(
+    #     opt='gd',
+    #     loss='squared',
+    #     metr='bin_class_acc',
+    #     lr=0.2,
+    #     momentum=0.6,
+    #     # reg_type='l2',
+    #     lambd=0.0
+    # )
+    # tr_error_values, tr_metric_values, val_error_values, val_metric_values = model.fit(
+    #     tr_x=monk1_train,
+    #     tr_y=labels,
+    #     epochs=800,
+    #     val_split=0.2,
+    #     batch_size='full',
+    # )
 
     # plot learning curve
     figure, ax = plt.subplots(1, 2, figsize=(12, 4))
