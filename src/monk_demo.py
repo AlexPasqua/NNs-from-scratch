@@ -48,7 +48,7 @@ if __name__ == '__main__':
         limit_step=350,
         opt='gd',
         momentum=0.75,
-        epochs=5,
+        epochs=50,
         batch_size='full',
         k_folds=8
     )
@@ -65,13 +65,13 @@ if __name__ == '__main__':
 
     # plot learning curve
     figure, ax = plt.subplots(1, 2, figsize=(12, 4))
-    ax[0].plot(range(len(tr_error_values)), tr_error_values, color='b', label='training error')
+    ax[0].plot(range(len(tr_error_values)), tr_error_values, color='b', linestyle='dashed', label='training error')
     ax[0].plot(range(len(tr_error_values)), val_error_values, color='r', label='validation error')
     ax[0].legend(loc='best', prop={'size': 6})
     ax[0].set_xlabel('Epochs', fontweight='bold')
     ax[0].set_ylabel('Loss', fontweight='bold')
     ax[0].grid()
-    ax[1].plot(range(len(tr_metric_values)), tr_metric_values, color='b', label='training accuracy')
+    ax[1].plot(range(len(tr_metric_values)), tr_metric_values, color='b', linestyle='dashed', label='training accuracy')
     ax[1].plot(range(len(tr_metric_values)), val_metric_values, color='r', label='validation accuracy')
     ax[1].legend(loc='best', prop={'size':6})
     ax[1].set_xlabel('Epochs', fontweight='bold')
