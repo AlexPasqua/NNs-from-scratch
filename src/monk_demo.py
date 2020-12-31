@@ -43,16 +43,16 @@ if __name__ == '__main__':
         tr_val_y=labels,
         loss='squared',
         metr='bin_class_acc',
-        lr=0.1,
+        lr=0.08,
         # lr_decay='linear',
         # limit_step=100,
         opt='gd',
-        momentum=0.65,
+        momentum=0.6,
         # reg_type='l2',
         # lambd=0.2,
-        epochs=1000,
-        batch_size='full',
-        k_folds=5
+        epochs=300,
+        batch_size=10,
+        k_folds=10
     )
 
     # # hold-out validation
