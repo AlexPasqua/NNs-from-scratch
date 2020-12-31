@@ -108,7 +108,7 @@ class GradientDescent(Optimizer, ABC):
                 targets_batch = tr_y[start: end]
                 grad_net = net.get_empty_struct()
 
-                # computes penalty term
+                # computes penalty term (regularization)
                 w_tot = []
                 if self.lambd != 0:
                     for layer in net.layers:
@@ -161,15 +161,6 @@ class GradientDescent(Optimizer, ABC):
                         np.add(net.layers[layer_index].weights, momentum_net[layer_index]['weights']),
                         regs[self.reg_type].deriv(w=net.layers[layer_index].weights, lambd=self.lambd),
                     )
-                    # a = np.add(net.layers[layer_index].weights, momentum_net[layer_index]['weights'])
-                    # b = np.subtract(a, regs[self.reg_type].deriv(w=net.layers[layer_index].weights, lambd=self.lambd))
-                    # c = np.subtract(
-                    #     np.add(net.layers[layer_index].weights, momentum_net[layer_index]['weights']),
-                    #     regs[self.reg_type].deriv(w=net.layers[layer_index].weights, lambd=self.lambd),
-                    # )
-                    # print(a)
-                    # print(b)
-                    # print(c, '\n')
                     net.layers[layer_index].biases = np.add(
                         net.layers[layer_index].biases,
                         momentum_net[layer_index]['biases']
