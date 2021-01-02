@@ -1,9 +1,8 @@
 import numpy as np
 from numbers import Number
-
-import weights_initializations
 from network.unit import Unit
 from weights_initializations import weights_inits
+from functions import act_funcs
 
 
 class Layer:
@@ -21,6 +20,7 @@ class Layer:
         self.__outputs = None
         self.__gradient_w = None
         self.__gradient_b = None
+        self.__act = act_funcs[act]
 
         self.weights = weights_inits(init_type=init_type, n_weights=fanin, n_units=n_units, **kwargs)
         self.biases = weights_inits(init_type=init_type, n_weights=1, n_units=n_units, **kwargs)
@@ -39,9 +39,9 @@ class Layer:
         #     if np.shape(self.__units) == 0:
         #         self.__units = np.expand_dims(self.__units, 0)
 
-    @property
-    def units(self):
-        return self.__units
+    # @property
+    # def units(self):
+    #     return self.__units
 
     # @property
     # def weights(self):
@@ -57,7 +57,7 @@ class Layer:
 
     @property
     def act(self):
-        return self.units[0].act
+        return self.__act
 
     @staticmethod
     def __check_vectors(self, passed, own):
@@ -91,7 +91,10 @@ class Layer:
         :return: the vector of the current layer's soutputs
         """
         self.__inputs = inp
-        self.__outputs = [unit.output(inp) for unit in self.units]
+        self.__outputs = np.matmul(inp, self.weights)
+        self.__outputs = np.add(self.__outputs, self.biases)
+        # TODO: missing activation function
+        # self.__outputs = [unit.output(inp) for unit in self.units]
         return self.__outputs
 
     def backward_pass(self, upstream_delta):
