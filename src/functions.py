@@ -60,8 +60,7 @@ def sigmoid(x):
     :param x: net -> input's weighted sum
     :return: sigmoid of x
     """
-    # check_is_number(x)
-    return 1. / (1. + np.exp(-x))
+    return [1. / (1. + np.exp(-i)) for i in x]
 
 
 def sigmoid_deriv(x):
@@ -70,8 +69,10 @@ def sigmoid_deriv(x):
     :param x: net -> input's weighted sum
     :return: derivative of the sigmoid in x
     """
-    # check_is_number(x)
-    return sigmoid(x) * (1 - sigmoid(x))
+    return np.multiply(
+        sigmoid(x),
+        np.subtract(np.ones(len(x)), sigmoid(x))
+    )
 
 
 def relu(x):
