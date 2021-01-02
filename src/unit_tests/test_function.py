@@ -7,16 +7,14 @@ class TestActivationFunctions(unittest.TestCase):
     def test_act_funcs(self):
         np.testing.assert_array_almost_equal(act_funcs['sigmoid'].func([1., 1.]), [0.7310585786, 0.7310585786])
         np.testing.assert_array_almost_equal(act_funcs['relu'].func([2., -3.]), [2., 0.])
-        # self.assertAlmostEqual(act_funcs['tanh'].func(1.), 0.7615941559557649)
-        # self.assertEqual(act_funcs['leaky_relu'].func(1.), 1.)
-        # self.assertEqual(act_funcs['leaky_relu'].func(-1.), -0.01)
+        np.testing.assert_array_almost_equal(act_funcs['tanh'].func([1.]), [0.76159415595])
+        np.testing.assert_array_equal(act_funcs['leaky_relu'].func([1., -1.]), [1., -0.01])
 
     def test_act_funcs_derivs(self):
         np.testing.assert_array_almost_equal(act_funcs['sigmoid'].deriv([1.]), [0.196611933241])
-        np.testing.assert_array_almost_equal(act_funcs['relu'].deriv([2., -3.]), [1., 0.])
-        # self.assertAlmostEqual(act_funcs['tanh'].deriv(1.), 0.41997434161402614)
-        # self.assertEqual(act_funcs['leaky_relu'].deriv(1.), 1.)
-        # self.assertEqual(act_funcs['leaky_relu'].deriv(-1.), 0.01)
+        np.testing.assert_array_equal(act_funcs['relu'].deriv([2., -3.]), [1., 0.])
+        np.testing.assert_array_almost_equal(act_funcs['tanh'].deriv([1.]), [0.4199743416140])
+        np.testing.assert_array_equal(act_funcs['leaky_relu'].deriv([2., -3.]), [1., 0.01])
 
     # def test_exceptions(self):
     #     # check many combination

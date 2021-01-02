@@ -54,13 +54,57 @@ class DerivableFunction(Function):
 """ Activation Functions """
 
 
+def relu(x):
+    """
+    Computes the ReLU function:
+    :param x: net -> input's weighted sum
+    :return: ReLU of x
+    """
+    return np.maximum(x, 0)
+
+
+def relu_deriv(x):
+    """
+    Computes the derivative of the ReLU function:
+    :param x: net-> input's weighted sum
+    :return: derivative of the ReLU in x
+    """
+    x = np.array(x)
+    x[x <= 0] = 0
+    x[x > 0] = 1
+    return x
+
+
+def leaky_relu(x):
+    """
+    Computes the leaky ReLu activation function
+    :param x: input's weighted sum
+    :return: leaky ReLu of x
+    """
+    return [i if i >= 0 else 0.01 * i for i in x]
+
+
+def leaky_relu_deriv(x):
+    """
+    Computes the derivative of the leaky ReLu activation function
+    :param x: input's weighted sum
+    :return: derivative of the leaky ReLU in x
+    """
+    x = np.array(x)
+    x[x > 0] = 1.
+    x[x <= 0] = 0.01
+    return x
+
+
 def sigmoid(x):
     """
     Computes the sigmoid function of x
     :param x: net -> input's weighted sum
     :return: sigmoid of x
     """
-    return [1. / (1. + np.exp(-i)) for i in x]
+    x = np.array(x)
+    ones = [1.] * len(x)
+    return np.divide(ones, np.add(ones, np.exp(-x)))
 
 
 def sigmoid_deriv(x):
@@ -71,26 +115,8 @@ def sigmoid_deriv(x):
     """
     return np.multiply(
         sigmoid(x),
-        np.subtract(np.ones(len(x)), sigmoid(x))
+        np.subtract([1.] * len(x), sigmoid(x))
     )
-
-
-def relu(x):
-    """
-    Computes the ReLU function:
-    :param x: net -> input's weighted sum
-    :return: ReLU of x
-    """
-    return [i if i > 0 else 0 for i in x]
-
-
-def relu_deriv(x):
-    """
-    Computes the derivative of the ReLU function:
-    :param x: net-> input's weighted sum
-    :return: derivative of the ReLU in x
-    """
-    return [0 if i <= 0 else 1 for i in x]
 
 
 def tanh(x):
@@ -99,8 +125,7 @@ def tanh(x):
     :param x: net-> input's weighted sum
     :return: Tanh of x
     """
-    # check_is_number(x)
-    return math.tanh(x)
+    return np.tanh(x)
 
 
 def tanh_deriv(x):
@@ -109,28 +134,10 @@ def tanh_deriv(x):
     :param x: net-> input's weighted sum
     :return: Tanh derivative of x
     """
-    # check_is_number(x)
-    return 1 - (math.tanh(x)) ** 2
-
-
-def leaky_relu(x):
-    """
-    Computes the leaky ReLu activation function
-    :param x: input's weighted sum
-    :return: leaky ReLu of x
-    """
-    # check_is_number(x)
-    return x if x >= 0 else 0.01 * x
-
-
-def leaky_relu_deriv(x):
-    """
-    Computes the derivative of the leaky ReLu activation function
-    :param x: input's weighted sum
-    :return: derivative of the leaky ReLU in x
-    """
-    # check_is_number(x)
-    return 1 if x >= 0 else 0.01
+    return np.subtract(
+        [1.] * len(x),
+        np.power(np.tanh(x), 2)
+    )
 
 
 """ Loss Functions """
@@ -196,7 +203,6 @@ def linear_lr_dec(curr_lr, base_lr, final_lr, curr_step, limit_step):
 
 
 """ Function objects and dictionaries to use them in other scripts """
-
 
 ReLU = DerivableFunction(relu, relu_deriv, 'ReLU')
 LeakyReLU = DerivableFunction(leaky_relu, leaky_relu_deriv, 'LeakyReLU')
