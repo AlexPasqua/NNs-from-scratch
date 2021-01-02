@@ -1,6 +1,9 @@
 import numpy as np
 from numbers import Number
+
+import weights_initializations
 from network.unit import Unit
+from weights_initializations import weights_inits
 
 
 class Layer:
@@ -9,7 +12,7 @@ class Layer:
     Attributes:
     """
 
-    def __init__(self, fanin=None, n_units=None, act=None, init_type=None, units=None, **kwargs):
+    def __init__(self, fanin=None, n_units=None, act=None, init_type=None, **kwargs):
         """
         :param n_units: (integer) number of units in the layer
         :param init_type: (string) type of weights initialization
@@ -18,31 +21,35 @@ class Layer:
         self.__outputs = None
         self.__gradient_w = None
         self.__gradient_b = None
-        # if units is empty
-        if units is None:
-            args = {'fanin': fanin, 'n_units': n_units, 'act': act, 'init_type': init_type}
-            if any(arg is None for arg in args.values()):
-                raise AttributeError(f"If a list of Unit(s) is not provided, every one in {list(args.keys())} must be initialized")
-            self.__units = []
-            unit_params = {**{'init_type': init_type, 'act': act, 'n_weights': fanin}, **kwargs}
-            for i in range(n_units):
-                self.__units.append(Unit(**unit_params))
-        else:
-            self.__units = units
-            if np.shape(self.__units) == 0:
-                self.__units = np.expand_dims(self.__units, 0)
+
+        self.weights = weights_inits(init_type=init_type, n_weights=fanin, n_units=n_units, **kwargs)
+        self.biases = weights_inits(init_type=init_type, n_weights=1, n_units=n_units, **kwargs)
+
+        # # if units is empty
+        # if units is None:
+        #     args = {'fanin': fanin, 'n_units': n_units, 'act': act, 'init_type': init_type}
+        #     if any(arg is None for arg in args.values()):
+        #         raise AttributeError(f"If a list of Unit(s) is not provided, every one in {list(args.keys())} must be initialized")
+        #     self.__units = []
+        #     unit_params = {**{'init_type': init_type, 'act': act, 'n_weights': fanin}, **kwargs}
+        #     for i in range(n_units):
+        #         self.__units.append(Unit(**unit_params))
+        # else:
+        #     self.__units = units
+        #     if np.shape(self.__units) == 0:
+        #         self.__units = np.expand_dims(self.__units, 0)
 
     @property
     def units(self):
         return self.__units
 
-    @property
-    def weights(self):
-        return np.array([u.w[i] for u in self.__units for i in range(len(u.w))])
-
-    @property
-    def biases(self):
-        return np.array([u.b for u in self.__units])
+    # @property
+    # def weights(self):
+    #     return np.array([u.w[i] for u in self.__units for i in range(len(u.w))])
+    #
+    # @property
+    # def biases(self):
+    #     return np.array([u.b for u in self.__units])
 
     @property
     def outputs(self):
@@ -62,20 +69,20 @@ class Layer:
         else:
             raise AttributeError(f"'value' must be a iterable, got {type(passed)}")
 
-    @weights.setter
-    def weights(self, value):
-        self.__check_vectors(self, passed=value, own=self.weights)
-        for i in range(len(self.units)):
-            n_weights = len(self.units[i].w)
-            start = i * n_weights
-            end = start + n_weights
-            self.units[i].w = value[start: end]
-
-    @biases.setter
-    def biases(self, value):
-        self.__check_vectors(self, passed=value, own=self.biases)
-        for i in range(len(self.units)):
-            self.units[i].b = value[i]
+    # @weights.setter
+    # def weights(self, value):
+    #     self.__check_vectors(self, passed=value, own=self.weights)
+    #     for i in range(len(self.units)):
+    #         n_weights = len(self.units[i].w)
+    #         start = i * n_weights
+    #         end = start + n_weights
+    #         self.units[i].w = value[start: end]
+    #
+    # @biases.setter
+    # def biases(self, value):
+    #     self.__check_vectors(self, passed=value, own=self.biases)
+    #     for i in range(len(self.units)):
+    #         self.units[i].b = value[i]
 
     def forward_pass(self, inp):
         """
