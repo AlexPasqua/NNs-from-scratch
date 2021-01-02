@@ -39,18 +39,6 @@ class Layer:
         #     if np.shape(self.__units) == 0:
         #         self.__units = np.expand_dims(self.__units, 0)
 
-    # @property
-    # def units(self):
-    #     return self.__units
-
-    # @property
-    # def weights(self):
-    #     return np.array([u.w[i] for u in self.__units for i in range(len(u.w))])
-    #
-    # @property
-    # def biases(self):
-    #     return np.array([u.b for u in self.__units])
-
     @property
     def outputs(self):
         return self.__outputs
@@ -69,21 +57,6 @@ class Layer:
         else:
             raise AttributeError(f"'value' must be a iterable, got {type(passed)}")
 
-    # @weights.setter
-    # def weights(self, value):
-    #     self.__check_vectors(self, passed=value, own=self.weights)
-    #     for i in range(len(self.units)):
-    #         n_weights = len(self.units[i].w)
-    #         start = i * n_weights
-    #         end = start + n_weights
-    #         self.units[i].w = value[start: end]
-    #
-    # @biases.setter
-    # def biases(self, value):
-    #     self.__check_vectors(self, passed=value, own=self.biases)
-    #     for i in range(len(self.units)):
-    #         self.units[i].b = value[i]
-
     def forward_pass(self, inp):
         """
         Performs the forward pass on the current layer
@@ -91,10 +64,7 @@ class Layer:
         :return: the vector of the current layer's soutputs
         """
         self.__inputs = inp
-        self.__outputs = np.matmul(inp, self.weights)
-        self.__outputs = np.add(self.__outputs, self.biases)
-        # TODO: missing activation function
-        # self.__outputs = [unit.output(inp) for unit in self.units]
+        self.__outputs = self.__act.func(np.add(np.matmul(inp, self.weights), self.biases))
         return self.__outputs
 
     def backward_pass(self, upstream_delta):

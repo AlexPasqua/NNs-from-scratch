@@ -7,14 +7,13 @@ from network.unit import Unit
 class TestLayer(unittest.TestCase):
     n_units = 5
     value = 0.2
-    layer = Layer(fanin=3, n_units=n_units, act='relu', init_type='random', lower_lim=-1, upper_lim=1, init_value=value)
+    layer = Layer(fanin=3, n_units=n_units, act='relu', init_type='uniform', lower_lim=-1, upper_lim=1, init_value=value)
 
     def test_creation(self):
         lower_lim = 10
         upper_lim = 12
         layer1 = self.layer
         layer2 = Layer(fanin=3, n_units=self.n_units, act='relu', init_type='random', lower_lim=lower_lim, upper_lim=upper_lim)
-
         # self.assertEqual(self.n_units, len(layer1.units))
         # self.assertEqual(self.n_units, len(layer2.units))
         # for unit_index in range(len(layer1.units)):
@@ -28,19 +27,11 @@ class TestLayer(unittest.TestCase):
         #         self.assertGreaterEqual(unit2.w[weight_index], lower_lim)
         #         self.assertLess(unit2.w[weight_index], upper_lim)
 
-    # def test_forward_pass(self):
-    #     inp = [0.5] * self.n_units
-    #     correct_out = []
-    #     for i in range(self.n_units):
-    #         unit = self.layer.units[i]
-    #         correct_out.append(self.layer.act.func(np.dot(unit.w, inp) + unit.b))
-    #         self.assertAlmostEqual(
-    #             correct_out[-1],
-    #             unit.output(inp))
-    #     self.layer.forward_pass(inp)
-    #     for i in range(self.n_units):
-    #         self.assertAlmostEqual(self.layer.outputs[i], correct_out[i])
-    #
+    def test_forward_pass(self):
+        inp = [0.5] * 3
+        correct_out = self.layer.act.func(np.add(np.matmul(inp, self.layer.weights), self.layer.biases))
+        np.testing.assert_array_equal(self.layer.forward_pass(inp), correct_out)
+
     # def test_backward_pass(self):
     #     fanin = 2
     #     layer = Layer(fanin=fanin, n_units=2, act='relu', init_type='uniform', init_value=0.5)
