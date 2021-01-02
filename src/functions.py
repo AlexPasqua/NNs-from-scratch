@@ -40,15 +40,15 @@ class DerivableFunction(Function):
         return self.__deriv
 
 
-def check_is_number(x):
-    if isinstance(x, str):
-        raise AttributeError(f"Input must be a number, got {type(x)}")
-    if not isinstance(x, Number):
-        if hasattr(x, '__iter__') and all(n == 1 for n in np.shape(x)):
-            while hasattr(x, '__iter__'):
-                x = x[0]
-        if not isinstance(x, Number):
-            raise AttributeError(f"Input must be a number. Got {type(x)}")
+# def check_is_number(x):
+#     if isinstance(x, str):
+#         raise AttributeError(f"Input must be a number, got {type(x)}")
+#     if not isinstance(x, Number):
+#         if hasattr(x, '__iter__') and all(n == 1 for n in np.shape(x)):
+#             while hasattr(x, '__iter__'):
+#                 x = x[0]
+#         if not isinstance(x, Number):
+#             raise AttributeError(f"Input must be a number. Got {type(x)}")
 
 
 """ Activation Functions """
@@ -60,7 +60,7 @@ def sigmoid(x):
     :param x: net -> input's weighted sum
     :return: sigmoid of x
     """
-    check_is_number(x)
+    # check_is_number(x)
     return 1. / (1. + np.exp(-x))
 
 
@@ -70,7 +70,7 @@ def sigmoid_deriv(x):
     :param x: net -> input's weighted sum
     :return: derivative of the sigmoid in x
     """
-    check_is_number(x)
+    # check_is_number(x)
     return sigmoid(x) * (1 - sigmoid(x))
 
 
@@ -80,8 +80,7 @@ def relu(x):
     :param x: net -> input's weighted sum
     :return: ReLU of x
     """
-    check_is_number(x)
-    return np.maximum(0, x)
+    return [i if i > 0 else 0 for i in x]
 
 
 def relu_deriv(x):
@@ -90,8 +89,7 @@ def relu_deriv(x):
     :param x: net-> input's weighted sum
     :return: derivative of the ReLU in x
     """
-    check_is_number(x)
-    return 0 if x <= 0 else 1
+    return [0 if i <= 0 else 1 for i in x]
 
 
 def tanh(x):
@@ -100,7 +98,7 @@ def tanh(x):
     :param x: net-> input's weighted sum
     :return: Tanh of x
     """
-    check_is_number(x)
+    # check_is_number(x)
     return math.tanh(x)
 
 
@@ -110,7 +108,7 @@ def tanh_deriv(x):
     :param x: net-> input's weighted sum
     :return: Tanh derivative of x
     """
-    check_is_number(x)
+    # check_is_number(x)
     return 1 - (math.tanh(x)) ** 2
 
 
@@ -120,7 +118,7 @@ def leaky_relu(x):
     :param x: input's weighted sum
     :return: leaky ReLu of x
     """
-    check_is_number(x)
+    # check_is_number(x)
     return x if x >= 0 else 0.01 * x
 
 
@@ -130,7 +128,7 @@ def leaky_relu_deriv(x):
     :param x: input's weighted sum
     :return: derivative of the leaky ReLU in x
     """
-    check_is_number(x)
+    # check_is_number(x)
     return 1 if x >= 0 else 0.01
 
 
