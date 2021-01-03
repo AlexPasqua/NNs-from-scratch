@@ -1,9 +1,6 @@
-import copy
 import warnings
-
 import numpy as np
 from network.layer import Layer
-from functions import losses
 from optimizers import *
 
 
@@ -29,7 +26,6 @@ class Network:
                                 units_per_layer=units_per_layer,
                                 acts=acts)
 
-        self.__input_dim = input_dim
         self.__params = {**{
             'input_dim': input_dim,
             'units_per_layer': units_per_layer,
@@ -39,11 +35,17 @@ class Network:
         }, **kwargs}
         self.__layers = []
         self.__opt = None
-        other_args = {**{'init_type': init_type, 'init_value': init_value}, **kwargs}  # merge 2 dictionaries
-        fanin = input_dim
+        layer_inp_dim = input_dim
+        other_args = {**{'init_value': init_value}, **kwargs}
         for i in range(len(units_per_layer)):
-            self.__layers.append(Layer(inp_dim=fanin, n_units=units_per_layer[i], act=acts[i], **other_args))
-            fanin = units_per_layer[i]
+            self.__layers.append(Layer(
+                inp_dim=layer_inp_dim,
+                n_units=units_per_layer[i],
+                act=acts[i],
+                init_type=init_type,
+                **other_args)
+            )
+            layer_inp_dim = units_per_layer[i]
 
     @staticmethod
     def __check_attributes(self, input_dim, units_per_layer, acts):
@@ -55,7 +57,7 @@ class Network:
 
     @property
     def input_dim(self):
-        return self.__input_dim
+        return self.__params['input_dim']
 
     @property
     def units_per_layer(self):
@@ -79,17 +81,11 @@ class Network:
         :param inp: net's input vector/matrix
         :return: net's output vector/matrix
         """
-        if isinstance(inp, str):
-            raise AttributeError("'inp' must be a vector of numbers, got string")
         inp = np.array(inp)
-        # if inp is not iterable (e.g. single number)
-        if len(inp.shape) == 0:
+        # if inp is not iterable (e.g. single number). inp must be a bidimensional array
+        while len(inp.shape) <= 1:
             inp = np.expand_dims(inp, 0)
-        pattern_len = inp.shape[1] if len(inp.shape) > 1 else inp.shape[0]
-        if pattern_len != self.__input_dim:
-            raise AttributeError(f"Mismatching lengths --> len(net_inp) = {len(inp)} ; input_dim = {self.__input_dim}")
-        if len(inp.shape) <= 1:
-            inp = np.expand_dims(inp, 0)
+
         if verbose:
             print(f"Net's inputs: {inp}")
 
@@ -198,8 +194,11 @@ class Network:
         struct = np.array([{}] * len(self.__layers))
         for layer_index in range(len(self.__layers)):
             struct[layer_index] = {'weights': [], 'biases': []}
-            struct[layer_index]['weights'] = np.array([0.] * len(self.__layers[layer_index].weights))
-            struct[layer_index]['biases'] = np.array([0.] * len(self.__layers[layer_index].biases))
+            weights_matrix = self.__layers[layer_index].weights
+            struct[layer_index]['weights'] = np.zeros(shape=(len(weights_matrix[:, 0]), len(weights_matrix[0, :])))
+            struct[layer_index]['biases'] = np.zeros(shape=(len(weights_matrix[0, :])))
+            # struct[layer_index]['weights'] = np.array([0.] * len(self.__layers[layer_index].weights))
+            # struct[layer_index]['biases'] = np.array([0.] * len(self.__layers[layer_index].biases))
         return struct
 
     def print_net(self):
