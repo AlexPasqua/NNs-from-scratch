@@ -45,15 +45,15 @@ class TestNetwork(unittest.TestCase):
         self.assertRaises(AttributeError, net.fit, tr_x=[[1, 1], [1, 1]], tr_y=[1, 2], val_x=[1, 1], val_y=[1, 2, 3])
         self.assertRaises(ValueError, net.fit, tr_x=[1, 1], tr_y=[1, 2], val_split=12)
 
-    # def test_propagate_back(self):
-    #     self.net.forward()  # to initialize the net
-    #     self.assertRaises(AttributeError,
-    #                       self.net.propagate_back,
-    #                       dErr_dOut=[0.5] * self.net.layers[-1].n_units,
-    #                       grad_net=self.net.get_empty_struct())
-    #     # perform a forward pass to initialize all the layers' outputs and then call again 'propagate_back'
-    #     self.net.forward(inp=[0.2] * self.net.input_dim)
-    #     self.net.propagate_back(dErr_dOut=[0.5] * len(self.net.layers[-1].units), grad_net=self.net.get_empty_struct())
+    def test_propagate_back(self):
+        # call propagate_back without initializing the net first (with a forward)
+        self.assertRaises(TypeError,
+                          self.net.propagate_back,
+                          dErr_dOut=[0.5] * self.net.layers[-1].n_units,
+                          grad_net=self.net.get_empty_struct())
+        # initialize the net first
+        self.net.forward()
+        self.net.propagate_back(dErr_dOut=[0.5] * self.net.layers[-1].n_units, grad_net=self.net.get_empty_struct())
 
     def test_get_empty_gradnet(self):
         gradnet = self.net.get_empty_struct()

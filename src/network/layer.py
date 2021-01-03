@@ -91,8 +91,6 @@ class Layer:
         for i in range(self.__inp_dim):
             for j in range(self.__n_units):
                 self.__gradient_w[i][j] = -delta[j] * self.__inputs[i]
-
-        self.__gradient_w = np.array(self.__gradient_w)
         # the i-th row of the weights matrix corresponds to the vector formed by the i-th weight of each layer's unit
         new_upstream_delta = [np.dot(delta, self.weights[i]) for i in range(self.__inp_dim)]
         return new_upstream_delta, self.__gradient_w, self.__gradient_b
