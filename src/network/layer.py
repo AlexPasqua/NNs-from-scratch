@@ -49,16 +49,6 @@ class Layer:
     def outputs(self):
         return self.__outputs
 
-    # @staticmethod
-    # def __check_vectors(self, passed, own):
-    #     if hasattr(passed, '__iter__'):
-    #         if not all(isinstance(n, Number) for n in passed):
-    #             raise ValueError("layer's weights must be numeric. Got: ", type(passed[0]))
-    #         if len(passed) != len(own):
-    #             raise AttributeError("'value' must have the same length of the layer's weights")
-    #     else:
-    #         raise AttributeError(f"'value' must be a iterable, got {type(passed)}")
-
     def forward_pass(self, inp):
         """
         Performs the forward pass on the current layer
