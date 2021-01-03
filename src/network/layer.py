@@ -21,7 +21,6 @@ class Layer:
         self.__gradient_w = None
         self.__gradient_b = None
         self.__act = act_funcs[act]
-
         self.weights = weights_inits(init_type=init_type, n_weights=fanin, n_units=n_units, **kwargs)
         self.biases = weights_inits(init_type=init_type, n_weights=1, n_units=n_units, **kwargs)
 
