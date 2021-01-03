@@ -9,7 +9,7 @@ class Network:
     Attributes:
         layers: list of net's layers ('Layer' objects)
     """
-    def __init__(self, input_dim, units_per_layer, acts, init_type='uniform', init_value=0.2, **kwargs):
+    def __init__(self, input_dim, units_per_layer, acts, init_type, **kwargs):
         """
         Constructor
         :param input_dim: the input dimension
@@ -29,19 +29,17 @@ class Network:
             'units_per_layer': units_per_layer,
             'acts': acts,
             'init_type': init_type,
-            'init_value': init_value
         }, **kwargs}
         self.__layers = []
         self.__opt = None
         layer_inp_dim = input_dim
-        other_args = {**{'init_value': init_value}, **kwargs}
         for i in range(len(units_per_layer)):
             self.__layers.append(Layer(
                 inp_dim=layer_inp_dim,
                 n_units=units_per_layer[i],
                 act=acts[i],
                 init_type=init_type,
-                **other_args)
+                **kwargs)
             )
             layer_inp_dim = units_per_layer[i]
 
