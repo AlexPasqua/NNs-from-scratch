@@ -9,7 +9,6 @@ class Network:
     Attributes:
         layers: list of net's layers ('Layer' objects)
     """
-
     def __init__(self, input_dim, units_per_layer, acts, init_type='uniform', init_value=0.2, **kwargs):
         """
         Constructor
@@ -74,33 +73,17 @@ class Network:
     def params(self):
         return self.__params
 
-    def forward(self, inp=(2, 2, 2), verbose=False):
+    def forward(self, inp=(2, 2, 2)):
         """
         Performs a prediction on the whole NN
         :param inp: net's input vector/matrix
         :return: net's output vector/matrix
         """
         inp = np.array(inp)
-        # if inp is not iterable (e.g. single number). inp must be a bidimensional array
-        while len(inp.shape) <= 1:
-            inp = np.expand_dims(inp, 0)
-
-        if verbose:
-            print(f"Net's inputs: {inp}")
-
-        outputs = []
-        for pattern in inp:
-            x = pattern
-            for layer in self.layers:
-                x = layer.forward_pass(x)
-            if len(inp) > 1:
-                outputs.append(x)
-            else:
-                outputs = x
-
-        if verbose:
-            print(f"Net's output: {outputs}")
-        return outputs
+        x = inp
+        for layer in self.__layers:
+            x = layer.forward_pass(x)
+        return x
 
     def compile(self, opt='gd', loss='squared', metr='bin_class_acc', lr=0.01, lr_decay=None, limit_step=None,
                 momentum=0.):

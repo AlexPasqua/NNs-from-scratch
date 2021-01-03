@@ -59,7 +59,7 @@ if __name__ == '__main__':
         tr_x=monk1_train,
         tr_y=labels,
         epochs=500,
-        val_split=0.17,
+        val_split=0.2,
         batch_size='full',
     )
 
