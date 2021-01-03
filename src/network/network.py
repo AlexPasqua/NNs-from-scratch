@@ -42,7 +42,7 @@ class Network:
         other_args = {**{'init_type': init_type, 'init_value': init_value}, **kwargs}  # merge 2 dictionaries
         fanin = input_dim
         for i in range(len(units_per_layer)):
-            self.__layers.append(Layer(fanin=fanin, n_units=units_per_layer[i], act=acts[i], **other_args))
+            self.__layers.append(Layer(inp_dim=fanin, n_units=units_per_layer[i], act=acts[i], **other_args))
             fanin = units_per_layer[i]
 
     @staticmethod

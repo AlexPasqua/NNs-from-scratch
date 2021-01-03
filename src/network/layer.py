@@ -11,50 +11,55 @@ class Layer:
     Attributes:
     """
 
-    def __init__(self, fanin=None, n_units=None, act=None, init_type=None, **kwargs):
+    def __init__(self, inp_dim, n_units, act, init_type, **kwargs):
         """
         :param n_units: (integer) number of units in the layer
         :param init_type: (string) type of weights initialization
         """
+        self.weights = weights_inits(init_type=init_type, n_weights=inp_dim, n_units=n_units, **kwargs)
+        self.biases = weights_inits(init_type=init_type, n_weights=1, n_units=n_units, **kwargs)
+        self.__inp_dim = inp_dim
+        self.__n_units = n_units
+        self.__act = act_funcs[act]
         self.__inputs = None
+        self.__nets = None
         self.__outputs = None
         self.__gradient_w = None
         self.__gradient_b = None
-        self.__act = act_funcs[act]
-        self.weights = weights_inits(init_type=init_type, n_weights=fanin, n_units=n_units, **kwargs)
-        self.biases = weights_inits(init_type=init_type, n_weights=1, n_units=n_units, **kwargs)
-
-        # # if units is empty
-        # if units is None:
-        #     args = {'fanin': fanin, 'n_units': n_units, 'act': act, 'init_type': init_type}
-        #     if any(arg is None for arg in args.values()):
-        #         raise AttributeError(f"If a list of Unit(s) is not provided, every one in {list(args.keys())} must be initialized")
-        #     self.__units = []
-        #     unit_params = {**{'init_type': init_type, 'act': act, 'n_weights': fanin}, **kwargs}
-        #     for i in range(n_units):
-        #         self.__units.append(Unit(**unit_params))
-        # else:
-        #     self.__units = units
-        #     if np.shape(self.__units) == 0:
-        #         self.__units = np.expand_dims(self.__units, 0)
 
     @property
-    def outputs(self):
-        return self.__outputs
+    def inp_dim(self):
+        return self.__inp_dim
 
     @property
     def act(self):
         return self.__act
 
-    @staticmethod
-    def __check_vectors(self, passed, own):
-        if hasattr(passed, '__iter__'):
-            if not all(isinstance(n, Number) for n in passed):
-                raise ValueError("layer's weights must be numeric. Got: ", type(passed[0]))
-            if len(passed) != len(own):
-                raise AttributeError("'value' must have the same length of the layer's weights")
-        else:
-            raise AttributeError(f"'value' must be a iterable, got {type(passed)}")
+    @property
+    def n_units(self):
+        return self.__n_units
+
+    @property
+    def inputs(self):
+        return self.__inputs
+
+    @property
+    def nets(self):
+        return self.__nets
+
+    @property
+    def outputs(self):
+        return self.__outputs
+
+    # @staticmethod
+    # def __check_vectors(self, passed, own):
+    #     if hasattr(passed, '__iter__'):
+    #         if not all(isinstance(n, Number) for n in passed):
+    #             raise ValueError("layer's weights must be numeric. Got: ", type(passed[0]))
+    #         if len(passed) != len(own):
+    #             raise AttributeError("'value' must have the same length of the layer's weights")
+    #     else:
+    #         raise AttributeError(f"'value' must be a iterable, got {type(passed)}")
 
     def forward_pass(self, inp):
         """
@@ -62,8 +67,10 @@ class Layer:
         :param inp: (numpy ndarray) input vector
         :return: the vector of the current layer's soutputs
         """
-        self.__inputs = inp
-        self.__outputs = self.__act.func(np.add(np.matmul(inp, self.weights), self.biases))
+        self.__inputs = np.array(inp)
+        self.__nets = np.matmul(inp, self.weights)
+        self.__nets = np.add(self.__nets, self.biases)
+        self.__outputs = self.__act.func(self.__nets)
         return self.__outputs
 
     def backward_pass(self, upstream_delta):
@@ -77,13 +84,19 @@ class Layer:
         :return gradient_w: gradient wrt weights
         :return gradient_b: gradient wrt biases
         """
-        dOut_dNet = np.array([self.act.deriv(u.net) for u in self.__units])
-        delta = upstream_delta * dOut_dNet
+        dOut_dNet = self.__act.deriv(self.__nets)
+        delta = np.multiply(upstream_delta, dOut_dNet)
         self.__gradient_b = -delta
+        # the following is equivalent to, but faster than:
+        # self.__gradient_w = np.array([])
+        # for i in range(self.__n_units):
+        #     self.__gradient_w = np.concatenate((self.__gradient_w, -delta[i] * self.__inputs))
         self.__gradient_w = [
             -delta[j] * self.__inputs[i]
             for j in range(len(delta))
             for i in range(len(self.__inputs))
         ]
-        new_upstream_delta = [np.dot(delta, [u.w[j] for u in self.units]) for j in range(len(self.__inputs))]
+        self.__gradient_w = np.array(self.__gradient_w)
+        # the i-th row of the weights matrix corresponds to the vector formed by the i-th weight of each layer's unit
+        new_upstream_delta = [np.dot(delta, self.weights[i]) for i in range(self.__inp_dim)]
         return new_upstream_delta, self.__gradient_w, self.__gradient_b
