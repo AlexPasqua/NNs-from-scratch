@@ -1,5 +1,4 @@
 import warnings
-import numpy as np
 from network.layer import Layer
 from optimizers import *
 
@@ -167,7 +166,7 @@ class Network:
         target_len = tr_y.shape[1] if len(tr_y.shape) > 1 else 1
         n_patterns = tr_x.shape[0] if len(tr_x.shape) > 1 else 1
         n_targets = tr_y.shape[0] if len(tr_y.shape) > 1 else 1
-        if target_len != len(self.layers[-1].units) or n_patterns != n_targets or batch_size > n_patterns:
+        if target_len != self.layers[-1].n_units or n_patterns != n_targets or batch_size > n_patterns:
             raise AttributeError(f"Mismatching shapes")
 
         return self.__opt.optimize(
