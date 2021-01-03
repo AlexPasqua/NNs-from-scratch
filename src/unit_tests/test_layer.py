@@ -49,7 +49,7 @@ class TestLayer(unittest.TestCase):
             self.assertEqual(new_upstream_delta, res[i])
             self.assertEqual(-delta, grdb[i])
             for j in range(layer.inp_dim):
-                self.assertEqual(grdw[i], -delta * layer.inputs[j])
+                self.assertEqual(grdw[j][i], -delta * layer.inputs[j])
 
     def test_exceptions(self):
         self.assertRaises(TypeError, Layer, n_units=2)  # if not all required arguments are passed

@@ -87,15 +87,11 @@ class Layer:
         dOut_dNet = self.__act.deriv(self.__nets)
         delta = np.multiply(upstream_delta, dOut_dNet)
         self.__gradient_b = -delta
-        # the following is equivalent to, but faster than:
-        # self.__gradient_w = np.array([])
-        # for i in range(self.__n_units):
-        #     self.__gradient_w = np.concatenate((self.__gradient_w, -delta[i] * self.__inputs))
-        self.__gradient_w = [
-            -delta[j] * self.__inputs[i]
-            for j in range(len(delta))
-            for i in range(len(self.__inputs))
-        ]
+        self.__gradient_w = np.zeros(shape=(self.__inp_dim, self.__n_units))
+        for i in range(self.__inp_dim):
+            for j in range(self.__n_units):
+                self.__gradient_w[i][j] = -delta[j] * self.__inputs[i]
+
         self.__gradient_w = np.array(self.__gradient_w)
         # the i-th row of the weights matrix corresponds to the vector formed by the i-th weight of each layer's unit
         new_upstream_delta = [np.dot(delta, self.weights[i]) for i in range(self.__inp_dim)]
