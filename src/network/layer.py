@@ -1,6 +1,4 @@
 import numpy as np
-from numbers import Number
-from network.unit import Unit
 from weights_initializations import weights_inits
 from functions import act_funcs
 
