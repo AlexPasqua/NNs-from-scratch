@@ -16,16 +16,16 @@ class TestActivationFunctions(unittest.TestCase):
         np.testing.assert_array_almost_equal(act_funcs['tanh'].deriv([1.]), [0.4199743416140])
         np.testing.assert_array_equal(act_funcs['leaky_relu'].deriv([2., -3.]), [1., 0.01])
 
-    # def test_exceptions(self):
-    #     # check many combination
-    #     # it may be enough to test the function 'check_is_number', but this way we check also that
-    #     # we call 'check_is_number' in every activation function and deriv
-    #     activation = ['sigmoid', 'relu', 'leaky_relu', 'tanh']
-    #     attribute_test = [[1], 'hello']
-    #     for act in activation:
-    #         for attr_test in attribute_test:
-    #             self.assertRaises(TypeError, act_funcs[act].func, attr_test)
-    #             self.assertRaises(TypeError, act_funcs[act].deriv, attr_test)
+    def test_exceptions(self):
+        # check many combination
+        # it may be enough to test the function 'check_is_number', but this way we check also that
+        # we call 'check_is_number' in every activation function and deriv
+        activation = ['sigmoid', 'relu', 'leaky_relu', 'tanh']
+        attribute_test = ['hello']
+        for act in activation:
+            for attr_test in attribute_test:
+                self.assertRaises(TypeError, act_funcs[act].func, attr_test)
+                self.assertRaises(TypeError, act_funcs[act].deriv, attr_test)
 
 
 class TestLossFunctions(unittest.TestCase):
