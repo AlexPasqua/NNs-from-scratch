@@ -81,10 +81,10 @@ class GradientDescent(Optimizer, ABC):
 
         # cycle through epochs
         for epoch in tqdm.tqdm(range(epochs), desc="Iterating over epochs"):
-            epoch_tr_error = np.zeros(len(net.layers[-1].units))
-            epoch_tr_metric = np.zeros(len(net.layers[-1].units))
-            epoch_val_error = np.zeros(len(net.layers[-1].units))
-            epoch_val_metric = np.zeros(len(net.layers[-1].units))
+            epoch_tr_error = np.zeros(net.layers[-1].n_units)
+            epoch_tr_metric = np.zeros(net.layers[-1].n_units)
+            epoch_val_error = np.zeros(net.layers[-1].n_units)
+            epoch_val_metric = np.zeros(net.layers[-1].n_units)
 
             # shuffle the datasets (training & validation) internally
             indexes = list(range(len(tr_x)))

@@ -1,9 +1,5 @@
-import copy
 import warnings
-
-import numpy as np
 from network.layer import Layer
-from functions import losses
 from optimizers import *
 
 
@@ -13,8 +9,7 @@ class Network:
     Attributes:
         layers: list of net's layers ('Layer' objects)
     """
-
-    def __init__(self, input_dim, units_per_layer, acts, init_type='uniform', init_value=0.2, **kwargs):
+    def __init__(self, input_dim, units_per_layer, acts, init_type, **kwargs):
         """
         Constructor
         :param input_dim: the input dimension
@@ -29,21 +24,24 @@ class Network:
                                 units_per_layer=units_per_layer,
                                 acts=acts)
 
-        self.__input_dim = input_dim
         self.__params = {**{
             'input_dim': input_dim,
             'units_per_layer': units_per_layer,
             'acts': acts,
             'init_type': init_type,
-            'init_value': init_value
         }, **kwargs}
         self.__layers = []
         self.__opt = None
-        other_args = {**{'init_type': init_type, 'init_value': init_value}, **kwargs}  # merge 2 dictionaries
-        fanin = input_dim
+        layer_inp_dim = input_dim
         for i in range(len(units_per_layer)):
-            self.__layers.append(Layer(fanin=fanin, n_units=units_per_layer[i], act=acts[i], **other_args))
-            fanin = units_per_layer[i]
+            self.__layers.append(Layer(
+                inp_dim=layer_inp_dim,
+                n_units=units_per_layer[i],
+                act=acts[i],
+                init_type=init_type,
+                **kwargs)
+            )
+            layer_inp_dim = units_per_layer[i]
 
     @staticmethod
     def __check_attributes(self, input_dim, units_per_layer, acts):
@@ -55,7 +53,7 @@ class Network:
 
     @property
     def input_dim(self):
-        return self.__input_dim
+        return self.__params['input_dim']
 
     @property
     def units_per_layer(self):
@@ -73,39 +71,17 @@ class Network:
     def params(self):
         return self.__params
 
-    def forward(self, inp=(2, 2, 2), verbose=False):
+    def forward(self, inp=(2, 2, 2)):
         """
         Performs a prediction on the whole NN
         :param inp: net's input vector/matrix
         :return: net's output vector/matrix
         """
-        if isinstance(inp, str):
-            raise AttributeError("'inp' must be a vector of numbers, got string")
         inp = np.array(inp)
-        # if inp is not iterable (e.g. single number)
-        if len(inp.shape) == 0:
-            inp = np.expand_dims(inp, 0)
-        pattern_len = inp.shape[1] if len(inp.shape) > 1 else inp.shape[0]
-        if pattern_len != self.__input_dim:
-            raise AttributeError(f"Mismatching lengths --> len(net_inp) = {len(inp)} ; input_dim = {self.__input_dim}")
-        if len(inp.shape) <= 1:
-            inp = np.expand_dims(inp, 0)
-        if verbose:
-            print(f"Net's inputs: {inp}")
-
-        outputs = []
-        for pattern in inp:
-            x = pattern
-            for layer in self.layers:
-                x = layer.forward_pass(x)
-            if len(inp) > 1:
-                outputs.append(x)
-            else:
-                outputs = x
-
-        if verbose:
-            print(f"Net's output: {outputs}")
-        return outputs
+        x = inp
+        for layer in self.__layers:
+            x = layer.forward_pass(x)
+        return x
 
     def compile(self, opt='gd', loss='squared', metr='bin_class_acc', lr=0.01, lr_decay=None, limit_step=None,
                 momentum=0.):
@@ -171,7 +147,7 @@ class Network:
         target_len = tr_y.shape[1] if len(tr_y.shape) > 1 else 1
         n_patterns = tr_x.shape[0] if len(tr_x.shape) > 1 else 1
         n_targets = tr_y.shape[0] if len(tr_y.shape) > 1 else 1
-        if target_len != len(self.layers[-1].units) or n_patterns != n_targets or batch_size > n_patterns:
+        if target_len != self.layers[-1].n_units or n_patterns != n_targets or batch_size > n_patterns:
             raise AttributeError(f"Mismatching shapes")
 
         return self.__opt.optimize(
@@ -198,8 +174,11 @@ class Network:
         struct = np.array([{}] * len(self.__layers))
         for layer_index in range(len(self.__layers)):
             struct[layer_index] = {'weights': [], 'biases': []}
-            struct[layer_index]['weights'] = np.array([0.] * len(self.__layers[layer_index].weights))
-            struct[layer_index]['biases'] = np.array([0.] * len(self.__layers[layer_index].biases))
+            weights_matrix = self.__layers[layer_index].weights
+            struct[layer_index]['weights'] = np.zeros(shape=(len(weights_matrix[:, 0]), len(weights_matrix[0, :])))
+            struct[layer_index]['biases'] = np.zeros(shape=(len(weights_matrix[0, :])))
+            # struct[layer_index]['weights'] = np.array([0.] * len(self.__layers[layer_index].weights))
+            # struct[layer_index]['biases'] = np.array([0.] * len(self.__layers[layer_index].biases))
         return struct
 
     def print_net(self):
