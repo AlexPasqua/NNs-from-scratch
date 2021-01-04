@@ -112,7 +112,7 @@ class GradientDescent(Optimizer, ABC):
                 w_tot = []
                 if self.lambd != 0:
                     for layer in net.layers:
-                        w_tot = np.concatenate((w_tot, layer.weights))
+                        w_tot = np.concatenate((w_tot, np.ndarray.flatten(layer.weights)))
                 regularization = [regs[self.reg_type].func(w=w_tot, lambd=self.lambd)] * len(epoch_tr_error)
 
                 # cycle through patterns and targets within a batch and accumulate the gradients

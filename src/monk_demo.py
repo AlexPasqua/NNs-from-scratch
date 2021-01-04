@@ -19,7 +19,7 @@ if __name__ == '__main__':
 
     # read the dataset
     col_names = ['class', 'a1', 'a2', 'a3', 'a4', 'a5', 'a6', 'Id']
-    monk1_train = pd.read_csv("../datasets/monks/monks-1.train", sep=' ', names=col_names)
+    monk1_train = pd.read_csv("../datasets/monks/monks-3.train", sep=' ', names=col_names)
     monk1_train.set_index('Id', inplace=True)
     labels = monk1_train.pop('class')
 
@@ -43,14 +43,16 @@ if __name__ == '__main__':
         tr_val_y=labels,
         loss='squared',
         metr='bin_class_acc',
-        lr=0.15,
+        lr=0.3,
         # lr_decay='linear',
-        # limit_step=350,
+        # limit_step=200,
         opt='gd',
         momentum=0.6,
-        epochs=500,
+        epochs=600,
         batch_size='full',
-        k_folds=10
+        k_folds=8,
+        reg_type='l2',
+        lambd=0.005
     )
 
     # # hold-out validation
@@ -58,7 +60,7 @@ if __name__ == '__main__':
     # tr_error_values, tr_metric_values, val_error_values, val_metric_values = model.fit(
     #     tr_x=monk1_train,
     #     tr_y=labels,
-    #     epochs=500,
+    #     epochs=50,
     #     val_split=0.2,
     #     batch_size='full',
     # )
@@ -76,5 +78,6 @@ if __name__ == '__main__':
     ax[1].legend(loc='best', prop={'size':6})
     ax[1].set_xlabel('Epochs', fontweight='bold')
     ax[1].set_ylabel('Accuracy', fontweight='bold')
+    ax[1].set_ylim((0., 1.))
     ax[1].grid()
     plt.show()
