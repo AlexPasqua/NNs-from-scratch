@@ -19,7 +19,7 @@ if __name__ == '__main__':
 
     # read the dataset
     col_names = ['class', 'a1', 'a2', 'a3', 'a4', 'a5', 'a6', 'Id']
-    monk1_train = pd.read_csv("../datasets/monks/monks-2.train", sep=' ', names=col_names)
+    monk1_train = pd.read_csv("../datasets/monks/monks-1.train", sep=' ', names=col_names)
     monk1_train.set_index('Id', inplace=True)
     labels = monk1_train.pop('class')
 
@@ -43,23 +43,23 @@ if __name__ == '__main__':
         tr_val_y=labels,
         loss='squared',
         metr='bin_class_acc',
-        lr=0.5,
-        lr_decay='linear',
-        limit_step=350,
+        lr=0.15,
+        # lr_decay='linear',
+        # limit_step=350,
         opt='gd',
-        momentum=0.75,
-        epochs=50,
+        momentum=0.6,
+        epochs=500,
         batch_size='full',
-        k_folds=8
+        k_folds=10
     )
 
     # # hold-out validation
-    # model.compile(opt='gd', loss='squared', metr='bin_class_acc', lr=0.2, momentum=0.5)
+    # model.compile(opt='gd', loss='squared', metr='bin_class_acc', lr=0.2, momentum=0.6)
     # tr_error_values, tr_metric_values, val_error_values, val_metric_values = model.fit(
     #     tr_x=monk1_train,
     #     tr_y=labels,
-    #     epochs=1000,
-    #     val_split=0.17,
+    #     epochs=500,
+    #     val_split=0.2,
     #     batch_size='full',
     # )
 
