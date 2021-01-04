@@ -40,38 +40,18 @@ class DerivableFunction(Function):
         return self.__deriv
 
 
-def check_is_number(x):
-    if isinstance(x, str):
-        raise AttributeError(f"Input must be a number, got {type(x)}")
-    if not isinstance(x, Number):
-        if hasattr(x, '__iter__') and all(n == 1 for n in np.shape(x)):
-            while hasattr(x, '__iter__'):
-                x = x[0]
-        if not isinstance(x, Number):
-            raise AttributeError(f"Input must be a number. Got {type(x)}")
+# def check_is_number(x):
+#     if isinstance(x, str):
+#         raise AttributeError(f"Input must be a number, got {type(x)}")
+#     if not isinstance(x, Number):
+#         if hasattr(x, '__iter__') and all(n == 1 for n in np.shape(x)):
+#             while hasattr(x, '__iter__'):
+#                 x = x[0]
+#         if not isinstance(x, Number):
+#             raise AttributeError(f"Input must be a number. Got {type(x)}")
 
 
 """ Activation Functions """
-
-
-def sigmoid(x):
-    """
-    Computes the sigmoid function of x
-    :param x: net -> input's weighted sum
-    :return: sigmoid of x
-    """
-    check_is_number(x)
-    return 1. / (1. + np.exp(-x))
-
-
-def sigmoid_deriv(x):
-    """
-    Computes the derivative of the sigmoid function
-    :param x: net -> input's weighted sum
-    :return: derivative of the sigmoid in x
-    """
-    check_is_number(x)
-    return sigmoid(x) * (1 - sigmoid(x))
 
 
 def relu(x):
@@ -80,8 +60,7 @@ def relu(x):
     :param x: net -> input's weighted sum
     :return: ReLU of x
     """
-    check_is_number(x)
-    return np.maximum(0, x)
+    return np.maximum(x, 0)
 
 
 def relu_deriv(x):
@@ -90,28 +69,10 @@ def relu_deriv(x):
     :param x: net-> input's weighted sum
     :return: derivative of the ReLU in x
     """
-    check_is_number(x)
-    return 0 if x <= 0 else 1
-
-
-def tanh(x):
-    """
-    Computes the hyperbolic tangent function (tanh) of x
-    :param x: net-> input's weighted sum
-    :return: Tanh of x
-    """
-    check_is_number(x)
-    return math.tanh(x)
-
-
-def tanh_deriv(x):
-    """
-    Computes the derivative of the hyperbolic tangent function (tanh)
-    :param x: net-> input's weighted sum
-    :return: Tanh derivative of x
-    """
-    check_is_number(x)
-    return 1 - (math.tanh(x)) ** 2
+    x = np.array(x)
+    x[x <= 0] = 0
+    x[x > 0] = 1
+    return x
 
 
 def leaky_relu(x):
@@ -120,8 +81,7 @@ def leaky_relu(x):
     :param x: input's weighted sum
     :return: leaky ReLu of x
     """
-    check_is_number(x)
-    return x if x >= 0 else 0.01 * x
+    return [i if i >= 0 else 0.01 * i for i in x]
 
 
 def leaky_relu_deriv(x):
@@ -130,8 +90,54 @@ def leaky_relu_deriv(x):
     :param x: input's weighted sum
     :return: derivative of the leaky ReLU in x
     """
-    check_is_number(x)
-    return 1 if x >= 0 else 0.01
+    x = np.array(x)
+    x[x > 0] = 1.
+    x[x <= 0] = 0.01
+    return x
+
+
+def sigmoid(x):
+    """
+    Computes the sigmoid function of x
+    :param x: net -> input's weighted sum
+    :return: sigmoid of x
+    """
+    x = np.array(x)
+    ones = [1.] * len(x)
+    return np.divide(ones, np.add(ones, np.exp(-x)))
+
+
+def sigmoid_deriv(x):
+    """
+    Computes the derivative of the sigmoid function
+    :param x: net -> input's weighted sum
+    :return: derivative of the sigmoid in x
+    """
+    return np.multiply(
+        sigmoid(x),
+        np.subtract([1.] * len(x), sigmoid(x))
+    )
+
+
+def tanh(x):
+    """
+    Computes the hyperbolic tangent function (tanh) of x
+    :param x: net-> input's weighted sum
+    :return: Tanh of x
+    """
+    return np.tanh(x)
+
+
+def tanh_deriv(x):
+    """
+    Computes the derivative of the hyperbolic tangent function (tanh)
+    :param x: net-> input's weighted sum
+    :return: Tanh derivative of x
+    """
+    return np.subtract(
+        [1.] * len(x),
+        np.power(np.tanh(x), 2)
+    )
 
 
 """ Loss Functions """

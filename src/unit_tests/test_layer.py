@@ -1,63 +1,58 @@
 import unittest
 import numpy as np
 from network.layer import Layer
-from network.unit import Unit
+import datetime
 
 
 class TestLayer(unittest.TestCase):
-    n_units = 3
+    n_units = 5
     value = 0.2
-    layer = Layer(fanin=3, n_units=n_units, act='relu', init_type='uniform', init_value=value)
+    fanin = 3
+    layer = Layer(inp_dim=fanin, n_units=n_units, act='relu', init_type='uniform', lower_lim=-1, upper_lim=1,
+                  init_value=value)
 
     def test_creation(self):
-        lower_lim = 10
-        upper_lim = 12
-        layer1 = self.layer
-        layer2 = Layer(fanin=3, n_units=self.n_units, act='relu', init_type='random', lower_lim=lower_lim, upper_lim=upper_lim)
-        self.assertEqual(self.n_units, len(layer1.units))
-        self.assertEqual(self.n_units, len(layer2.units))
-        for unit_index in range(len(layer1.units)):
-            unit1 = layer1.units[unit_index]
-            unit2 = layer2.units[unit_index]
-            self.assertEqual(self.value, unit1.b)
-            self.assertGreaterEqual(unit2.b, lower_lim)
-            self.assertLess(unit2.b, upper_lim)
-            for weight_index in range(len(unit1.w)):
-                self.assertEqual(self.value, unit1.w[weight_index])
-                self.assertGreaterEqual(unit2.w[weight_index], lower_lim)
-                self.assertLess(unit2.w[weight_index], upper_lim)
+        lower_lim = -2
+        upper_lim = 2.2
+        layer2 = Layer(
+            inp_dim=self.fanin,
+            n_units=self.n_units,
+            act='relu',
+            init_type='random',
+            lower_lim=lower_lim,
+            upper_lim=upper_lim)
+        for i in range(len(self.layer.weights)):
+            for j in range(len(self.layer.weights[0])):
+                self.assertEqual(self.layer.weights[i][j], self.value)
+                self.assertGreaterEqual(layer2.weights[i][j], lower_lim)
+                self.assertLessEqual(layer2.weights[i][j], upper_lim)
 
     def test_forward_pass(self):
-        inp = [0.5] * self.n_units
-        correct_out = []
-        for i in range(self.n_units):
-            unit = self.layer.units[i]
-            correct_out.append(self.layer.act.func(np.dot(unit.w, inp) + unit.b))
-            self.assertAlmostEqual(
-                correct_out[-1],
-                unit.output(inp))
-        self.layer.forward_pass(inp)
-        for i in range(self.n_units):
-            self.assertAlmostEqual(self.layer.outputs[i], correct_out[i])
+        inp = [0.5] * 3
+        correct_out = self.layer.act.func(np.add(np.matmul(inp, self.layer.weights), self.layer.biases))
+        np.testing.assert_array_equal(self.layer.forward_pass(inp), correct_out)
 
     def test_backward_pass(self):
         fanin = 2
-        layer = Layer(fanin=fanin, n_units=2, act='relu', init_type='uniform', init_value=0.5)
+        layer = Layer(inp_dim=fanin, n_units=2, act='relu', init_type='uniform', init_value=0.5)
         layer.forward_pass(inp=[0.5] * fanin)  # needed to initialize outputs and weighted sums
-        upstream_delta = np.array([0.5] * len(layer.units))
-        res = layer.backward_pass(upstream_delta)
-        for i in range(len(layer.units)):
-            dOut_dNet = layer.act.deriv(layer.units[i].net)
+        upstream_delta = np.array([0.5] * layer.n_units)
+        res, grdw, grdb = layer.backward_pass(upstream_delta)
+        for i in range(layer.n_units):
+            dOut_dNet = layer.act.deriv(layer.nets)[i]
             delta = dOut_dNet * upstream_delta[i]
             new_upstream_delta = 0.
-            for weight in layer.units[i].w:
+            for weight in layer.weights[i]:
                 val = delta * weight
                 self.assertEqual(val, 0.25)
                 new_upstream_delta += val
-            self.assertEqual(new_upstream_delta, 0.5)
+            self.assertEqual(new_upstream_delta, res[i])
+            self.assertEqual(-delta, grdb[i])
+            for j in range(layer.inp_dim):
+                self.assertEqual(grdw[j][i], -delta * layer.inputs[j])
 
     def test_exceptions(self):
-        self.assertRaises(AttributeError, Layer, n_units=2)  # if not all required arguments are passed
+        self.assertRaises(TypeError, Layer, n_units=2)  # if not all required arguments are passed
 
 
 if __name__ == '__main__':
