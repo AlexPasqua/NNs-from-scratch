@@ -12,7 +12,9 @@ class TestOptimizers(unittest.TestCase):
         lr=0.2,
         lr_decay='linear',
         limit_step=400,
-        momentum=0.5
+        momentum=0.5,
+        reg_type='l2',
+        lambd=0.001
     )
 
     # def test_gd(self):

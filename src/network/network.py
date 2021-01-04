@@ -84,7 +84,7 @@ class Network:
         return x
 
     def compile(self, opt='gd', loss='squared', metr='bin_class_acc', lr=0.01, lr_decay=None, limit_step=None,
-                momentum=0.):
+                momentum=0., reg_type='l2', lambd=0):
         """
         Prepares the network for training by assigning an optimizer to it
         :param opt: ('Optimizer' object)
@@ -94,6 +94,8 @@ class Network:
         :param lr_decay: type of decay for the learning rate
         :param limit_step: number of steps of weights update to perform before stopping decaying the learning rate
         :param momentum: (float) momentum parameter
+        :param lambd: (float) regularization parameter
+        :param reg_type: (string) regularization type
         """
         if momentum > 1. or momentum < 0.:
             raise ValueError(f"momentum must be a value between 0 and 1. Got: {momentum}")
@@ -104,7 +106,9 @@ class Network:
             lr=lr,
             lr_decay=lr_decay,
             limit_step=limit_step,
-            momentum=momentum
+            momentum=momentum,
+            reg_type=reg_type,
+            lambd=lambd
         )
 
     def fit(self, tr_x, tr_y, val_x=None, val_y=None, epochs=1, batch_size=1, val_split=0):

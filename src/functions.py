@@ -202,7 +202,35 @@ def linear_lr_dec(curr_lr, base_lr, final_lr, curr_step, limit_step):
     return final_lr
 
 
+""" Regularizations """
+
+
+def lasso_l1(w, lambd):
+    return lambd * np.sum(np.abs(w))
+
+
+def lasso_l1_deriv(w, lambd):
+    res = np.zeros(len(w))
+    for i in range(len(w)):
+        if w[i] < 0:
+            res[i] = -lambd
+        elif w[i] > 0:
+            res[i] = lambd
+        else:
+            res[i] = 0
+    return res
+
+
+def ridge_l2(w, lambd):
+    return lambd * np.sum(np.square(w))
+
+
+def ridge_l2_deriv(w, lambd):
+    return 2 * lambd * w
+
+
 """ Function objects and dictionaries to use them in other scripts """
+
 
 ReLU = DerivableFunction(relu, relu_deriv, 'ReLU')
 LeakyReLU = DerivableFunction(leaky_relu, leaky_relu_deriv, 'LeakyReLU')
@@ -228,4 +256,11 @@ metrics = {
 LinearLRDecay = Function(linear_lr_dec, 'linear')
 lr_decays = {
     'linear': LinearLRDecay
+}
+
+l2_regularization = DerivableFunction(ridge_l2, ridge_l2_deriv, 'l2')
+l1_regularization = DerivableFunction(lasso_l1, lasso_l1_deriv, 'l1')
+regs = {
+    'l2': l2_regularization,
+    'l1': l1_regularization
 }

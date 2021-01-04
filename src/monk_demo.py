@@ -19,7 +19,7 @@ if __name__ == '__main__':
 
     # read the dataset
     col_names = ['class', 'a1', 'a2', 'a3', 'a4', 'a5', 'a6', 'Id']
-    monk1_train = pd.read_csv("../datasets/monks/monks-1.train", sep=' ', names=col_names)
+    monk1_train = pd.read_csv("../datasets/monks/monks-3.train", sep=' ', names=col_names)
     monk1_train.set_index('Id', inplace=True)
     labels = monk1_train.pop('class')
 
@@ -36,32 +36,34 @@ if __name__ == '__main__':
     monk1_train = monk1_train[indexes]
     labels = labels[indexes]
 
-    # # cross validation
-    # tr_error_values, tr_metric_values, val_error_values, val_metric_values = cross_valid(
-    #     net=model,
-    #     tr_val_x=monk1_train,
-    #     tr_val_y=labels,
-    #     loss='squared',
-    #     metr='bin_class_acc',
-    #     lr=0.5,
-    #     lr_decay='linear',
-    #     limit_step=350,
-    #     opt='gd',
-    #     momentum=0.75,
-    #     epochs=150,
-    #     batch_size='full',
-    #     k_folds=8
-    # )
-
-    # hold-out validation
-    model.compile(opt='gd', loss='squared', metr='bin_class_acc', lr=0.2, momentum=0.5)
-    tr_error_values, tr_metric_values, val_error_values, val_metric_values = model.fit(
-        tr_x=monk1_train,
-        tr_y=labels,
-        epochs=500,
-        val_split=0.2,
+    # cross validation
+    tr_error_values, tr_metric_values, val_error_values, val_metric_values = cross_valid(
+        net=model,
+        tr_val_x=monk1_train,
+        tr_val_y=labels,
+        loss='squared',
+        metr='bin_class_acc',
+        lr=0.3,
+        # lr_decay='linear',
+        # limit_step=200,
+        opt='gd',
+        momentum=0.6,
+        epochs=600,
         batch_size='full',
+        k_folds=8,
+        reg_type='l2',
+        lambd=0.005
     )
+
+    # # hold-out validation
+    # model.compile(opt='gd', loss='squared', metr='bin_class_acc', lr=0.2, momentum=0.6)
+    # tr_error_values, tr_metric_values, val_error_values, val_metric_values = model.fit(
+    #     tr_x=monk1_train,
+    #     tr_y=labels,
+    #     epochs=50,
+    #     val_split=0.2,
+    #     batch_size='full',
+    # )
 
     # plot learning curve
     figure, ax = plt.subplots(1, 2, figsize=(12, 4))
@@ -76,5 +78,6 @@ if __name__ == '__main__':
     ax[1].legend(loc='best', prop={'size':6})
     ax[1].set_xlabel('Epochs', fontweight='bold')
     ax[1].set_ylabel('Accuracy', fontweight='bold')
+    ax[1].set_ylim((0., 1.))
     ax[1].grid()
     plt.show()

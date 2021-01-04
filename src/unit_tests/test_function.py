@@ -1,6 +1,6 @@
 import unittest
 import numpy as np
-from functions import act_funcs, losses, metrics, lr_decays
+from functions import act_funcs, losses, metrics, lr_decays, regs
 
 
 class TestActivationFunctions(unittest.TestCase):
@@ -52,6 +52,22 @@ class TestMetrics(unittest.TestCase):
     def test_metrics(self):
         self.assertEqual(1, metrics['bin_class_acc'].func(predicted=[1], target=[0.98]))
         self.assertEqual(0, metrics['bin_class_acc'].func(predicted=[1], target=[0.098]))
+        predicted = np.array(
+            [[1, 0, 0, 1],
+             [1, 1, 1, 1]]
+        )
+        target = np.array(
+            [[1, 1, 0, 0],
+             [0, 0, 0, 0]]
+        )
+        acc = np.array([0])
+        predicted = np.array([[0], [1], [1], [0.8]])
+        target = np.array([[1], [1], [1], [1]])
+        for i in range(len(predicted)):
+            acc += metrics['bin_class_acc'].func(predicted[i], target[i])
+        self.assertEqual(3, acc)
+        acc = acc / float(len(predicted))
+        self.assertEqual(0.75, acc)
 
 
 class TestLRDecays(unittest.TestCase):
@@ -70,6 +86,16 @@ class TestLRDecays(unittest.TestCase):
             lr_decays['linear'].func(curr_lr=curr_lr, base_lr=base_lr, final_lr=final_lr, curr_step=curr_step, limit_step=limit_step),
             final_lr
         )
+
+
+class TestRegularizations(unittest.TestCase):
+    def test_regularizations(self):
+        lambd = 0.2
+        w = np.array([[1, 0.2, -1], [1, 0, 0.5]])
+        l1_deriv = np.array([[1, 1, -1], [1, 0, 1]]) * lambd
+        l2_deriv = np.array([[0.4, 0.08, -0.4], [0.4, 0., 0.2]])
+        self.assertAlmostEqual(regs['l1'].func(w, lambd=lambd), 0.740000)
+        self.assertAlmostEqual(regs['l2'].func(w, lambd=lambd), 0.658)
 
 
 if __name__ == '__main__':

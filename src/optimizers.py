@@ -1,9 +1,9 @@
 import math
 from abc import ABC, abstractmethod
-import matplotlib.pyplot as plt
+import datetime
 import numpy as np
 import tqdm as tqdm
-from functions import losses, metrics, lr_decays
+from functions import losses, metrics, lr_decays, regs
 
 
 class Optimizer(ABC):
@@ -19,7 +19,7 @@ class Optimizer(ABC):
     """
 
     @abstractmethod
-    def __init__(self, net, loss, metr, lr, lr_decay, limit_step, momentum):
+    def __init__(self, net, loss, metr, lr, lr_decay, limit_step, momentum, reg_type, lambd):
         # makes sure lr is a value between 0 and 1
         if lr <= 0 or lr > 1:
             raise ValueError('lr should be a value between 0 and 1, Got:{}'.format(lr))
@@ -32,6 +32,8 @@ class Optimizer(ABC):
         self.lr_decay = lr_decay
         self.limit_step = limit_step
         self.momentum = momentum
+        self.lambd = lambd
+        self.reg_type = reg_type
 
     @property
     def net(self):
@@ -48,8 +50,9 @@ class Optimizer(ABC):
 
 class GradientDescent(Optimizer, ABC):
     """ Gradient Descent """
-    def __init__(self, net, loss, metr, lr, lr_decay, limit_step, momentum):
-        super(GradientDescent, self).__init__(net, loss, metr, lr, lr_decay, limit_step, momentum)
+
+    def __init__(self, net, loss, metr, lr, lr_decay, limit_step, momentum, reg_type, lambd):
+        super(GradientDescent, self).__init__(net, loss, metr, lr, lr_decay, limit_step, momentum, reg_type, lambd)
         self.__type = 'gd'
 
     @property
@@ -105,10 +108,22 @@ class GradientDescent(Optimizer, ABC):
                 targets_batch = tr_y[start: end]
                 grad_net = net.get_empty_struct()
 
+                # computes penalty term (regularization)
+                w_tot = []
+                if self.lambd != 0:
+                    for layer in net.layers:
+                        w_tot = np.concatenate((w_tot, np.ndarray.flatten(layer.weights)))
+                regularization = [regs[self.reg_type].func(w=w_tot, lambd=self.lambd)] * len(epoch_tr_error)
+
                 # cycle through patterns and targets within a batch and accumulate the gradients
                 for pattern, target in zip(train_batch, targets_batch):
                     net_outputs = net.forward(inp=pattern)
-                    epoch_tr_error = np.add(epoch_tr_error, self.loss.func(predicted=net_outputs, target=target))
+
+                    # epoch training error = itself + loss + regularization
+                    epoch_tr_error = np.add(
+                        np.add(epoch_tr_error, self.loss.func(predicted=net_outputs, target=target)),
+                        regularization
+                    )
                     epoch_tr_metric = np.add(epoch_tr_metric, self.metr.func(predicted=net_outputs, target=target))
                     dErr_dOut = self.loss.deriv(predicted=net_outputs, target=target)
                     # set the layers' gradients and add them into grad_net
@@ -141,10 +156,15 @@ class GradientDescent(Optimizer, ABC):
                     momentum_net[layer_index]['biases'] *= self.momentum
                     momentum_net[layer_index]['weights'] = np.add(momentum_net[layer_index]['weights'], delta_w)
                     momentum_net[layer_index]['biases'] = np.add(momentum_net[layer_index]['biases'], delta_b)
-                    net.layers[layer_index].weights = np.add(net.layers[layer_index].weights,
-                                                             momentum_net[layer_index]['weights'])
-                    net.layers[layer_index].biases = np.add(net.layers[layer_index].biases,
-                                                            momentum_net[layer_index]['biases'])
+
+                    net.layers[layer_index].weights = np.subtract(
+                        np.add(net.layers[layer_index].weights, momentum_net[layer_index]['weights']),
+                        regs[self.reg_type].deriv(w=net.layers[layer_index].weights, lambd=self.lambd),
+                    )
+                    net.layers[layer_index].biases = np.add(
+                        net.layers[layer_index].biases,
+                        momentum_net[layer_index]['biases']
+                    )
 
             # validation
             if val_x is not None:
