@@ -1,12 +1,10 @@
-import pandas as pd
-import numpy as np
-from sklearn.preprocessing import OneHotEncoder
 import matplotlib.pyplot as plt
 from network.network import Network
 from model_selection import cross_valid
+from utility import read_monk, plot_curves
 
 if __name__ == '__main__':
-    parameters = {
+    model_params = {
         'input_dim': 17,
         'units_per_layer': (4, 1),
         'acts': ('leaky_relu', 'tanh'),
@@ -15,44 +13,34 @@ if __name__ == '__main__':
         'lower_lim': -0.1,
         'upper_lim': 0.1
     }
-    model = Network(**parameters)
+
+    model = Network(**model_params)
+
+    training_params = {
+        'lr': 0.3,
+        'momentum': 0.6,
+        'lambd': 0.0,
+        'reg_type': 'l2',
+        # 'lr_decay':'linear',
+        # 'limit_step':200,
+        'loss': 'squared',
+        'opt': 'gd',
+        'epochs': 100,
+        'batch_size': 'full',
+        'metr': 'bin_class_acc'
+
+    }
 
     # read the dataset
-    col_names = ['class', 'a1', 'a2', 'a3', 'a4', 'a5', 'a6', 'Id']
-    monk1_train = pd.read_csv("../datasets/monks/monks-3.train", sep=' ', names=col_names)
-    monk1_train.set_index('Id', inplace=True)
-    labels = monk1_train.pop('class')
-
-    # 1-hot encoding (and transform dataframe to numpy array)
-    monk1_train = OneHotEncoder().fit_transform(monk1_train).toarray()
-
-    # transform labels from pandas dataframe to numpy ndarray
-    labels = labels.to_numpy()[:, np.newaxis]
-    labels[labels == 0] = -1
-
-    # shuffle the whole dataset once
-    indexes = list(range(len(monk1_train)))
-    np.random.shuffle(indexes)
-    monk1_train = monk1_train[indexes]
-    labels = labels[indexes]
+    monk_train, labels = read_monk(filename='monks-1')
 
     # cross validation
     tr_error_values, tr_metric_values, val_error_values, val_metric_values = cross_valid(
         net=model,
-        tr_val_x=monk1_train,
+        tr_val_x=monk_train,
         tr_val_y=labels,
-        loss='squared',
-        metr='bin_class_acc',
-        lr=0.3,
-        # lr_decay='linear',
-        # limit_step=200,
-        opt='gd',
-        momentum=0.6,
-        epochs=600,
-        batch_size='full',
-        k_folds=8,
-        reg_type='l2',
-        lambd=0.005
+        k_folds=5,
+        **training_params
     )
 
     # # hold-out validation
@@ -65,19 +53,8 @@ if __name__ == '__main__':
     #     batch_size='full',
     # )
 
-    # plot learning curve
-    figure, ax = plt.subplots(1, 2, figsize=(12, 4))
-    ax[0].plot(range(len(tr_error_values)), tr_error_values, color='b', linestyle='dashed', label='training error')
-    ax[0].plot(range(len(tr_error_values)), val_error_values, color='r', label='validation error')
-    ax[0].legend(loc='best', prop={'size': 6})
-    ax[0].set_xlabel('Epochs', fontweight='bold')
-    ax[0].set_ylabel('Loss', fontweight='bold')
-    ax[0].grid()
-    ax[1].plot(range(len(tr_metric_values)), tr_metric_values, color='b', linestyle='dashed', label='training accuracy')
-    ax[1].plot(range(len(tr_metric_values)), val_metric_values, color='r', label='validation accuracy')
-    ax[1].legend(loc='best', prop={'size':6})
-    ax[1].set_xlabel('Epochs', fontweight='bold')
-    ax[1].set_ylabel('Accuracy', fontweight='bold')
-    ax[1].set_ylim((0., 1.))
-    ax[1].grid()
-    plt.show()
+    # plot graph
+    plot_curves(tr_loss=tr_error_values,
+                val_loss=val_error_values,
+                tr_acc=tr_metric_values,
+                val_acc=val_metric_values, **training_params)
