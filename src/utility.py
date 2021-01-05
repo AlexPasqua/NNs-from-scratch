@@ -7,24 +7,24 @@ import matplotlib.pyplot as plt
 def read_monk(filename):
     # read the dataset
     col_names = ['class', 'a1', 'a2', 'a3', 'a4', 'a5', 'a6', 'Id']
-    monk1_train = pd.read_csv(f"../datasets/monks/{str(filename)}.train", sep=' ', names=col_names)
-    monk1_train.set_index('Id', inplace=True)
-    labels = monk1_train.pop('class')
+    monk_train = pd.read_csv(f"../datasets/monks/{str(filename)}.train", sep=' ', names=col_names)
+    monk_train.set_index('Id', inplace=True)
+    labels = monk_train.pop('class')
 
     # 1-hot encoding (and transform dataframe to numpy array)
-    monk1_train = OneHotEncoder().fit_transform(monk1_train).toarray()
+    monk_train = OneHotEncoder().fit_transform(monk_train).toarray()
 
     # transform labels from pandas dataframe to numpy ndarray
     labels = labels.to_numpy()[:, pd.np.newaxis]
     labels[labels == 0] = -1
 
     # shuffle the whole dataset once
-    indexes = list(range(len(monk1_train)))
+    indexes = list(range(len(monk_train)))
     np.random.shuffle(indexes)
-    monk1_train = monk1_train[indexes]
+    monk_train = monk_train[indexes]
     labels = labels[indexes]
 
-    return monk1_train, labels
+    return monk_train, labels
 
 
 def plot_curves(tr_loss, val_loss, tr_acc, val_acc, lr, momentum, lambd, **kwargs):
@@ -46,5 +46,4 @@ def plot_curves(tr_loss, val_loss, tr_acc, val_acc, lr, momentum, lambd, **kwarg
     ax[1].set_ylim((0., 1.1))
     ax[1].grid()
     plt.show()
-
 
