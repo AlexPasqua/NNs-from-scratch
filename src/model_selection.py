@@ -1,5 +1,6 @@
 import numpy as np
 from network.network import Network
+import tqdm
 
 
 def cross_valid(net, tr_val_x, tr_val_y, loss, metr, lr, lr_decay=None, limit_step=None, opt='gd', momentum=0.,
@@ -11,9 +12,11 @@ def cross_valid(net, tr_val_x, tr_val_y, loss, metr, lr, lr_decay=None, limit_st
     # initialize vectors for plots
     tr_error_values, tr_metric_values = np.zeros(epochs), np.zeros(epochs)
     val_error_values, val_metric_values = np.zeros(epochs), np.zeros(epochs)
+    val_acc = []
+    val_loss = []
 
     # CV cycle
-    for i in range(k_folds):
+    for i in tqdm.tqdm(range(k_folds), desc='Iterating over folds', disable=True):
         # create validation set and training set using the folds
         valid_set = x_folds[i]
         valid_targets = y_folds[i]
@@ -45,17 +48,28 @@ def cross_valid(net, tr_val_x, tr_val_y, loss, metr, lr, lr_decay=None, limit_st
             epochs=epochs,
             batch_size=batch_size
         )
+        # metrics for the graph
         tr_error_values += tr_err
         tr_metric_values += tr_metric
         val_error_values += val_err
         val_metric_values += val_metric
+        val_acc.append(val_metric[-1])
+        val_loss.append(val_err[-1])
 
         # reset net's weights and compile the "new" model
         net = Network(**net.params)
-
     # average the validation results of every fold
     tr_error_values /= float(k_folds)
     tr_metric_values /= float(k_folds)
     val_error_values /= float(k_folds)
     val_metric_values /= float(k_folds)
+
+    # print k-fold metrics
+    print("\nValidation scores per fold:")
+    for i in range(k_folds):
+        print(f"Fold {i + 1} - Loss: {val_loss[i]} - Accuracy: {val_acc[i]}")
+        print("--------------------------------------------------------------")
+    print('\nAverage validation scores for all folds:')
+    print(f"Loss: {np.mean(val_loss)} - std:(+/- {np.std(val_loss)})\nAccuracy: {np.mean(val_acc)} - std:(+/- {np.std(val_acc)})")
+
     return tr_error_values, tr_metric_values, val_error_values, val_metric_values

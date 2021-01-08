@@ -1,6 +1,4 @@
 import numpy as np
-from numbers import Number
-import math
 
 
 class Function:

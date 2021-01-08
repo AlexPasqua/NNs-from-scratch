@@ -11,7 +11,7 @@ if __name__ == '__main__':
         'units_per_layer': (4, 1),
         'acts': ('leaky_relu', 'tanh'),
         'init_type': 'random',
-        'weights_value': 0.2,
+        'init_value': 0.2,
         'lower_lim': -0.1,
         'upper_lim': 0.1
     }

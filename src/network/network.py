@@ -181,8 +181,6 @@ class Network:
             weights_matrix = self.__layers[layer_index].weights
             struct[layer_index]['weights'] = np.zeros(shape=(len(weights_matrix[:, 0]), len(weights_matrix[0, :])))
             struct[layer_index]['biases'] = np.zeros(shape=(len(weights_matrix[0, :])))
-            # struct[layer_index]['weights'] = np.array([0.] * len(self.__layers[layer_index].weights))
-            # struct[layer_index]['biases'] = np.array([0.] * len(self.__layers[layer_index].biases))
         return struct
 
     def print_net(self):
