@@ -11,7 +11,7 @@ if __name__ == '__main__':
         'units_per_layer': (4, 1),
         'acts': ('leaky_relu', 'tanh'),
         'init_type': 'random',
-        'weights_value': 0.2,
+        'init_value': 0.2,
         'lower_lim': -0.1,
         'upper_lim': 0.1
     }
@@ -28,7 +28,8 @@ if __name__ == '__main__':
 
     # transform labels from pandas dataframe to numpy ndarray
     labels = labels.to_numpy()[:, np.newaxis]
-    labels[labels == 0] = -1
+    if parameters['acts'][-1] == 'tanh':  # fix targets to match output value range
+        labels[labels == 0] = -1
 
     # shuffle the whole dataset once
     indexes = list(range(len(monk1_train)))
@@ -36,48 +37,48 @@ if __name__ == '__main__':
     monk1_train = monk1_train[indexes]
     labels = labels[indexes]
 
-    # cross validation
-    tr_error_values, tr_metric_values, val_error_values, val_metric_values = cross_valid(
-        net=model,
-        tr_val_x=monk1_train,
-        tr_val_y=labels,
-        loss='squared',
-        metr='bin_class_acc',
-        lr=0.3,
-        # lr_decay='linear',
-        # limit_step=200,
-        opt='gd',
-        momentum=0.8,
-        epochs=600,
-        batch_size='full',
-        k_folds=8,
-        # reg_type='l2',
-        # lambd=0.005
-    )
-
-    # # hold-out validation
-    # model.compile(opt='gd', loss='squared', metr='bin_class_acc', lr=0.2, momentum=0.6)
-    # tr_error_values, tr_metric_values, val_error_values, val_metric_values = model.fit(
-    #     tr_x=monk1_train,
-    #     tr_y=labels,
-    #     epochs=50,
-    #     val_split=0.2,
+    # # cross validation
+    # tr_error_values, tr_metric_values, val_error_values, val_metric_values = cross_valid(
+    #     net=model,
+    #     tr_val_x=monk1_train,
+    #     tr_val_y=labels,
+    #     loss='squared',
+    #     metr='bin_class_acc',
+    #     lr=0.3,
+    #     # lr_decay='linear',
+    #     # limit_step=200,
+    #     opt='gd',
+    #     momentum=0.6,
+    #     epochs=600,
     #     batch_size='full',
+    #     k_folds=8,
+    #     reg_type='l2',
+    #     lambd=0.005
     # )
+
+    # hold-out validation
+    model.compile(opt='gd', loss='squared', metr='bin_class_acc', lr=0.3, momentum=0.6)
+    tr_error_values, tr_metric_values, val_error_values, val_metric_values = model.fit(
+        tr_x=monk1_train,
+        tr_y=labels,
+        epochs=800,
+        val_split=0.,
+        batch_size='full',
+    )
 
     # plot learning curve
     figure, ax = plt.subplots(1, 2, figsize=(12, 4))
     ax[0].plot(range(len(tr_error_values)), tr_error_values, color='b', linestyle='dashed', label='training error')
-    ax[0].plot(range(len(tr_error_values)), val_error_values, color='r', label='validation error')
+    ax[0].plot(range(len(val_error_values)), val_error_values, color='r', label='validation error')
     ax[0].legend(loc='best', prop={'size': 6})
     ax[0].set_xlabel('Epochs', fontweight='bold')
     ax[0].set_ylabel('Loss', fontweight='bold')
     ax[0].grid()
     ax[1].plot(range(len(tr_metric_values)), tr_metric_values, color='b', linestyle='dashed', label='training accuracy')
-    ax[1].plot(range(len(tr_metric_values)), val_metric_values, color='r', label='validation accuracy')
+    ax[1].plot(range(len(val_metric_values)), val_metric_values, color='r', label='validation accuracy')
     ax[1].legend(loc='best', prop={'size': 6})
     ax[1].set_xlabel('Epochs', fontweight='bold')
     ax[1].set_ylabel('Accuracy', fontweight='bold')
-    ax[1].set_ylim((0., 1.2))
+    ax[1].set_ylim((-0.05, 1.05))
     ax[1].grid()
     plt.show()
