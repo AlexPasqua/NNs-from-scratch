@@ -4,10 +4,10 @@ from sklearn.preprocessing import OneHotEncoder
 import matplotlib.pyplot as plt
 
 
-def read_monk(filename):
+def read_monk(name, rescale=False):
     # read the dataset
     col_names = ['class', 'a1', 'a2', 'a3', 'a4', 'a5', 'a6', 'Id']
-    monk_train = pd.read_csv(f"../datasets/monks/{str(filename)}.train", sep=' ', names=col_names)
+    monk_train = pd.read_csv(f"../datasets/monks/{str(name)}.train", sep=' ', names=col_names)
     monk_train.set_index('Id', inplace=True)
     labels = monk_train.pop('class')
 
@@ -15,8 +15,9 @@ def read_monk(filename):
     monk_train = OneHotEncoder().fit_transform(monk_train).toarray()
 
     # transform labels from pandas dataframe to numpy ndarray
-    labels = labels.to_numpy()[:, pd.np.newaxis]
-    labels[labels == 0] = -1
+    labels = labels.to_numpy()[:, np.newaxis]
+    if rescale:
+        labels[labels == 0] = -1
 
     # shuffle the whole dataset once
     indexes = list(range(len(monk_train)))
