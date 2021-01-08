@@ -19,7 +19,7 @@ if __name__ == '__main__':
 
     # read the dataset
     col_names = ['class', 'a1', 'a2', 'a3', 'a4', 'a5', 'a6', 'Id']
-    monk1_train = pd.read_csv("../datasets/monks/monks-2.train", sep=' ', names=col_names)
+    monk1_train = pd.read_csv("../datasets/monks/monks-1.train", sep=' ', names=col_names)
     monk1_train.set_index('Id', inplace=True)
     labels = monk1_train.pop('class')
 
@@ -50,9 +50,9 @@ if __name__ == '__main__':
         momentum=0.8,
         epochs=600,
         batch_size='full',
-        k_folds=10,
-        #reg_type='l2',
-        #lambd=0.005
+        k_folds=8,
+        # reg_type='l2',
+        # lambd=0.005
     )
 
     # # hold-out validation
@@ -75,7 +75,7 @@ if __name__ == '__main__':
     ax[0].grid()
     ax[1].plot(range(len(tr_metric_values)), tr_metric_values, color='b', linestyle='dashed', label='training accuracy')
     ax[1].plot(range(len(tr_metric_values)), val_metric_values, color='r', label='validation accuracy')
-    ax[1].legend(loc='best', prop={'size':6})
+    ax[1].legend(loc='best', prop={'size': 6})
     ax[1].set_xlabel('Epochs', fontweight='bold')
     ax[1].set_ylabel('Accuracy', fontweight='bold')
     ax[1].set_ylim((0., 1.2))
