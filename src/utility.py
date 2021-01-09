@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 from sklearn.preprocessing import OneHotEncoder
 import matplotlib.pyplot as plt
+import csv
 
 
 def read_monk(name, rescale=False):
@@ -26,6 +27,11 @@ def read_monk(name, rescale=False):
     labels = labels[indexes]
 
     return monk_train, labels
+
+
+def read_cup():
+    col_names = ['id', 'a1', 'a2', 'a3', 'a4', 'a5', 'a6', 'a7', 'a8', 'a9', 'a10', 'target_x', 'target_y']
+    cup_tr = pd.read_csv("../datasets/cup/ML-CUP20-TR.csv", sep=',', names=col_names, skiprows=range(7))
 
 
 def plot_curves(tr_loss, val_loss, tr_acc, val_acc, lr, momentum, lambd, **kwargs):
