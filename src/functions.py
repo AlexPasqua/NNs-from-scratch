@@ -52,6 +52,24 @@ class DerivableFunction(Function):
 """ Activation Functions """
 
 
+def identity(x):
+    """
+    Computes the identity function
+    :param x:  net -> input's weighted sum
+    :return: x
+    """
+    return x
+
+
+def indentity_deriv(x):
+    """
+    Computes the derivative of the identity function
+    :param x: net -> input's weighted sum
+    :return: derivative of identity of x (i.e. 1)
+    """
+    return 1.
+
+
 def relu(x):
     """
     Computes the ReLU function:
@@ -230,11 +248,13 @@ def ridge_l2_deriv(w, lambd):
 """ Function objects and dictionaries to use them in other scripts """
 
 
+Identity = DerivableFunction(identity, indentity_deriv, 'identity')
 ReLU = DerivableFunction(relu, relu_deriv, 'ReLU')
 LeakyReLU = DerivableFunction(leaky_relu, leaky_relu_deriv, 'LeakyReLU')
 Sigmoid = DerivableFunction(sigmoid, sigmoid_deriv, 'Sigmoid')
 Tanh = DerivableFunction(tanh, tanh_deriv, 'Tanh')
 act_funcs = {
+    'identity': Identity,
     'relu': ReLU,
     'leaky_relu': LeakyReLU,
     'sigmoid': Sigmoid,
