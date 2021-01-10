@@ -5,6 +5,12 @@ import matplotlib.pyplot as plt
 
 
 def read_monk(name, rescale=False):
+    """
+    Reads the monks dataset
+    :param name: name of the dataset (either "monks-1", "monks-2" or "monks-3")
+    :param rescale: Whether or not to rescale the targets to [-1, +1]
+    :return: monk dataset and labels (as numpy ndarrays)
+    """
     # read the dataset
     col_names = ['class', 'a1', 'a2', 'a3', 'a4', 'a5', 'a6', 'Id']
     monk_train = pd.read_csv(f"../datasets/monks/{str(name)}.train", sep=' ', names=col_names)
