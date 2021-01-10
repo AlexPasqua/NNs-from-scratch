@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-from sklearn.preprocessing import OneHotEncoder
+from sklearn.preprocessing import OneHotEncoder, MinMaxScaler, StandardScaler
 import matplotlib.pyplot as plt
 
 
@@ -29,23 +29,28 @@ def read_monk(name, rescale=False):
 
 
 def read_cup():
-    # TODO: normalize
     # read the dataset
-    filename = "../datasets/cup/ML-CUP20-TR.csv"
+    directory = "../datasets/cup/"
+    file = "ML-CUP20-TR.csv"
     col_names = ['id', 'a1', 'a2', 'a3', 'a4', 'a5', 'a6', 'a7', 'a8', 'a9', 'a10', 'target_x', 'target_y']
-    cup_tr_data = pd.read_csv(filename, sep=',', names=col_names, skiprows=range(7), usecols=range(1, 11))
-    cup_tr_targets = pd.read_csv(filename, sep=',', names=col_names, skiprows=range(7), usecols=range(11, 13))
-    print(cup_tr_targets.describe())
+    cup_tr_data = pd.read_csv(directory + file, sep=',', names=col_names, skiprows=range(7), usecols=range(1, 11))
+    cup_tr_targets = pd.read_csv(directory + file, sep=',', names=col_names, skiprows=range(7), usecols=range(11, 13))
+    file = "ML-CUP20-TS.csv"
+    cup_ts_data = pd.read_csv(directory + file, sep=',', names=col_names[: -2], skiprows=range(7))
     cup_tr_data = cup_tr_data.to_numpy()
     cup_tr_targets = cup_tr_targets.to_numpy()
+    cup_ts_data = cup_ts_data.to_numpy()
 
-    # shuffle the whole dataset once
+    # shuffle the training dataset once
     indexes = list(range(cup_tr_targets.shape[0]))
     np.random.shuffle(indexes)
     cup_tr_data = cup_tr_data[indexes]
     cup_tr_targets = cup_tr_targets[indexes]
 
-    return cup_tr_data, cup_tr_targets
+    # standardize the targets
+    # cup_tr_targets = StandardScaler().fit_transform(cup_tr_targets)
+
+    return cup_tr_data, cup_tr_targets, cup_ts_data
 
 
 def plot_curves(tr_loss, val_loss, tr_acc, val_acc, lr, momentum, lambd, **kwargs):

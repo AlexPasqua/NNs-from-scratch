@@ -3,9 +3,6 @@ from model_selection import cross_valid
 from utility import read_monk, plot_curves
 
 if __name__ == '__main__':
-    # read the dataset
-    monk_train, labels = read_monk(name='monks-1', rescale=True)
-
     model_params = {
         'input_dim': 17,
         'units_per_layer': (4, 1),
@@ -17,16 +14,20 @@ if __name__ == '__main__':
     }
     model = Network(**model_params)
 
+    # read the dataset
+    rescale = True if model_params['acts'][-1] in ('tanh',) else False
+    monk_train, labels = read_monk(name='monks-1', rescale=rescale)
+
     training_params = {
         'lr': 0.3,
         'momentum': 0.6,
-        'lambd': 0.0,
+        'lambd': 0.,
         'reg_type': 'l2',
         # 'lr_decay':'linear',
         # 'limit_step':200,
         'loss': 'squared',
         'opt': 'gd',
-        'epochs': 600,
+        'epochs': 800,
         'batch_size': 'full',
         'metr': 'bin_class_acc'
     }
@@ -36,7 +37,7 @@ if __name__ == '__main__':
         net=model,
         tr_val_x=monk_train,
         tr_val_y=labels,
-        k_folds=8,
+        k_folds=9,
         **training_params
     )
 
