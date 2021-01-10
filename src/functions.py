@@ -161,39 +161,27 @@ def tanh_deriv(x):
 
 def squared_loss(predicted, target):
     """
-    Computes the mean squared error between
-    the targ vector and the output pred by the net
-
+    Computes the mean squared error between the targ vector and the output pred by the net
     :param predicted: ndarray of shape (n, m) – Predictions for the n examples
     :param target: ndarray of shape (n, m) – Ground truth w_vals for each of n examples
     :return: loss in terms of mse (Mean Squared Error)
     """
-    # Check shapes
-    predicted = np.array(predicted)
-    target = np.array(target)
-    if predicted.shape != target.shape:
-        raise AttributeError(f"Mismatching shapes in Squared Loss: predictions shape: "
-                             f"{predicted.shape} - targets shape {target.shape}")
-    return 0.5 * np.square(target - predicted)  # "0.5" is to make the gradient simpler
+    return 0.5 * np.square(np.subtract(target, predicted))  # "0.5" is to make the gradient simpler
 
 
 def squared_loss_deriv(predicted, target):
     """
-    Computes the derivative of the mean squared error between
-    the targ vector and the output pred by the net
-
+    Computes the derivative of the mean squared error between the targ vector and the output pred by the net
     :param predicted: ndarray of shape (n, m) – Predictions for the n examples
     :param target: ndarray of shape (n, m) – Ground truth w_vals for each of n examples
     :return: derivative of the mse (Mean Squared Error)
     """
-    predicted = np.array(predicted)
-    target = np.array(target)
-    if predicted.shape != target.shape:
-        raise Exception(f"Mismatching shapes in MSE: predictions shape: "
-                        f"{predicted.shape} - targets shape {target.shape}")
-
     # exponent 2 in the deriv becomes a multiplying constant and simplifies itself with the denominator of the func
-    return predicted - target
+    return np.subtract(predicted, target)
+
+
+# def euclidean_loss(predicted, target):
+
 
 
 """ Metrics """

@@ -25,7 +25,7 @@ class Optimizer(ABC):
             raise ValueError('lr should be a value between 0 and 1, Got:{}'.format(lr))
         self.__net = net
         self.__loss = losses[loss]
-        self.__metric = metrics[metr]
+        self.__metric = metrics[metr] if metr is not None else None
         self.lr = lr
         self.base_lr = self.lr
         self.final_lr = self.base_lr / 100.0
@@ -124,7 +124,8 @@ class GradientDescent(Optimizer, ABC):
                         np.add(epoch_tr_error, self.loss.func(predicted=net_outputs, target=target)),
                         regularization
                     )
-                    epoch_tr_metric = np.add(epoch_tr_metric, self.metr.func(predicted=net_outputs, target=target))
+                    if self.metr is not None:
+                        epoch_tr_metric = np.add(epoch_tr_metric, self.metr.func(predicted=net_outputs, target=target))
                     dErr_dOut = self.loss.deriv(predicted=net_outputs, target=target)
                     # set the layers' gradients and add them into grad_net
                     # (emulate pass by reference of grad_net using return and reassign)
@@ -171,16 +172,19 @@ class GradientDescent(Optimizer, ABC):
                 for pattern, target in zip(val_x, val_y):
                     net_outputs = net.forward(inp=pattern)
                     epoch_val_error = np.add(epoch_val_error, self.loss.func(predicted=net_outputs, target=target))
-                    epoch_val_metric = np.add(epoch_val_metric, self.metr.func(predicted=net_outputs, target=target))
+                    if self.metr is not None:
+                        epoch_val_metric = np.add(epoch_val_metric, self.metr.func(predicted=net_outputs, target=target))
                 epoch_val_error = np.sum(epoch_val_error) / float(len(epoch_val_error))
-                epoch_val_metric = np.sum(epoch_val_metric) / float(len(epoch_val_metric))
                 val_error_values.append(epoch_val_error / float(len(val_x)))
-                val_metric_values.append(epoch_val_metric / float(len(val_x)))
+                if self.metr is not None:
+                    epoch_val_metric = np.sum(epoch_val_metric) / float(len(epoch_val_metric))
+                    val_metric_values.append(epoch_val_metric / float(len(val_x)))
 
             epoch_tr_error = np.sum(epoch_tr_error) / float(len(epoch_tr_error))
-            epoch_tr_metric = np.sum(epoch_tr_metric) / float(len(epoch_tr_metric))
             tr_error_values.append(epoch_tr_error / float(len(tr_x)))
-            tr_metric_values.append(epoch_tr_metric / float(len(tr_x)))
+            if self.metr is not None:
+                epoch_tr_metric = np.sum(epoch_tr_metric) / float(len(epoch_tr_metric))
+                tr_metric_values.append(epoch_tr_metric / float(len(tr_x)))
 
         return tr_error_values, tr_metric_values, val_error_values, val_metric_values
 
