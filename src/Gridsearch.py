@@ -9,6 +9,18 @@ def grid_search(net, params, folds):
     # create directory
     os.makedirs("grid_reports", exist_ok=True)
     timestamp = datetime.today().isoformat().replace(':', '_')
+    # write file
+
+    # grid_search results
+    res_grid = []
+
+    # call cross_valid with hyper-params from get_RandParams
+
+
+    # append results to res_grid
+
+    # return res_grid
+
     pass
 
 
@@ -29,7 +41,7 @@ def get_Params(params):
     return res
 
 
-def get_randParams(params):
+def get_RandParams(params):
     """
     Generate a list of dictionaries of random hyper-parameters for a grid search
     """
@@ -54,7 +66,6 @@ def get_randParams(params):
 
 
 if __name__ == '__main__':
-
     hyp_params = [
         {
             'units_per_layer': [(10, 1), (20, 1), (50, 1), (100, 1), (5, 1)],
@@ -71,4 +82,4 @@ if __name__ == '__main__':
         }
     ]
 
-    print(get_randParams(hyp_params))
+    print(get_RandParams(hyp_params))
