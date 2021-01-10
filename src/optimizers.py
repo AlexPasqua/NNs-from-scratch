@@ -89,17 +89,12 @@ class GradientDescent(Optimizer, ABC):
             epoch_val_error = np.zeros(net.layers[-1].n_units)
             epoch_val_metric = np.zeros(net.layers[-1].n_units)
 
-            # shuffle the datasets (training & validation) internally
+            # shuffle the training set if using mini-batches (or stochastic)
             if batch_size != tr_x.shape[0]:
                 indexes = list(range(len(tr_x)))
                 np.random.shuffle(indexes)
                 tr_x = tr_x[indexes]
                 tr_y = tr_y[indexes]
-                if val_x is not None:
-                    indexes = list(range(len(val_x)))
-                    np.random.shuffle(indexes)
-                    val_x = val_x[indexes]
-                    val_y = val_y[indexes]
 
             # cycle through batches
             for batch_index in range(math.ceil(len(tr_x) / batch_size)):
