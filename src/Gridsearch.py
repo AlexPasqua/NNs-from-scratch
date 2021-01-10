@@ -1,42 +1,56 @@
 import os
 from datetime import datetime
 from itertools import product
+import random as random
+import numpy as np
 
 
 def grid_search(net, params, folds):
     # create directory
     os.makedirs("grid_reports", exist_ok=True)
     timestamp = datetime.today().isoformat().replace(':', '_')
-
-    filename = "grid_reports/" + net.__class__.__name__ + "_" + timestamp
-
-    with open(filename + ".gsv", 'w', buffering=1):
-        pass
+    pass
 
 
 def get_Params(params):
     """
     Generate a list of dictionaries containing hyper-parameters combination to be used for a coarse grid-search
-    :param params: list of dictionaries of hyper-parameter values
     """
     res = []
     params = [params]
     for line in params:
-        for p in line:
-            items = sorted(p.items())
+        for par in line:
+            items = sorted(par.items())
 
             keys, values = zip(*items)
-            for v in product(*values):
-                par = dict(zip(keys, v))
-                res.append(par)
+            for val in product(*values):
+                param = dict(zip(keys, val))
+                res.append(param)
     return res
 
 
-def get_randParams():
+def get_randParams(params):
     """
-    Generate random hyper-parameters for a grid search
+    Generate a list of dictionaries of random hyper-parameters for a grid search
     """
-    pass
+    params = [params]
+    rand_res = []
+    for line in params:
+        for par in line:
+            items = sorted(par.items())
+            if not items:
+                return
+            else:
+                pa = {}
+                keys, values = zip(*items)
+                for k, vl in zip(keys, values):
+                    isnumber = all(type(v) in (int, float) for v in vl)
+                    if isnumber:
+                        pa[k] = [np.random.uniform(min(vl), max(vl))]
+                    else:
+                        pa[k] = random.choice(vl)
+                rand_res.append(pa)
+    return rand_res
 
 
 if __name__ == '__main__':
@@ -47,9 +61,9 @@ if __name__ == '__main__':
             'momentum': [0., 0.9],
             'batch_size': [1, 5, 10, 50, 100, 'full'],
             'lr': [0.001, 0.3],
-            'learning_rate_init': [0.1, 2],
+            'learning_rate_init': [0.1, 0.9],
             'lr_decay': ['linear'],
-            'limit_step': [200, 300, 400, 500, 1000, 2000],
+            'limit_step': [200, 5000],
             'acts': ['leaky_relu', 'relu', 'tanh', 'sigmoid'],
             'init_type': ['random'],
             'lower_lim': [-0.1, 0.05],
@@ -57,4 +71,4 @@ if __name__ == '__main__':
         }
     ]
 
-    print(get_Params(hyp_params))
+    print(get_randParams(hyp_params))
