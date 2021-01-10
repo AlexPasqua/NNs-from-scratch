@@ -24,6 +24,10 @@ Install pip:<br>
 Install requirements:<br>
 `python -m pip install --requirement requirements.txt`
 
+MONKS demo:
+```
+```
+
 Create the NN and execute an inference:<br>
 ```
 python src/network.py [--input_dim INPUT_DIM] [--inputs INPUTS] [--units_per_layer UNITS_PER_LAYER] [--act_funcs ACT_FUNCS] [--verbose]
