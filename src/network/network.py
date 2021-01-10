@@ -83,7 +83,7 @@ class Network:
             x = layer.forward_pass(x)
         return x
 
-    def compile(self, opt='gd', loss='squared', metr=None, lr=0.01, lr_decay=None, limit_step=None,
+    def compile(self, opt='gd', loss='squared', metr='bin_class_acc', lr=0.01, lr_decay=None, limit_step=None,
                 momentum=0., reg_type='l2', lambd=0):
         """
         Prepares the network for training by assigning an optimizer to it

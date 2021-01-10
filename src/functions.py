@@ -38,17 +38,6 @@ class DerivableFunction(Function):
         return self.__deriv
 
 
-# def check_is_number(x):
-#     if isinstance(x, str):
-#         raise AttributeError(f"Input must be a number, got {type(x)}")
-#     if not isinstance(x, Number):
-#         if hasattr(x, '__iter__') and all(n == 1 for n in np.shape(x)):
-#             while hasattr(x, '__iter__'):
-#                 x = x[0]
-#         if not isinstance(x, Number):
-#             raise AttributeError(f"Input must be a number. Got {type(x)}")
-
-
 """ Activation Functions """
 
 
@@ -161,27 +150,23 @@ def tanh_deriv(x):
 
 def squared_loss(predicted, target):
     """
-    Computes the mean squared error between the targ vector and the output pred by the net
+    Computes the squared error between the targ vector and the output pred by the net
     :param predicted: ndarray of shape (n, m) – Predictions for the n examples
     :param target: ndarray of shape (n, m) – Ground truth w_vals for each of n examples
-    :return: loss in terms of mse (Mean Squared Error)
+    :return: loss in terms of squared error
     """
     return 0.5 * np.square(np.subtract(target, predicted))  # "0.5" is to make the gradient simpler
 
 
 def squared_loss_deriv(predicted, target):
     """
-    Computes the derivative of the mean squared error between the targ vector and the output pred by the net
+    Computes the derivative of the squared error between the targ vector and the output pred by the net
     :param predicted: ndarray of shape (n, m) – Predictions for the n examples
     :param target: ndarray of shape (n, m) – Ground truth w_vals for each of n examples
-    :return: derivative of the mse (Mean Squared Error)
+    :return: derivative of the squared error
     """
     # exponent 2 in the deriv becomes a multiplying constant and simplifies itself with the denominator of the func
     return np.subtract(predicted, target)
-
-
-# def euclidean_loss(predicted, target):
-
 
 
 """ Metrics """
@@ -193,6 +178,16 @@ def binary_class_accuracy(predicted, target):
     if np.abs(predicted - target) < 0.3:
         return np.array([1])
     return np.array([0])
+
+
+def euclidean_loss(predicted, target):
+    """
+    Computes the euclidean error between the targ vector and the output pred by the net
+    :param predicted: ndarray of shape (n, m) – Predictions for the n examples
+    :param target: ndarray of shape (n, m) – Ground truth w_vals for each of n examples
+    :return: loss in terms of euclidean error
+    """
+    return np.linalg.norm(np.subtract(predicted, target))
 
 
 """ Learning rate decay """
@@ -255,8 +250,10 @@ losses = {
 }
 
 BinClassAcc = Function(binary_class_accuracy, 'class_acc')
+Euclidean = Function(euclidean_loss, 'euclidean')
 metrics = {
-    'bin_class_acc': BinClassAcc
+    'bin_class_acc': BinClassAcc,
+    'euclidean': Euclidean
 }
 
 LinearLRDecay = Function(linear_lr_dec, 'linear')

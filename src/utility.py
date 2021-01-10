@@ -48,12 +48,13 @@ def read_cup():
     cup_tr_targets = cup_tr_targets[indexes]
 
     # standardize the targets
-    # cup_tr_targets = StandardScaler().fit_transform(cup_tr_targets)
+    cup_tr_data = StandardScaler().fit_transform(cup_tr_data)
+    cup_tr_targets = MinMaxScaler().fit_transform(cup_tr_targets)
 
     return cup_tr_data, cup_tr_targets, cup_ts_data
 
 
-def plot_curves(tr_loss, val_loss, tr_acc, val_acc, lr, momentum, lambd, **kwargs):
+def plot_curves(tr_loss, val_loss, tr_acc, val_acc, lr=None, momentum=None, lambd=None, **kwargs):
     # plot learning curve
     figure, ax = plt.subplots(1, 2, figsize=(12, 4))
     ax[0].plot(range(len(tr_loss)), tr_loss, color='b', linestyle='dashed', label='training error')
