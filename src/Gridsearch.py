@@ -9,7 +9,10 @@ def grid_search(net, params, folds):
     # create directory
     os.makedirs("grid_reports", exist_ok=True)
     timestamp = datetime.today().isoformat().replace(':', '_')
+    filename = 'grid_reports/grid_table__'+ timestamp
     # write file
+    #with open(filename +'.gsv', 'w') as file:
+
 
     # grid_search results
     res_grid = []
@@ -61,6 +64,7 @@ def get_RandParams(params):
                         pa[k] = [np.random.uniform(min(vl), max(vl))]
                     else:
                         pa[k] = random.choice(vl)
+
                 rand_res.append(pa)
     return rand_res
 
@@ -75,7 +79,7 @@ if __name__ == '__main__':
             'learning_rate_init': [0.1, 0.9],
             'lr_decay': ['linear'],
             'limit_step': [200, 5000],
-            'acts': ['leaky_relu', 'relu', 'tanh', 'sigmoid'],
+            'acts': [('leaky_relu', 'tanh'),('tanh','tanh'),('leaky_relu','sigmoid'),('relu','tanh'),('relu','sigmoid') ,('sigmoid','sigmoid')],
             'init_type': ['random'],
             'lower_lim': [-0.1, 0.05],
             'upper_lim': [0.1, 0.3]
@@ -83,3 +87,4 @@ if __name__ == '__main__':
     ]
 
     print(get_RandParams(hyp_params))
+
