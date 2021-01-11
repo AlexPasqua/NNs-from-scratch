@@ -4,7 +4,7 @@ import numpy as np
 def weights_inits(init_type, **kwargs):
     inits = {
         'fixed': _fixed_init,
-        'random': _rand_init
+        'uniform': _rand_init
     }
     return inits[init_type](**kwargs)
 

@@ -10,7 +10,7 @@ if __name__ == '__main__':
         input_dim=len(cup_tr_data[0]),
         units_per_layer=(10, 10, 2),
         acts=('leaky_relu', 'leaky_relu', 'identity'),
-        init_type='random',
+        init_type='uniform',
         lower_lim=0.0001,
         upper_lim=0.001,
     )

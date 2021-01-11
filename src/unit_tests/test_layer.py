@@ -18,7 +18,7 @@ class TestLayer(unittest.TestCase):
             inp_dim=self.fanin,
             n_units=self.n_units,
             act='relu',
-            init_type='random',
+            init_type='uniform',
             lower_lim=lower_lim,
             upper_lim=upper_lim)
         for i in range(len(self.layer.weights)):
