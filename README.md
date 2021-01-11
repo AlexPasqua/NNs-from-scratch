@@ -24,14 +24,8 @@ Install pip:<br>
 Install requirements:<br>
 `python -m pip install --requirement requirements.txt`
 
-Create the NN and execute an inference:<br>
+MONKS demo:
 ```
-python src/network.py [--input_dim INPUT_DIM] [--inputs INPUTS] [--units_per_layer UNITS_PER_LAYER] [--act_funcs ACT_FUNCS] [--verbose]
+cd src/
+python monk_demo.py
 ```
-
-Arguments:
-* `INPUT_DIM`: integer representing the length of each data record
-* `INPUTS`: sequence of floats representing a single data record for inference
-* `UNITS_PER_LAYER`:  sequence of integers. The i-th number represents the number of units in the i-th layer
-* `ACT_FUNCS`: sequence of strings. The i-th string represents the activation function of the units in the i-th layer
-    * This parameter's values have to be chosen among {`relu`, `sigmoid`}
