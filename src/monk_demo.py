@@ -26,7 +26,7 @@ if __name__ == '__main__':
         # 'limit_step':200,
         'loss': 'squared',
         'opt': 'gd',
-        'epochs': 600,
+        'epochs': 100,
         'batch_size': 'full',
         'metr': 'bin_class_acc'
     }

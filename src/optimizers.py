@@ -140,8 +140,8 @@ class GradientDescent(Optimizer, ABC):
                 # weights update
                 for layer_index in range(len(net.layers)):
                     # grad_net contains the gradients of all the layers (and units) in the network
-                    grad_net[layer_index]['weights'] /= float(batch_size)
-                    grad_net[layer_index]['biases'] /= float(batch_size)
+                    grad_net[layer_index]['weights'] /= batch_size
+                    grad_net[layer_index]['biases'] /= batch_size
                     # delta_w is equivalent to lrn_rate * local_grad * input_on_that_connection (local_grad = delta)
                     delta_w = self.lr * grad_net[layer_index]['weights']
                     delta_b = self.lr * grad_net[layer_index]['biases']
@@ -168,15 +168,15 @@ class GradientDescent(Optimizer, ABC):
                     net_outputs = net.forward(inp=pattern)
                     epoch_val_error = np.add(epoch_val_error, self.loss.func(predicted=net_outputs, target=target))
                     epoch_val_metric = np.add(epoch_val_metric, self.metr.func(predicted=net_outputs, target=target))
-                epoch_val_error = np.sum(epoch_val_error) / float(len(epoch_val_error))
-                val_error_values.append(epoch_val_error / float(len(val_x)))
-                epoch_val_metric = np.sum(epoch_val_metric) / float(len(epoch_val_metric))
-                val_metric_values.append(epoch_val_metric / float(len(val_x)))
+                epoch_val_error = np.sum(epoch_val_error) / len(epoch_val_error)
+                val_error_values.append(epoch_val_error / len(val_x))
+                epoch_val_metric = np.sum(epoch_val_metric) / len(epoch_val_metric)
+                val_metric_values.append(epoch_val_metric / len(val_x))
 
-            epoch_tr_error = np.sum(epoch_tr_error) / float(len(epoch_tr_error))
-            tr_error_values.append(epoch_tr_error / float(len(tr_x)))
-            epoch_tr_metric = np.sum(epoch_tr_metric) / float(len(epoch_tr_metric))
-            tr_metric_values.append(epoch_tr_metric / float(len(tr_x)))
+            epoch_tr_error = np.sum(epoch_tr_error) / len(epoch_tr_error)
+            tr_error_values.append(epoch_tr_error / len(tr_x))
+            epoch_tr_metric = np.sum(epoch_tr_metric) / len(epoch_tr_metric)
+            tr_metric_values.append(epoch_tr_metric / len(tr_x))
 
         return tr_error_values, tr_metric_values, val_error_values, val_metric_values
 

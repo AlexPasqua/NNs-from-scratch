@@ -60,10 +60,10 @@ def cross_valid(net, tr_val_x, tr_val_y, loss, metr, lr, lr_decay=None, limit_st
         net = Network(**net.params)
 
     # average the validation results of every fold
-    tr_error_values /= float(k_folds)
-    tr_metric_values /= float(k_folds)
-    val_error_values /= float(k_folds)
-    val_metric_values /= float(k_folds)
+    tr_error_values /= k_folds
+    tr_metric_values /= k_folds
+    val_error_values /= k_folds
+    val_metric_values /= k_folds
 
     # print k-fold metrics
     print("\nValidation scores per fold:")
