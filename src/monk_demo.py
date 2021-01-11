@@ -1,5 +1,4 @@
-from network.network import Network
-from model_selection import cross_valid
+from network import Network
 from utility import read_monk, plot_curves
 
 if __name__ == '__main__':

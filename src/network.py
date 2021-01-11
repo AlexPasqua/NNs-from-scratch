@@ -1,5 +1,5 @@
 import warnings
-from network.layer import Layer
+from layer import Layer
 from optimizers import *
 
 

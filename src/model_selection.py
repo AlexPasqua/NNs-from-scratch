@@ -1,5 +1,5 @@
 import numpy as np
-from network.network import Network
+from network import Network
 import tqdm
 
 
@@ -74,3 +74,7 @@ def cross_valid(net, tr_val_x, tr_val_y, loss, metr, lr, lr_decay=None, limit_st
     print(f"Loss: {np.mean(val_loss)} - std:(+/- {np.std(val_loss)})\nAccuracy: {np.mean(val_acc)} - std:(+/- {np.std(val_acc)})")
 
     return tr_error_values, tr_metric_values, val_error_values, val_metric_values
+
+
+def grid_search():
+    pass
