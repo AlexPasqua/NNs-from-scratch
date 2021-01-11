@@ -169,13 +169,13 @@ class GradientDescent(Optimizer, ABC):
                     epoch_val_error = np.add(epoch_val_error, self.loss.func(predicted=net_outputs, target=target))
                     epoch_val_metric = np.add(epoch_val_metric, self.metr.func(predicted=net_outputs, target=target))
                 epoch_val_error = np.sum(epoch_val_error) / float(len(epoch_val_error))
-                epoch_val_metric = np.sum(epoch_val_metric) / float(len(epoch_val_metric))
                 val_error_values.append(epoch_val_error / float(len(val_x)))
+                epoch_val_metric = np.sum(epoch_val_metric) / float(len(epoch_val_metric))
                 val_metric_values.append(epoch_val_metric / float(len(val_x)))
 
             epoch_tr_error = np.sum(epoch_tr_error) / float(len(epoch_tr_error))
-            epoch_tr_metric = np.sum(epoch_tr_metric) / float(len(epoch_tr_metric))
             tr_error_values.append(epoch_tr_error / float(len(tr_x)))
+            epoch_tr_metric = np.sum(epoch_tr_metric) / float(len(epoch_tr_metric))
             tr_metric_values.append(epoch_tr_metric / float(len(tr_x)))
 
         return tr_error_values, tr_metric_values, val_error_values, val_metric_values

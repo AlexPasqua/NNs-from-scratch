@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-from sklearn.preprocessing import OneHotEncoder
+from sklearn.preprocessing import OneHotEncoder, MinMaxScaler, StandardScaler
 import matplotlib.pyplot as plt
 
 
@@ -34,7 +34,33 @@ def read_monk(name, rescale=False):
     return monk_train, labels
 
 
-def plot_curves(tr_loss, val_loss, tr_acc, val_acc, lr, momentum, lambd, **kwargs):
+def read_cup():
+    # read the dataset
+    directory = "../datasets/cup/"
+    file = "ML-CUP20-TR.csv"
+    col_names = ['id', 'a1', 'a2', 'a3', 'a4', 'a5', 'a6', 'a7', 'a8', 'a9', 'a10', 'target_x', 'target_y']
+    cup_tr_data = pd.read_csv(directory + file, sep=',', names=col_names, skiprows=range(7), usecols=range(1, 11))
+    cup_tr_targets = pd.read_csv(directory + file, sep=',', names=col_names, skiprows=range(7), usecols=range(11, 13))
+    file = "ML-CUP20-TS.csv"
+    cup_ts_data = pd.read_csv(directory + file, sep=',', names=col_names[: -2], skiprows=range(7))
+    cup_tr_data = cup_tr_data.to_numpy()
+    cup_tr_targets = cup_tr_targets.to_numpy()
+    cup_ts_data = cup_ts_data.to_numpy()
+
+    # shuffle the training dataset once
+    indexes = list(range(cup_tr_targets.shape[0]))
+    np.random.shuffle(indexes)
+    cup_tr_data = cup_tr_data[indexes]
+    cup_tr_targets = cup_tr_targets[indexes]
+
+    # standardization / normalization
+    # cup_tr_data = StandardScaler().fit_transform(cup_tr_data)
+    # cup_tr_targets = MinMaxScaler().fit_transform(cup_tr_targets)
+
+    return cup_tr_data, cup_tr_targets, cup_ts_data
+
+
+def plot_curves(tr_loss, val_loss, tr_acc, val_acc, lr=None, momentum=None, lambd=None, **kwargs):
     # plot learning curve
     figure, ax = plt.subplots(1, 2, figsize=(12, 4))
     ax[0].plot(range(len(tr_loss)), tr_loss, color='b', linestyle='dashed', label='training error')
@@ -50,7 +76,7 @@ def plot_curves(tr_loss, val_loss, tr_acc, val_acc, lr, momentum, lambd, **kwarg
     ax[1].set_title(f"eta: {lr} - alpha: {momentum} - lambda: {lambd}")
     ax[1].set_xlabel('Epochs', fontweight='bold')
     ax[1].set_ylabel('Accuracy', fontweight='bold')
-    ax[1].set_ylim((0., 1.1))
+    # ax[1].set_ylim((0., 1.1))
     ax[1].grid()
     plt.show()
 
