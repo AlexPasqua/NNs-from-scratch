@@ -53,9 +53,9 @@ def read_cup():
     cup_tr_data = cup_tr_data[indexes]
     cup_tr_targets = cup_tr_targets[indexes]
 
-    # standardize the targets
-    cup_tr_data = StandardScaler().fit_transform(cup_tr_data)
-    cup_tr_targets = MinMaxScaler().fit_transform(cup_tr_targets)
+    # standardization / normalization
+    # cup_tr_data = StandardScaler().fit_transform(cup_tr_data)
+    # cup_tr_targets = MinMaxScaler().fit_transform(cup_tr_targets)
 
     return cup_tr_data, cup_tr_targets, cup_ts_data
 
@@ -76,7 +76,7 @@ def plot_curves(tr_loss, val_loss, tr_acc, val_acc, lr=None, momentum=None, lamb
     ax[1].set_title(f"eta: {lr} - alpha: {momentum} - lambda: {lambd}")
     ax[1].set_xlabel('Epochs', fontweight='bold')
     ax[1].set_ylabel('Accuracy', fontweight='bold')
-    ax[1].set_ylim((0., 1.1))
+    # ax[1].set_ylim((0., 1.1))
     ax[1].grid()
     plt.show()
 
