@@ -1,5 +1,6 @@
 from utility import read_cup, plot_curves
 from network import Network
+from model_selection import grid_search
 
 if __name__ == '__main__':
     # read dataset
@@ -20,12 +21,15 @@ if __name__ == '__main__':
     tr_error_values, tr_metric_values, val_error_values, val_metric_values = model.fit(
         tr_x=cup_tr_data,
         tr_y=cup_tr_targets,
-        epochs=200,
+        epochs=150,
         val_split=0.2,
         batch_size=30,
     )
     print(f"Final values:\nTR loss: {tr_error_values[-1]}\tTR metric: {tr_metric_values[-1]}")
     print(f"VAL loss: {val_error_values[-1]}\tVAL metric: {val_metric_values[-1]}")
+
+    # grid search
+    # grid_search(cup_tr_data, cup_tr_targets)
 
     # plot graph
     plot_curves(
