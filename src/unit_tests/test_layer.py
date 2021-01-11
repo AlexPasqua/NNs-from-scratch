@@ -8,7 +8,7 @@ class TestLayer(unittest.TestCase):
     n_units = 5
     value = 0.2
     fanin = 3
-    layer = Layer(inp_dim=fanin, n_units=n_units, act='relu', init_type='uniform', lower_lim=-1, upper_lim=1,
+    layer = Layer(inp_dim=fanin, n_units=n_units, act='relu', init_type='fixed', lower_lim=-1, upper_lim=1,
                   init_value=value)
 
     def test_creation(self):
@@ -34,7 +34,7 @@ class TestLayer(unittest.TestCase):
 
     def test_backward_pass(self):
         fanin = 2
-        layer = Layer(inp_dim=fanin, n_units=2, act='relu', init_type='uniform', init_value=0.5)
+        layer = Layer(inp_dim=fanin, n_units=2, act='relu', init_type='fixed', init_value=0.5)
         layer.forward_pass(inp=[0.5] * fanin)  # needed to initialize outputs and weighted sums
         upstream_delta = np.array([0.5] * layer.n_units)
         res, grdw, grdb = layer.backward_pass(upstream_delta)

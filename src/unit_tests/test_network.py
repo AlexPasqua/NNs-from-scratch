@@ -7,7 +7,7 @@ class TestNetwork(unittest.TestCase):
         'input_dim': 3,
         'units_per_layer': (3, 1),
         'acts': ('sigmoid', 'sigmoid'),
-        'init_type': 'uniform',
+        'init_type': 'fixed',
         'init_value': 0.2,
     }
     net = Network(**params)
@@ -15,12 +15,12 @@ class TestNetwork(unittest.TestCase):
     def test_creation(self):
         self.assertEqual(len(self.params['units_per_layer']), len(self.net.layers))
         self.assertRaises(TypeError, Network, input_dim=2)  # if not all required arguments are passed
-        self.assertRaises(ValueError, Network, input_dim=-2, units_per_layer=2, acts='relu', init_type='uniform')
-        self.assertRaises(ValueError, Network, input_dim=2, units_per_layer=(2, -2), acts='relu', init_type='uniform')
-        self.assertRaises(AttributeError, Network, input_dim=2, units_per_layer=(2, 2), acts='relu', init_type='uniform')
+        self.assertRaises(ValueError, Network, input_dim=-2, units_per_layer=2, acts='relu', init_type='fixed')
+        self.assertRaises(ValueError, Network, input_dim=2, units_per_layer=(2, -2), acts='relu', init_type='fixed')
+        self.assertRaises(AttributeError, Network, input_dim=2, units_per_layer=(2, 2), acts='relu', init_type='fixed')
 
     def test_forward(self):
-        net = Network(input_dim=3, units_per_layer=[2, 2], acts=['relu', 'relu'], init_type='uniform', init_value=0.5)
+        net = Network(input_dim=3, units_per_layer=[2, 2], acts=['relu', 'relu'], init_type='fixed', init_value=0.5)
         self.assertRaises(ValueError, net.forward, inp='hello')
         self.assertRaises(ValueError, net.forward, inp=2)
         self.assertRaises(ValueError, net.forward, inp=(1, 1))
@@ -39,7 +39,7 @@ class TestNetwork(unittest.TestCase):
         self.assertRaises(ValueError, self.net.compile, momentum=2)
 
     def test_fit(self):
-        net = Network(input_dim=3, units_per_layer=[6, 2], acts=['relu', 'relu'], init_type='uniform', init_value=0.2)
+        net = Network(input_dim=3, units_per_layer=[6, 2], acts=['relu', 'relu'], init_type='fixed', init_value=0.2)
         self.assertRaises(AttributeError, net.fit, tr_x=[1, 1], tr_y=[1, 2, 3])
         self.assertRaises(AttributeError, net.fit, tr_x=[[1, 1], [1, 1]], tr_y=[[1, 2]])
         self.assertRaises(AttributeError, net.fit, tr_x=[[1, 1], [1, 1]], tr_y=[1, 2], val_x=[1, 1], val_y=[1, 2, 3])

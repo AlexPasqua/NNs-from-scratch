@@ -3,13 +3,13 @@ import numpy as np
 
 def weights_inits(init_type, **kwargs):
     inits = {
-        'uniform': _uniform_init,
+        'fixed': _fixed_init,
         'random': _rand_init
     }
     return inits[init_type](**kwargs)
 
 
-def _uniform_init(n_weights, n_units, init_value, **kwargs):
+def _fixed_init(n_weights, n_units, init_value, **kwargs):
     if n_weights == 1:
         return np.full(shape=n_units, fill_value=init_value)
     return np.full(shape=(n_weights, n_units), fill_value=init_value)

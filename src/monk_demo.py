@@ -31,24 +31,24 @@ if __name__ == '__main__':
         'metr': 'bin_class_acc'
     }
 
-    # cross validation
-    tr_error_values, tr_metric_values, val_error_values, val_metric_values = cross_valid(
-        net=model,
-        tr_val_x=monk_train,
-        tr_val_y=labels,
-        k_folds=8,
-        **training_params
-    )
-
-    # # hold-out validation
-    # model.compile(opt='gd', loss='squared', metr='bin_class_acc', lr=0.2, momentum=0.6)
-    # tr_error_values, tr_metric_values, val_error_values, val_metric_values = model.fit(
-    #     tr_x=monk_train,
-    #     tr_y=labels,
-    #     epochs=1000,
-    #     val_split=0.2,
-    #     batch_size='full',
+    # # cross validation
+    # tr_error_values, tr_metric_values, val_error_values, val_metric_values = cross_valid(
+    #     net=model,
+    #     tr_val_x=monk_train,
+    #     tr_val_y=labels,
+    #     k_folds=8,
+    #     **training_params
     # )
+
+    # hold-out validation
+    model.compile(opt='gd', loss='squared', metr='bin_class_acc', lr=0.2, momentum=0.6)
+    tr_error_values, tr_metric_values, val_error_values, val_metric_values = model.fit(
+        tr_x=monk_train,
+        tr_y=labels,
+        epochs=100,
+        val_split=0.,
+        batch_size='full',
+    )
 
     # plot graph
     plot_curves(

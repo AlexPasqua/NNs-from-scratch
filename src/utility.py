@@ -61,21 +61,20 @@ def read_cup():
 
 
 def plot_curves(tr_loss, val_loss, tr_acc, val_acc, lr=None, momentum=None, lambd=None, **kwargs):
-    # plot learning curve
     figure, ax = plt.subplots(1, 2, figsize=(12, 4))
     ax[0].plot(range(len(tr_loss)), tr_loss, color='b', linestyle='dashed', label='training error')
     ax[0].plot(range(len(val_loss)), val_loss, color='r', label='validation error')
     ax[0].legend(loc='best', prop={'size': 6})
     ax[0].set_xlabel('Epochs', fontweight='bold')
     ax[0].set_ylabel('Loss', fontweight='bold')
-    ax[0].grid()
     ax[0].set_title(f"eta: {lr} - alpha: {momentum} - lambda: {lambd}")
+    ax[0].grid()
     ax[1].plot(range(len(tr_acc)), tr_acc, color='b', linestyle='dashed', label='training accuracy')
     ax[1].plot(range(len(val_acc)), val_acc, color='r', label='validation accuracy')
     ax[1].legend(loc='best', prop={'size': 6})
-    ax[1].set_title(f"eta: {lr} - alpha: {momentum} - lambda: {lambd}")
     ax[1].set_xlabel('Epochs', fontweight='bold')
     ax[1].set_ylabel('Accuracy', fontweight='bold')
+    ax[1].set_title(f"eta: {lr} - alpha: {momentum} - lambda: {lambd}")
     # ax[1].set_ylim((0., 1.1))
     ax[1].grid()
     plt.show()
