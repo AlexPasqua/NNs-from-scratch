@@ -82,7 +82,7 @@ def cross_valid(net, tr_val_x, tr_val_y, loss, metr, lr, lr_decay=None, limit_st
 def grid_search(dev_set_x, dev_set_y):
     grid_search_params = {
         'units_per_layer': ((10, 10, 2),),
-        'acts': (('leaky_relu', 'leaky_relu', 'tanh'),),
+        'acts': (('leaky_relu', 'leaky_relu', 'identity'),),
         'momentum': (0.6,),
         'batch_size': (30,),
         'lr': (0.0002,),
@@ -99,6 +99,14 @@ def grid_search(dev_set_x, dev_set_y):
                         for init_type in grid_search_params['init_type']:
                             for lower_lim in grid_search_params['lower_lim']:
                                 for upper_lim in grid_search_params['upper_lim']:
-                                    model = Network(10, units_per_layer, acts, init_type, lower_lim=lower_lim, upper_lim=upper_lim)
-                                    res = cross_valid(model, dev_set_x, dev_set_y, 'squared', 'euclidean', lr,
-                                                      momentum=momentum, epochs=150, batch_size=batch_size, k_folds=10)
+                                    print(units_per_layer, acts, momentum, batch_size, lr, init_type, lower_lim, upper_lim)
+                                    model = Network(
+                                        input_dim=len(dev_set_x[0]),
+                                        units_per_layer=units_per_layer,
+                                        acts=acts,
+                                        init_type=init_type,
+                                        lower_lim=lower_lim,
+                                        upper_lim=upper_lim,
+                                    )
+                                    cross_valid(model, dev_set_x, dev_set_y, 'squared', 'euclidean', lr=lr,
+                                                momentum=momentum, epochs=150, batch_size=batch_size, k_folds=10)
