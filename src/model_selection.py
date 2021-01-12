@@ -1,5 +1,6 @@
 import numpy as np
 import tqdm
+from multiprocessing import Process
 from utility import plot_curves
 from network import Network
 
@@ -17,7 +18,7 @@ def cross_valid(net, tr_val_x, tr_val_y, loss, metr, lr, lr_decay=None, limit_st
     val_loss = []
 
     # CV cycle
-    for i in tqdm.tqdm(range(k_folds), desc='Iterating over folds', disable=True):
+    for i in tqdm.tqdm(range(k_folds), desc='Iterating over folds', disable=False):
         # create validation set and training set using the folds
         valid_set = x_folds[i]
         valid_targets = y_folds[i]
@@ -85,12 +86,13 @@ def grid_search(dev_set_x, dev_set_y):
         'acts': (('leaky_relu', 'leaky_relu', 'identity'),),
         'momentum': (0.6,),
         'batch_size': (30,),
-        'lr': (0.0002,),
+        'lr': (0.0002, 0.001),
         'init_type': ('uniform',),
         'lower_lim': (0.0001,),
         'upper_lim': (0.001,)
     }
 
+    processes = []
     for units_per_layer in grid_search_params['units_per_layer']:
         for acts in grid_search_params['acts']:
             for momentum in grid_search_params['momentum']:
@@ -99,7 +101,7 @@ def grid_search(dev_set_x, dev_set_y):
                         for init_type in grid_search_params['init_type']:
                             for lower_lim in grid_search_params['lower_lim']:
                                 for upper_lim in grid_search_params['upper_lim']:
-                                    print(units_per_layer, acts, momentum, batch_size, lr, init_type, lower_lim, upper_lim)
+                                    # print(units_per_layer, acts, momentum, batch_size, lr, init_type, lower_lim, upper_lim)
                                     model = Network(
                                         input_dim=len(dev_set_x[0]),
                                         units_per_layer=units_per_layer,
@@ -108,5 +110,26 @@ def grid_search(dev_set_x, dev_set_y):
                                         lower_lim=lower_lim,
                                         upper_lim=upper_lim,
                                     )
-                                    cross_valid(model, dev_set_x, dev_set_y, 'squared', 'euclidean', lr=lr,
-                                                momentum=momentum, epochs=150, batch_size=batch_size, k_folds=10)
+
+                                    processes.append(Process(target=cross_valid, kwargs={
+                                        'net': model,
+                                        'tr_val_x': dev_set_x,
+                                        'tr_val_y': dev_set_y,
+                                        'loss': 'squared',
+                                        'metr': 'euclidean',
+                                        'lr': lr,
+                                        'momentum': momentum,
+                                        'epochs': 5,
+                                        'batch_size': batch_size,
+                                        'k_folds': 10
+                                    }))
+
+                                    # cross_valid(model, dev_set_x, dev_set_y, 'squared', 'euclidean', lr=lr,
+                                    #             momentum=momentum, epochs=150, batch_size=batch_size, k_folds=10)
+
+    for process in processes:
+        process.start()
+
+    for process in processes:
+        process.join()
+        # print('ended')
