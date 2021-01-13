@@ -9,7 +9,7 @@ from network.network import Network
 from monk_demo import *
 
 
-def grid_search(params, data, labels, folds, epochs, coarse=True):
+def grid_search(params, data, labels, folds, epochs, coarse=True, n_models=1):
     # create directory
     filename = 'grid_test.txt'
     filepath_n = '/Users/gaetanoantonicchio/Desktop/UNIVERSITY OF PISA - DATA SCIENCE/' + filename
@@ -18,7 +18,7 @@ def grid_search(params, data, labels, folds, epochs, coarse=True):
         if coarse:
             grid = get_Params(params=params)
         else:
-            grid = get_RandParams(params=params)
+            grid = get_RandParams(params=params, n_models=n_models)
         res_grid = []
         for i in grid:
             model = Network(input_dim=17, **i)
@@ -54,43 +54,44 @@ def get_Params(params):
     return res
 
 
-def get_RandParams(params):
+def get_RandParams(params, n_models):
     """
     Generate a list of dictionaries of random hyper-parameters for a grid search
     """
     params = [params]
     rand_res = []
-    for line in params:
-        for par in line:
-            items = sorted(par.items())
-            if not items:
-                return
-            else:
-                pa = {}
-                keys, values = zip(*items)
-                for k, vl in zip(keys, values):
-                    isnumber = all(type(v) in (int, float) for v in vl)
-
-                    if isnumber:
-                        pa[k] = np.random.uniform(min(vl), max(vl))
+    for m in range(n_models):
+        for line in params:
+            for par in params:
+                for par in line:
+                    items = sorted(par.items())
+                    if not items:
+                        return
                     else:
-                        pa[k] = random.choice(vl)
+                        pa = {}
+                        keys, values = zip(*items)
+                        for k, vl in zip(keys, values):
+                            isnumber = all(type(v) in (int, float) for v in vl)
+                            if isnumber:
+                                pa[k] = np.random.uniform(min(vl), max(vl))
+                            else:
+                                pa[k] = random.choice(vl)
 
-                rand_res.append(pa)
+                        rand_res.append(pa)
     return rand_res
 
 
 if __name__ == '__main__':
     hyp_params = [
         {
-            'units_per_layer': [(5,1), (4, 1)],
-            'momentum': [0.7, 0.9],
+            'units_per_layer': [(5, 1), (4, 1)],
+            'momentum': [0.8, 0.9],
             'batch_size': ['full'],
-            'lr': [0.6, 0.8],
+            'lr': [0.75, 0.8],
             # 'learning_rate_init': [0.8],
             # 'lr_decay': ['linear'],
             # 'limit_step': [200, 5000],
-            'acts': [('leaky_relu', 'tanh'), ('tanh', 'tanh')],
+            'acts': [('leaky_relu', 'tanh')],
             'init_type': ['random'],
             'lower_lim': [-0.1],
             'upper_lim': [0.1]
@@ -98,5 +99,7 @@ if __name__ == '__main__':
     ]
 
 monk_train, labels = read_monk(name='monks-1', rescale=True)
-grid_search(params=hyp_params, data=monk_train, labels=labels, folds=10, epochs=300, coarse=False)
-#print(get_RandParams(params=hyp_params))
+grid_search(params=hyp_params, data=monk_train, labels=labels, folds=10, epochs=400, coarse=False, n_models=4)
+#print(get_RandParams(params=hyp_params, n_models= 4))
+#print(get_Params(params=hyp_params))
+
