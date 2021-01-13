@@ -14,51 +14,41 @@ def cross_valid(net, tr_val_x, tr_val_y, loss, metr, lr, lr_decay=None, limit_st
     # initialize vectors for plots
     tr_error_values, tr_metric_values = np.zeros(epochs), np.zeros(epochs)
     val_error_values, val_metric_values = np.zeros(epochs), np.zeros(epochs)
-    val_acc = []
-    val_loss = []
+    val_metr_for_fold, val_err_for_fold = [], []
 
     # CV cycle
     for i in tqdm.tqdm(range(k_folds), desc='Iterating over folds', disable=False):
-        # create validation set and training set using the folds
-        valid_set = x_folds[i]
-        valid_targets = y_folds[i]
-        train_folds = np.concatenate((x_folds[: i], x_folds[i + 1:]))
-        target_folds = np.concatenate((y_folds[: i], y_folds[i + 1:]))
-        train_set = train_folds[0]
-        train_targets = target_folds[0]
-        for j in range(1, len(train_folds)):
-            train_set = np.concatenate((train_set, train_folds[j]))
-            train_targets = np.concatenate((train_targets, target_folds[j]))
+        # create validation set and training set using the folds (for one iteration of CV)
+        val_data, val_targets = x_folds[i], y_folds[i]
+        tr_data_folds = np.concatenate((x_folds[: i], x_folds[i + 1:]))
+        tr_targets_folds = np.concatenate((y_folds[: i], y_folds[i + 1:]))
+        # here tr_data_folds & tr_targets_folds are still a "list of folds", we need a single seq as a whole
+        tr_data = tr_data_folds[0]
+        tr_targets = tr_targets_folds[0]
+        for j in range(1, len(tr_data_folds)):
+            tr_data = np.concatenate((tr_data, tr_data_folds[j]))
+            tr_targets = np.concatenate((tr_targets, tr_targets_folds[j]))
 
-        # training
-        net.compile(
-            opt=opt,
-            loss=loss,
-            metr=metr,
-            lr=lr,
-            lr_decay=lr_decay,
-            limit_step=limit_step,
-            momentum=momentum,
-            reg_type=reg_type,
-            lambd=lambd
-        )
-        tr_err, tr_metric, val_err, val_metric = net.fit(
-            tr_x=train_set,
-            tr_y=train_targets,
-            val_x=valid_set,
-            val_y=valid_targets,
-            epochs=epochs,
-            batch_size=batch_size
-        )
+        # compile and fit the model on the current training set and evaluate it on the current validation set
+        net.compile(opt=opt, loss=loss, metr=metr, lr=lr, lr_decay=lr_decay, limit_step=limit_step, momentum=momentum,
+                    reg_type=reg_type, lambd=lambd)
+        tr_history = net.fit(tr_x=tr_data, tr_y=tr_targets, val_x=val_data, val_y=val_targets, epochs=epochs,
+                             batch_size=batch_size)
+
         # metrics for the graph
-        tr_error_values += tr_err
-        tr_metric_values += tr_metric
-        val_error_values += val_err
-        val_metric_values += val_metric
-        val_acc.append(val_metric[-1])
-        val_loss.append(val_err[-1])
+        # composition of tr_history:
+        #   [0] --> training error values for each epoch
+        #   [1] --> training metric values for each epoch
+        #   [2] --> validation error values for each epoch
+        #   [3] --> validation metric values for each epoch
+        tr_error_values += tr_history[0]
+        tr_metric_values += tr_history[1]
+        val_error_values += tr_history[2]
+        val_metric_values += tr_history[3]
+        val_metr_for_fold.append(tr_history[3][-1])
+        val_err_for_fold.append(tr_history[3][-1])
 
-        # reset net's weights and compile the "new" model
+        # reset net's weights for the next iteration of CV
         net = Network(**net.params)
 
     # average the validation results of every fold
@@ -70,10 +60,11 @@ def cross_valid(net, tr_val_x, tr_val_y, loss, metr, lr, lr_decay=None, limit_st
     # print k-fold metrics
     print("\nValidation scores per fold:")
     for i in range(k_folds):
-        print(f"Fold {i + 1} - Loss: {val_loss[i]} - Accuracy: {val_acc[i]}")
+        print(f"Fold {i + 1} - Loss: {val_err_for_fold[i]} - Accuracy: {val_metr_for_fold[i]}")
         print("--------------------------------------------------------------")
     print('\nAverage validation scores for all folds:')
-    print(f"Loss: {np.mean(val_loss)} - std:(+/- {np.std(val_loss)})\nAccuracy: {np.mean(val_acc)} - std:(+/- {np.std(val_acc)})")
+    print(
+        f"Loss: {np.mean(val_err_for_fold)} - std:(+/- {np.std(val_err_for_fold)})\nAccuracy: {np.mean(val_metr_for_fold)} - std:(+/- {np.std(val_metr_for_fold)})")
 
     plot_curves(tr_error_values, val_error_values, tr_metric_values, val_metric_values)
 
