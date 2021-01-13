@@ -10,11 +10,23 @@ from monk_demo import *
 
 
 def grid_search(params, data, labels, folds, epochs, coarse=True, n_models=1):
+    """
+
+    :param params: list of hyper-parameters
+    :param data: development set
+    :param labels: labels
+    :param folds: number of folds of k-fold cv
+    :param epochs: epochs
+    :param coarse: if False performs a
+    :param n_models:
+    :return:
+    """
     # create directory
     filename = 'grid_test.txt'
     filepath_n = '/Users/gaetanoantonicchio/Desktop/UNIVERSITY OF PISA - DATA SCIENCE/' + filename
     # write file
     with open(filepath_n, 'w') as fp:
+        print(f"{datetime.today()}\ngrid_search results:\n", file=fp)
         if coarse:
             grid = get_Params(params=params)
         else:
@@ -98,8 +110,8 @@ if __name__ == '__main__':
         }
     ]
 
-monk_train, labels = read_monk(name='monks-1', rescale=True)
-grid_search(params=hyp_params, data=monk_train, labels=labels, folds=10, epochs=400, coarse=False, n_models=4)
-#print(get_RandParams(params=hyp_params, n_models= 4))
-#print(get_Params(params=hyp_params))
+    monk_train, labels = read_monk(name='monks-1', rescale=True)
+    grid_search(params=hyp_params, data=monk_train, labels=labels, folds=10, epochs=4, coarse=False, n_models=1)
+    #print(get_RandParams(params=hyp_params, n_models= 4))
+    #print(get_Params(params=hyp_params))
 
