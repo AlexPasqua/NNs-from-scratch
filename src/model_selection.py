@@ -1,7 +1,9 @@
+import os
+
 import numpy as np
 import tqdm
 from multiprocessing import Process
-from utility import plot_curves, sets_from_folds
+from utility import plot_curves, sets_from_folds, start_processes_and_wait
 from network import Network
 
 
@@ -96,14 +98,16 @@ def grid_search(dev_set_x, dev_set_y):
                                     # create different processes to go parallel
                                     processes.append(Process(target=cross_valid, kwargs={
                                         'net': model, 'tr_val_x': dev_set_x, 'tr_val_y': dev_set_y, 'loss': 'squared',
-                                        'metr': 'euclidean', 'lr': lr, 'momentum': momentum, 'epochs': 5,
+                                        'metr': 'euclidean', 'lr': lr, 'momentum': momentum, 'epochs': 10,
                                         'batch_size': batch_size, 'k_folds': 5
                                     }))
+                                    print(len(processes))
+
+                                    if len(processes) >= os.cpu_count() - 1:
+                                        start_processes_and_wait(processes)
+                                        processes = []
+
                                     # cross_valid(model, dev_set_x, dev_set_y, 'squared', 'euclidean', lr=lr,
                                     #             momentum=momentum, epochs=150, batch_size=batch_size, k_folds=10)
 
-    for process in processes:
-        process.start()
-
-    for process in processes:
-        process.join()
+    start_processes_and_wait(processes)

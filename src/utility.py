@@ -73,6 +73,14 @@ def sets_from_folds(x_folds, y_folds, val_fold_index):
     return tr_data, tr_targets, val_data, val_targets
 
 
+def start_processes_and_wait(processes):
+    for process in processes:
+        process.start()
+
+    for process in processes:
+        process.join()
+
+
 def plot_curves(tr_loss, val_loss, tr_acc, val_acc, lr=None, momentum=None, lambd=None, **kwargs):
     figure, ax = plt.subplots(1, 2, figsize=(12, 4))
     ax[0].plot(range(len(tr_loss)), tr_loss, color='b', linestyle='dashed', label='training error')
