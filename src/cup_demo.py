@@ -71,11 +71,11 @@ if __name__ == '__main__':
     #         print(k, ': ', v)
 
     # cross validation
-    # cross_valid(model, cup_tr_data, cup_tr_targets, 'squared', 'euclidean', lr=0.002, momentum=0.6, epochs=150,
-    #             batch_size=30, k_folds=10)
+    cross_valid(model, cup_tr_data, cup_tr_targets, 'squared', 'euclidean', lr=0.002, momentum=0.6, epochs=15,
+                batch_size=30, k_folds=5, verbose=True)
 
     # grid search
-    grid_search(dev_set_x=cup_tr_data, dev_set_y=cup_tr_targets)
+    # grid_search(dev_set_x=cup_tr_data, dev_set_y=cup_tr_targets)
 
     # # plot graph
     # plot_curves(

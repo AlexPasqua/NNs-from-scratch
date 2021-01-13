@@ -60,6 +60,19 @@ def read_cup():
     return cup_tr_data, cup_tr_targets, cup_ts_data
 
 
+def sets_from_folds(x_folds, y_folds, val_fold_index):
+    val_data, val_targets = x_folds[val_fold_index], y_folds[val_fold_index]
+    tr_data_folds = np.concatenate((x_folds[: val_fold_index], x_folds[val_fold_index + 1:]))
+    tr_targets_folds = np.concatenate((y_folds[: val_fold_index], y_folds[val_fold_index + 1:]))
+    # here tr_data_folds & tr_targets_folds are still a "list of folds", we need a single seq as a whole
+    tr_data = tr_data_folds[0]
+    tr_targets = tr_targets_folds[0]
+    for j in range(1, len(tr_data_folds)):
+        tr_data = np.concatenate((tr_data, tr_data_folds[j]))
+        tr_targets = np.concatenate((tr_targets, tr_targets_folds[j]))
+    return tr_data, tr_targets, val_data, val_targets
+
+
 def plot_curves(tr_loss, val_loss, tr_acc, val_acc, lr=None, momentum=None, lambd=None, **kwargs):
     figure, ax = plt.subplots(1, 2, figsize=(12, 4))
     ax[0].plot(range(len(tr_loss)), tr_loss, color='b', linestyle='dashed', label='training error')
