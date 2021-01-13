@@ -2,6 +2,7 @@ import os
 import numpy as np
 import tqdm
 from multiprocessing import Process
+from joblib import Parallel, delayed
 from utility import plot_curves, sets_from_folds, start_processes_and_wait, list_of_combos
 from network import Network
 
@@ -76,25 +77,29 @@ def grid_search(dev_set_x, dev_set_y):
         'lower_lim': (0.0001,),
         'upper_lim': (0.001,)
     }
-    processes = []
     param_combos = list_of_combos(grid_search_params)
+    models = []
     for combo in param_combos:
         units_per_layer, acts, init_type = combo['units_per_layer'], combo['acts'], combo['init_type']
         lower_lim, upper_lim, lr, momentum = combo['lower_lim'], combo['upper_lim'], combo['lr'], combo['momentum']
         batch_size = combo['batch_size']
+        models.append(Network(input_dim=len(dev_set_x[0]), units_per_layer=units_per_layer, acts=acts,
+                              init_type=init_type, lower_lim=lower_lim, upper_lim=upper_lim))
 
-        model = Network(input_dim=len(dev_set_x[0]), units_per_layer=units_per_layer, acts=acts, init_type=init_type,
-                        lower_lim=lower_lim, upper_lim=upper_lim)
+        # # create different processes to go parallel
+        # processes.append(Process(target=cross_valid, kwargs={
+        #     'net': model, 'tr_val_x': dev_set_x, 'tr_val_y': dev_set_y, 'loss': 'squared',
+        #     'metr': 'euclidean', 'lr': lr, 'momentum': momentum, 'epochs': 10,
+        #     'batch_size': batch_size, 'k_folds': 5
+        # }))
+        # print(f"Process {len(processes)}")
+        # if len(processes) >= os.cpu_count() - 1:
+        #     start_processes_and_wait(processes)
+        #     processes = []
 
-        # create different processes to go parallel
-        processes.append(Process(target=cross_valid, kwargs={
-            'net': model, 'tr_val_x': dev_set_x, 'tr_val_y': dev_set_y, 'loss': 'squared',
-            'metr': 'euclidean', 'lr': lr, 'momentum': momentum, 'epochs': 10,
-            'batch_size': batch_size, 'k_folds': 5
-        }))
-        print(f"Process {len(processes)}")
-        if len(processes) >= os.cpu_count() - 1:
-            start_processes_and_wait(processes)
-            processes = []
+    Parallel(n_jobs=os.cpu_count()-1, verbose=50)(
+        delayed(cross_valid)(net=models[i], tr_val_x=dev_set_x, tr_val_y=dev_set_y, loss='squared', metr='euclidean',
+                             lr=param_combos[i]['lr'], momentum=param_combos[i]['momentum'], epochs=10,
+                             batch_size=param_combos[i]['batch_size'], k_folds=5) for i in range(len(param_combos)))
 
-    start_processes_and_wait(processes)
+
