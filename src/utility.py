@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 from sklearn.preprocessing import OneHotEncoder, MinMaxScaler, StandardScaler
 import matplotlib.pyplot as plt
+import itertools as it
 
 
 def read_monk(name, rescale=False):
@@ -81,6 +82,18 @@ def start_processes_and_wait(processes):
         process.join()
 
 
+def list_of_combos(param_dict):
+    combo_list = list(it.product(*(param_dict[k] for k in param_dict.keys())))
+    combos = []
+    for c in combo_list:
+        # check if the current combination is formed of compatible parameters
+        # c[0] = units per layer  ;  c[1] = activation functions  -->  their lengths must be equal
+        if len(c[0]) == len(c[1]):
+            combos.append({'units_per_layer': c[0], 'acts': c[1], 'momentum': c[2], 'batch_size': c[3], 'lr': c[4],
+                           'init_type': c[5], 'lower_lim': c[6], 'upper_lim': c[7]})
+    return combos
+
+
 def plot_curves(tr_loss, val_loss, tr_acc, val_acc, lr=None, momentum=None, lambd=None, **kwargs):
     figure, ax = plt.subplots(1, 2, figsize=(12, 4))
     ax[0].plot(range(len(tr_loss)), tr_loss, color='b', linestyle='dashed', label='training error')
@@ -99,4 +112,3 @@ def plot_curves(tr_loss, val_loss, tr_acc, val_acc, lr=None, momentum=None, lamb
     # ax[1].set_ylim((0., 1.1))
     ax[1].grid()
     plt.show()
-

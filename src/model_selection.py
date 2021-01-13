@@ -1,9 +1,8 @@
 import os
-
 import numpy as np
 import tqdm
 from multiprocessing import Process
-from utility import plot_curves, sets_from_folds, start_processes_and_wait
+from utility import plot_curves, sets_from_folds, start_processes_and_wait, list_of_combos
 from network import Network
 
 
@@ -77,37 +76,25 @@ def grid_search(dev_set_x, dev_set_y):
         'lower_lim': (0.0001,),
         'upper_lim': (0.001,)
     }
-
     processes = []
-    for units_per_layer in grid_search_params['units_per_layer']:
-        for acts in grid_search_params['acts']:
-            for momentum in grid_search_params['momentum']:
-                for batch_size in grid_search_params['batch_size']:
-                    for lr in grid_search_params['lr']:
-                        for init_type in grid_search_params['init_type']:
-                            for lower_lim in grid_search_params['lower_lim']:
-                                for upper_lim in grid_search_params['upper_lim']:
-                                    # discard combination of incompatible parameters
-                                    if len(acts) != len(units_per_layer):
-                                        continue
+    param_combos = list_of_combos(grid_search_params)
+    for combo in param_combos:
+        units_per_layer, acts, init_type = combo['units_per_layer'], combo['acts'], combo['init_type']
+        lower_lim, upper_lim, lr, momentum = combo['lower_lim'], combo['upper_lim'], combo['lr'], combo['momentum']
+        batch_size = combo['batch_size']
 
-                                    model = Network(input_dim=len(dev_set_x[0]), units_per_layer=units_per_layer,
-                                                    acts=acts, init_type=init_type, lower_lim=lower_lim,
-                                                    upper_lim=upper_lim)
+        model = Network(input_dim=len(dev_set_x[0]), units_per_layer=units_per_layer, acts=acts, init_type=init_type,
+                        lower_lim=lower_lim, upper_lim=upper_lim)
 
-                                    # create different processes to go parallel
-                                    processes.append(Process(target=cross_valid, kwargs={
-                                        'net': model, 'tr_val_x': dev_set_x, 'tr_val_y': dev_set_y, 'loss': 'squared',
-                                        'metr': 'euclidean', 'lr': lr, 'momentum': momentum, 'epochs': 10,
-                                        'batch_size': batch_size, 'k_folds': 5
-                                    }))
-                                    print(len(processes))
-
-                                    if len(processes) >= os.cpu_count() - 1:
-                                        start_processes_and_wait(processes)
-                                        processes = []
-
-                                    # cross_valid(model, dev_set_x, dev_set_y, 'squared', 'euclidean', lr=lr,
-                                    #             momentum=momentum, epochs=150, batch_size=batch_size, k_folds=10)
+        # create different processes to go parallel
+        processes.append(Process(target=cross_valid, kwargs={
+            'net': model, 'tr_val_x': dev_set_x, 'tr_val_y': dev_set_y, 'loss': 'squared',
+            'metr': 'euclidean', 'lr': lr, 'momentum': momentum, 'epochs': 10,
+            'batch_size': batch_size, 'k_folds': 5
+        }))
+        print(f"Process {len(processes)}")
+        if len(processes) >= os.cpu_count() - 1:
+            start_processes_and_wait(processes)
+            processes = []
 
     start_processes_and_wait(processes)
