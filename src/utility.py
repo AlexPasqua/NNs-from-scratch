@@ -36,6 +36,10 @@ def read_monk(name, rescale=False):
 
 
 def read_cup():
+    """
+    Reads the CUP training and testing sets
+    :return: CUP training data, CUP training targets and CUP test data (as numpy ndarray)
+    """
     # read the dataset
     directory = "../datasets/cup/"
     file = "ML-CUP20-TR.csv"
@@ -62,6 +66,13 @@ def read_cup():
 
 
 def sets_from_folds(x_folds, y_folds, val_fold_index):
+    """
+    Takes folds from cross validation and return training and validation sets as a whole (not lists of folds)
+    :param x_folds: list of folds containing the data
+    :param y_folds: list of folds containing the targets
+    :param val_fold_index: index of the fold to use as validation set
+    :return: training data set, training targets set, validation data set, validation targets set (as numpy ndarray)
+    """
     val_data, val_targets = x_folds[val_fold_index], y_folds[val_fold_index]
     tr_data_folds = np.concatenate((x_folds[: val_fold_index], x_folds[val_fold_index + 1:]))
     tr_targets_folds = np.concatenate((y_folds[: val_fold_index], y_folds[val_fold_index + 1:]))
@@ -75,14 +86,23 @@ def sets_from_folds(x_folds, y_folds, val_fold_index):
 
 
 def start_processes_and_wait(processes):
+    """
+    Starts a list of processes and wait until they finished
+    :param processes: list of processes (multiprocessing.Process objs) (already set up)
+    """
     for process in processes:
         process.start()
-
     for process in processes:
         process.join()
 
 
 def list_of_combos(param_dict):
+    """
+    Takes a dictionary with the combinations of params to use in the grid search and creates a list of dictionaries, one
+    for each combination (so it's possible to iterate over this list in the GS, instead of having many nested loops)
+    :param param_dict: dict{kind_of_param: tuple of all the values of that param to try in the grid search)
+    :return: list of dictionaries{kind_of_param: value of that param}
+    """
     combo_list = list(it.product(*(param_dict[k] for k in param_dict.keys())))
     combos = []
     for c in combo_list:
@@ -95,6 +115,7 @@ def list_of_combos(param_dict):
 
 
 def plot_curves(tr_loss, val_loss, tr_acc, val_acc, lr=None, momentum=None, lambd=None, **kwargs):
+    """ Plot the curves of training loss, training metric, validation loss, validation metric """
     figure, ax = plt.subplots(1, 2, figsize=(12, 4))
     ax[0].plot(range(len(tr_loss)), tr_loss, color='b', linestyle='dashed', label='training error')
     ax[0].plot(range(len(val_loss)), val_loss, color='r', label='validation error')
