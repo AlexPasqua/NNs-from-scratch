@@ -17,7 +17,7 @@ def cross_valid(net, tr_val_x, tr_val_y, loss, metr, lr, lr_decay=None, limit_st
     val_metr_for_fold, val_err_for_fold = [], []
 
     # CV cycle
-    for i in tqdm.tqdm(range(k_folds), desc='Iterating over folds', disable=False):
+    for i in tqdm.tqdm(range(k_folds), desc='Iterating over folds', disable=True):
         # create validation set and training set using the folds (for one iteration of CV)
         tr_data, tr_targets, val_data, val_targets = sets_from_folds(x_folds, y_folds, val_fold_index=i)
 
@@ -66,10 +66,10 @@ def cross_valid(net, tr_val_x, tr_val_y, loss, metr, lr, lr_decay=None, limit_st
 
 def grid_search(dev_set_x, dev_set_y):
     grid_search_params = {
-        'units_per_layer': ((10, 10, 2),),
-        'acts': (('leaky_relu', 'leaky_relu', 'identity'),),
-        'momentum': (0.6,),
-        'batch_size': (30,),
+        'units_per_layer': ((10, 2), (15, 2), (10, 10, 2)),
+        'acts': (('leaky_relu', 'identity'), ('leaky_relu', 'leaky_relu', 'identity'),),
+        'momentum': (0., 0.6, 0.8),
+        'batch_size': (30, 15, 'full'),
         'lr': (0.0002, 0.001),
         'init_type': ('uniform',),
         'lower_lim': (0.0001,),
@@ -85,29 +85,20 @@ def grid_search(dev_set_x, dev_set_y):
                         for init_type in grid_search_params['init_type']:
                             for lower_lim in grid_search_params['lower_lim']:
                                 for upper_lim in grid_search_params['upper_lim']:
-                                    # print(units_per_layer, acts, momentum, batch_size, lr, init_type, lower_lim, upper_lim)
-                                    model = Network(
-                                        input_dim=len(dev_set_x[0]),
-                                        units_per_layer=units_per_layer,
-                                        acts=acts,
-                                        init_type=init_type,
-                                        lower_lim=lower_lim,
-                                        upper_lim=upper_lim,
-                                    )
+                                    # discard combination of incompatible parameters
+                                    if len(acts) != len(units_per_layer):
+                                        continue
 
+                                    model = Network(input_dim=len(dev_set_x[0]), units_per_layer=units_per_layer,
+                                                    acts=acts, init_type=init_type, lower_lim=lower_lim,
+                                                    upper_lim=upper_lim)
+
+                                    # create different processes to go parallel
                                     processes.append(Process(target=cross_valid, kwargs={
-                                        'net': model,
-                                        'tr_val_x': dev_set_x,
-                                        'tr_val_y': dev_set_y,
-                                        'loss': 'squared',
-                                        'metr': 'euclidean',
-                                        'lr': lr,
-                                        'momentum': momentum,
-                                        'epochs': 5,
-                                        'batch_size': batch_size,
-                                        'k_folds': 10
+                                        'net': model, 'tr_val_x': dev_set_x, 'tr_val_y': dev_set_y, 'loss': 'squared',
+                                        'metr': 'euclidean', 'lr': lr, 'momentum': momentum, 'epochs': 5,
+                                        'batch_size': batch_size, 'k_folds': 5
                                     }))
-
                                     # cross_valid(model, dev_set_x, dev_set_y, 'squared', 'euclidean', lr=lr,
                                     #             momentum=momentum, epochs=150, batch_size=batch_size, k_folds=10)
 
@@ -116,4 +107,3 @@ def grid_search(dev_set_x, dev_set_y):
 
     for process in processes:
         process.join()
-        # print('ended')
