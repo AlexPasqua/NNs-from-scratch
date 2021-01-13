@@ -2,6 +2,7 @@ import os
 import numpy as np
 import tqdm
 from multiprocessing import Process
+from datetime import datetime
 from joblib import Parallel, delayed
 from utility import plot_curves, sets_from_folds, start_processes_and_wait, list_of_combos
 from network import Network
@@ -67,6 +68,7 @@ def cross_valid(net, tr_val_x, tr_val_y, loss, metr, lr, lr_decay=None, limit_st
 
 
 def grid_search(dev_set_x, dev_set_y):
+    start = datetime.now()
     grid_search_params = {
         'units_per_layer': ((10, 2), (15, 2), (10, 10, 2)),
         'acts': (('leaky_relu', 'identity'), ('leaky_relu', 'leaky_relu', 'identity'),),
@@ -97,9 +99,10 @@ def grid_search(dev_set_x, dev_set_y):
         #     start_processes_and_wait(processes)
         #     processes = []
 
-    Parallel(n_jobs=os.cpu_count()-1, verbose=50)(
-        delayed(cross_valid)(net=models[i], tr_val_x=dev_set_x, tr_val_y=dev_set_y, loss='squared', metr='euclidean',
-                             lr=param_combos[i]['lr'], momentum=param_combos[i]['momentum'], epochs=10,
-                             batch_size=param_combos[i]['batch_size'], k_folds=5) for i in range(len(param_combos)))
+    Parallel(n_jobs=os.cpu_count() - 1, verbose=50)(delayed(cross_valid)(
+        net=models[i], tr_val_x=dev_set_x, tr_val_y=dev_set_y, loss='squared', metr='euclidean',
+        lr=param_combos[i]['lr'], momentum=param_combos[i]['momentum'], epochs=10,
+        batch_size=param_combos[i]['batch_size'], k_folds=5) for i in range(len(param_combos)))
 
-
+    end = datetime.now()
+    print('Time used: ', end - start)
