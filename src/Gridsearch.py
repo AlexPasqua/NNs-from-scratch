@@ -3,28 +3,39 @@ from datetime import datetime
 from itertools import product
 import random as random
 import numpy as np
+import json
+from model_selection import cross_valid
+from network.network import Network
+from monk_demo import *
 
 
-def grid_search(net, params, folds):
+def grid_search(params, data, labels, folds, epochs, coarse=True):
     # create directory
-    os.makedirs("grid_reports", exist_ok=True)
-    timestamp = datetime.today().isoformat().replace(':', '_')
-    filename = 'grid_reports/grid_table__'+ timestamp
+    filename = 'grid_test.txt'
+    filepath_n = '/Users/gaetanoantonicchio/Desktop/UNIVERSITY OF PISA - DATA SCIENCE/' + filename
     # write file
-    #with open(filename +'.gsv', 'w') as file:
-
-
-    # grid_search results
-    res_grid = []
-
-    # call cross_valid with hyper-params from get_RandParams
-
-
-    # append results to res_grid
-
-    # return res_grid
-
-    pass
+    with open(filepath_n, 'w') as fp:
+        if coarse:
+            grid = get_Params(params=params)
+        else:
+            grid = get_RandParams(params=params)
+        res_grid = []
+        for i in grid:
+            model = Network(input_dim=17, **i)
+            r = cross_valid(net=model,
+                            tr_val_x=data,
+                            tr_val_y=labels,
+                            loss='squared',
+                            metr='bin_class_acc',
+                            k_folds=folds,
+                            epochs=epochs,
+                            **i)
+            res_grid.append([i, r])
+            json.dump(i, fp)
+            fp.write('\n')
+            json.dump(r, fp)
+            fp.write('\n')
+        return res_grid
 
 
 def get_Params(params):
@@ -36,7 +47,6 @@ def get_Params(params):
     for line in params:
         for par in line:
             items = sorted(par.items())
-
             keys, values = zip(*items)
             for val in product(*values):
                 param = dict(zip(keys, val))
@@ -60,8 +70,9 @@ def get_RandParams(params):
                 keys, values = zip(*items)
                 for k, vl in zip(keys, values):
                     isnumber = all(type(v) in (int, float) for v in vl)
+
                     if isnumber:
-                        pa[k] = [np.random.uniform(min(vl), max(vl))]
+                        pa[k] = np.random.uniform(min(vl), max(vl))
                     else:
                         pa[k] = random.choice(vl)
 
@@ -72,19 +83,20 @@ def get_RandParams(params):
 if __name__ == '__main__':
     hyp_params = [
         {
-            'units_per_layer': [(10, 1), (20, 1), (50, 1), (100, 1), (5, 1)],
-            'momentum': [0., 0.9],
-            'batch_size': [1, 5, 10, 50, 100, 'full'],
-            'lr': [0.001, 0.3],
-            'learning_rate_init': [0.1, 0.9],
-            'lr_decay': ['linear'],
-            'limit_step': [200, 5000],
-            'acts': [('leaky_relu', 'tanh'),('tanh','tanh'),('leaky_relu','sigmoid'),('relu','tanh'),('relu','sigmoid') ,('sigmoid','sigmoid')],
+            'units_per_layer': [(5,1), (4, 1)],
+            'momentum': [0.7, 0.9],
+            'batch_size': ['full'],
+            'lr': [0.6, 0.8],
+            # 'learning_rate_init': [0.8],
+            # 'lr_decay': ['linear'],
+            # 'limit_step': [200, 5000],
+            'acts': [('leaky_relu', 'tanh'), ('tanh', 'tanh')],
             'init_type': ['random'],
-            'lower_lim': [-0.1, 0.05],
-            'upper_lim': [0.1, 0.3]
+            'lower_lim': [-0.1],
+            'upper_lim': [0.1]
         }
     ]
 
-    print(get_RandParams(hyp_params))
-
+monk_train, labels = read_monk(name='monks-1', rescale=True)
+grid_search(params=hyp_params, data=monk_train, labels=labels, folds=10, epochs=300, coarse=False)
+#print(get_RandParams(params=hyp_params))

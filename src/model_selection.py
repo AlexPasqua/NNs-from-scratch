@@ -4,7 +4,7 @@ import tqdm
 
 
 def cross_valid(net, tr_val_x, tr_val_y, loss, metr, lr, lr_decay=None, limit_step=None, opt='gd', momentum=0.,
-                epochs=1, batch_size=1, k_folds=5, reg_type='l2', lambd=0):
+                epochs=1, batch_size=1, k_folds=5, reg_type='l2', lambd=0, **kwargs):
     # split the dataset into folds
     x_folds = np.array(np.array_split(tr_val_x, k_folds), dtype=object)
     y_folds = np.array(np.array_split(tr_val_y, k_folds), dtype=object)
@@ -66,11 +66,12 @@ def cross_valid(net, tr_val_x, tr_val_y, loss, metr, lr, lr_decay=None, limit_st
     val_metric_values /= float(k_folds)
 
     # print k-fold metrics
-    print("\nValidation scores per fold:")
-    for i in range(k_folds):
-        print(f"Fold {i + 1} - Loss: {val_loss[i]} - Accuracy: {val_acc[i]}")
-        print("--------------------------------------------------------------")
-    print('\nAverage validation scores for all folds:')
-    print(f"Loss: {np.mean(val_loss)} - std:(+/- {np.std(val_loss)})\nAccuracy: {np.mean(val_acc)} - std:(+/- {np.std(val_acc)})")
+  #  print("\nValidation scores per fold:")
+   # for i in range(k_folds):
+    #    print(f"Fold {i + 1} - Loss: {val_loss[i]} - Accuracy: {val_acc[i]}")
+    #    print("--------------------------------------------------------------")
+    #print('\nAverage validation scores for all folds:')
+    #print(f"Loss: {np.mean(val_loss)} - std:(+/- {np.std(val_loss)})\nAccuracy: {np.mean(val_acc)} - std:(+/- {np.std(val_acc)})")
 
-    return tr_error_values, tr_metric_values, val_error_values, val_metric_values
+    return np.mean(val_loss), np.std(val_loss), np.mean(val_acc), np.std(val_acc)
+    #return tr_error_values, tr_metric_values, val_error_values, val_metric_values
