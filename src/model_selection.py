@@ -4,15 +4,19 @@ import numpy as np
 import tqdm
 from datetime import datetime
 from joblib import Parallel, delayed
-from utility import plot_curves, sets_from_folds, start_processes_and_wait, list_of_combos
+from utility import plot_curves, sets_from_folds, list_of_combos, read_monk
 from network import Network
 
 
-def cross_valid(net, tr_val_x, tr_val_y, loss, metr, lr, lr_decay=None, limit_step=None, opt='gd', momentum=0.,
-                epochs=1, batch_size=1, k_folds=5, reg_type='l2', lambd=0, verbose=False):
+def cross_valid(net, dev_set_x, dev_set_y, loss, metr, lr, lr_decay=None, limit_step=None, opt='gd', momentum=0.,
+                epochs=1, batch_size=1, k_folds=5, reg_type='l2', lambd=0, verbose=False, **kwargs):
+    # TODO: only for monks, set this up better
+    rescale = True if net.params['acts'][-1] in ('tanh',) else False
+    dev_set_x, dev_set_y = read_monk("monks-1", rescale=rescale)
+
     # split the dataset into folds
-    x_folds = np.array(np.array_split(tr_val_x, k_folds), dtype=object)
-    y_folds = np.array(np.array_split(tr_val_y, k_folds), dtype=object)
+    x_folds = np.array(np.array_split(dev_set_x, k_folds), dtype=object)
+    y_folds = np.array(np.array_split(dev_set_y, k_folds), dtype=object)
 
     # initialize vectors for plots
     tr_error_values, tr_metric_values = np.zeros(epochs), np.zeros(epochs)
@@ -69,40 +73,39 @@ def cross_valid(net, tr_val_x, tr_val_y, loss, metr, lr, lr_decay=None, limit_st
     return avg_val_err, std_val_err, avg_val_metric, std_val_metric
 
 
+def get_coarse_gs_params():
+    """
+    :return: dictionary of all the parameters to try in a grid search
+    """
+    return {'units_per_layer': ((4, 1), (2, 2, 1)),
+            'acts': (('leaky_relu', 'tanh'), ('leaky_relu', 'leaky_relu', 'tanh')),
+            'momentum': (0.7,),
+            'batch_size': ('full',),
+            'lr': (0.1, 0.3),
+            'init_type': ('uniform',),
+            'lower_lim': (-0.1,),
+            'upper_lim': (0.1,)}
+
+
 def grid_search(dev_set_x, dev_set_y):
-    start = datetime.now()
-    grid_search_params = {
-        'units_per_layer': ((15, 2),),
-        'acts': (('leaky_relu', 'identity'),),
-        'momentum': (0., 0.9),
-        'batch_size': ('full',),
-        'lr': (0.0002,),
-        'init_type': ('uniform',),
-        'lower_lim': (0.0001,),
-        'upper_lim': (0.001,)
-    }
     models = []
+    grid_search_params = get_coarse_gs_params()
     param_combos = list_of_combos(grid_search_params)
+    print(f"Total number of trials: {len(param_combos)}")
     for combo in param_combos:
         models.append(Network(input_dim=len(dev_set_x[0]), units_per_layer=combo['units_per_layer'], acts=combo['acts'],
                               init_type=combo['init_type'], lower_lim=combo['lower_lim'], upper_lim=combo['upper_lim']))
 
     results = Parallel(n_jobs=os.cpu_count() - 1, verbose=50)(delayed(cross_valid)(
-        net=models[i], tr_val_x=dev_set_x, tr_val_y=dev_set_y, loss='squared', metr='euclidean',
-        lr=param_combos[i]['lr'], momentum=param_combos[i]['momentum'], epochs=10,
-        batch_size=param_combos[i]['batch_size'], k_folds=5) for i in range(len(param_combos)))
-
-    end = datetime.now()
-    print('Time used: ', end - start)
+        net=models[i], dev_set_x=dev_set_x, dev_set_y=dev_set_y, loss='squared', metr='bin_class_acc', epochs=500,
+        k_folds=5,
+        **param_combos[i]) for i in range(len(param_combos)))
 
     # write results on file
     folder_path = "../results/"
-    file_name = "results.txt"
+    file_name = "results.json"
     if not os.path.exists(folder_path):
         os.mkdir(folder_path)
+    data = {"params": param_combos, "results": results}
     with open(folder_path + file_name, 'w') as f:
-        for combo, res in zip(param_combos, results):
-            json.dump(combo, f)
-            f.write('\n')
-            json.dump(res, f)
-            f.write('\n')
+        json.dump(data, f)

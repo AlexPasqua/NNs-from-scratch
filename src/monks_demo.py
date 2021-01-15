@@ -1,5 +1,6 @@
 from network import Network
-from utility import read_monk, plot_curves
+from utility import read_monk, plot_curves, get_best_models
+from model_selection import grid_search
 
 if __name__ == '__main__':
     # read the dataset
@@ -33,27 +34,32 @@ if __name__ == '__main__':
     # # cross validation
     # tr_error_values, tr_metric_values, val_error_values, val_metric_values = cross_valid(
     #     net=model,
-    #     tr_val_x=monk_train,
-    #     tr_val_y=labels,
+    #     dev_set_x=monk_train,
+    #     dev_set_y=labels,
     #     k_folds=8,
     #     **training_params
     # )
 
-    # hold-out validation
-    model.compile(opt='gd', loss='squared', metr='bin_class_acc', lr=0.2, momentum=0.6)
-    tr_error_values, tr_metric_values, val_error_values, val_metric_values = model.fit(
-        tr_x=monk_train,
-        tr_y=labels,
-        epochs=100,
-        val_split=0.,
-        batch_size='full',
-    )
+    # # hold-out validation
+    # model.compile(opt='gd', loss='squared', metr='bin_class_acc', lr=0.2, momentum=0.6)
+    # tr_error_values, tr_metric_values, val_error_values, val_metric_values = model.fit(
+    #     tr_x=monk_train,
+    #     tr_y=labels,
+    #     epochs=100,
+    #     val_split=0.,
+    #     batch_size='full',
+    # )
 
-    # plot graph
-    plot_curves(
-        tr_loss=tr_error_values,
-        val_loss=val_error_values,
-        tr_acc=tr_metric_values,
-        val_acc=val_metric_values,
-        **training_params
-    )
+    # grid search
+    grid_search(dev_set_x=monk_train, dev_set_y=labels)
+    best_model = get_best_models(n_models=1, input_dim=len(monk_train[0]))[0]
+    best_model.print_topology()
+
+    # # plot graph
+    # plot_curves(
+    #     tr_loss=tr_error_values,
+    #     val_loss=val_error_values,
+    #     tr_acc=tr_metric_values,
+    #     val_acc=val_metric_values,
+    #     **training_params
+    # )

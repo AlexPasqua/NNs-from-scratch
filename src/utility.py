@@ -3,6 +3,8 @@ import numpy as np
 from sklearn.preprocessing import OneHotEncoder, MinMaxScaler, StandardScaler
 import matplotlib.pyplot as plt
 import itertools as it
+import json
+from network import Network
 
 
 def read_monk(name, rescale=False):
@@ -85,17 +87,6 @@ def sets_from_folds(x_folds, y_folds, val_fold_index):
     return tr_data, tr_targets, val_data, val_targets
 
 
-def start_processes_and_wait(processes):
-    """
-    Starts a list of processes and wait until they finished
-    :param processes: list of processes (multiprocessing.Process objs) (already set up)
-    """
-    for process in processes:
-        process.start()
-    for process in processes:
-        process.join()
-
-
 def list_of_combos(param_dict):
     """
     Takes a dictionary with the combinations of params to use in the grid search and creates a list of dictionaries, one
@@ -112,6 +103,18 @@ def list_of_combos(param_dict):
             combos.append({'units_per_layer': c[0], 'acts': c[1], 'momentum': c[2], 'batch_size': c[3], 'lr': c[4],
                            'init_type': c[5], 'lower_lim': c[6], 'upper_lim': c[7]})
     return combos
+
+
+def get_best_models(input_dim, n_models=1):
+    with open("../results/results.json", 'r') as f:
+        data = json.load(f)
+    models = []
+    for i in range(n_models):
+        for result in data['results']:
+            accuracies = result[2]
+        index = np.argmax(accuracies)
+        models.append(Network(input_dim=input_dim, **data['params'][index]))
+    return models
 
 
 def plot_curves(tr_loss, val_loss, tr_acc, val_acc, lr=None, momentum=None, lambd=None, **kwargs):

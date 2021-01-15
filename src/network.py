@@ -179,15 +179,13 @@ class Network:
         for layer_index in range(len(self.__layers)):
             struct[layer_index] = {'weights': [], 'biases': []}
             weights_matrix = self.__layers[layer_index].weights
-            struct[layer_index]['weights'] = np.zeros(shape=(len(weights_matrix[:, 0]), len(weights_matrix[0, :])))
+            weights_matrix = weights_matrix[np.newaxis, :] if len(weights_matrix.shape) < 2 else weights_matrix
+            struct[layer_index]['weights'] = np.zeros(shape=weights_matrix.shape)
             struct[layer_index]['biases'] = np.zeros(shape=(len(weights_matrix[0, :])))
         return struct
 
-    def print_net(self):
+    def print_topology(self):
         """ Prints the network's architecture and parameters """
-        print('Neural Network:')
-        for layer in self.layers:
-            print('  Layer:')
-            for unit in layer.units:
-                print(f"\tUnit:\n\t  weights: {unit.w}\n\t  bias: {unit.b}\n\t  activation function: {unit.act.name}")
-            print()
+        print("Model's topology:")
+        print("Units per layer: ", self.__params['units_per_layer'])
+        print("Activation functions: ", self.__params['acts'])
