@@ -17,7 +17,7 @@ def cross_valid(net, tr_val_x, tr_val_y, loss, metr, lr, lr_decay=None, limit_st
     # initialize vectors for plots
     tr_error_values, tr_metric_values = np.zeros(epochs), np.zeros(epochs)
     val_error_values, val_metric_values = np.zeros(epochs), np.zeros(epochs)
-    val_metr_for_fold, val_err_for_fold = [], []
+    val_metric_per_fold, val_error_per_fold = [], []
 
     # CV cycle
     for i in tqdm.tqdm(range(k_folds), desc='Iterating over folds', disable=True):
@@ -40,8 +40,8 @@ def cross_valid(net, tr_val_x, tr_val_y, loss, metr, lr, lr_decay=None, limit_st
         tr_metric_values += tr_history[1]
         val_error_values += tr_history[2]
         val_metric_values += tr_history[3]
-        val_metr_for_fold.append(tr_history[3][-1])
-        val_err_for_fold.append(tr_history[3][-1])
+        val_error_per_fold.append(tr_history[2][-1])
+        val_metric_per_fold.append(tr_history[3][-1])
 
         # reset net's weights for the next iteration of CV
         net = Network(**net.params)
@@ -52,22 +52,28 @@ def cross_valid(net, tr_val_x, tr_val_y, loss, metr, lr, lr_decay=None, limit_st
     val_error_values /= k_folds
     val_metric_values /= k_folds
 
+    # results
+    avg_val_err, std_val_err = np.mean(val_error_per_fold), np.std(val_error_per_fold)
+    avg_val_metric, std_val_metric = np.mean(val_metric_per_fold), np.std(val_metric_per_fold)
+
     # print k-fold metrics
     if verbose:
         print("\nValidation scores per fold:")
         for i in range(k_folds):
-            print(f"Fold {i + 1} - Loss: {val_err_for_fold[i]} - Accuracy: {val_metr_for_fold[i]}\n{'-' * 62}")
+            print(f"Fold {i + 1} - Loss: {val_error_per_fold[i]} - Accuracy: {val_metric_per_fold[i]}\n{'-' * 62}")
         print('\nAverage validation scores for all folds:')
-        print("Loss: {} - std:(+/- {})\nAccuracy: {} - std:(+/- {})".format(np.mean(val_err_for_fold),
-                                                                            np.std(val_err_for_fold),
-                                                                            np.mean(val_metr_for_fold),
-                                                                            np.std(val_metr_for_fold)))
+        print("Loss: {} - std:(+/- {})\nAccuracy: {} - std:(+/- {})".format(avg_val_err, std_val_err,
+                                                                            avg_val_metric, std_val_metric))
 
     plot_curves(tr_error_values, val_error_values, tr_metric_values, val_metric_values)
     return tr_error_values, tr_metric_values, val_error_values, val_metric_values
 
 
 def grid_search(dev_set_x, dev_set_y):
+    folder_path = "../results/"
+    if not os.path.exists(folder_path):
+        os.mkdir(folder_path)
+
     start = datetime.now()
     grid_search_params = {
         'units_per_layer': ((10, 2), (15, 2), (10, 10, 2)),
@@ -79,25 +85,11 @@ def grid_search(dev_set_x, dev_set_y):
         'lower_lim': (0.0001,),
         'upper_lim': (0.001,)
     }
-    param_combos = list_of_combos(grid_search_params)
     models = []
+    param_combos = list_of_combos(grid_search_params)
     for combo in param_combos:
-        units_per_layer, acts, init_type = combo['units_per_layer'], combo['acts'], combo['init_type']
-        lower_lim, upper_lim, lr, momentum = combo['lower_lim'], combo['upper_lim'], combo['lr'], combo['momentum']
-        batch_size = combo['batch_size']
-        models.append(Network(input_dim=len(dev_set_x[0]), units_per_layer=units_per_layer, acts=acts,
-                              init_type=init_type, lower_lim=lower_lim, upper_lim=upper_lim))
-
-        # # create different processes to go parallel
-        # processes.append(Process(target=cross_valid, kwargs={
-        #     'net': model, 'tr_val_x': dev_set_x, 'tr_val_y': dev_set_y, 'loss': 'squared',
-        #     'metr': 'euclidean', 'lr': lr, 'momentum': momentum, 'epochs': 10,
-        #     'batch_size': batch_size, 'k_folds': 5
-        # }))
-        # print(f"Process {len(processes)}")
-        # if len(processes) >= os.cpu_count() - 1:
-        #     start_processes_and_wait(processes)
-        #     processes = []
+        models.append(Network(input_dim=len(dev_set_x[0]), units_per_layer=combo['units_per_layer'], acts=combo['acts'],
+                              init_type=combo['init_type'], lower_lim=combo['lower_lim'], upper_lim=combo['upper_lim']))
 
     Parallel(n_jobs=os.cpu_count() - 1, verbose=50)(delayed(cross_valid)(
         net=models[i], tr_val_x=dev_set_x, tr_val_y=dev_set_y, loss='squared', metr='euclidean',
