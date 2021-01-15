@@ -1,7 +1,7 @@
+import json
 import os
 import numpy as np
 import tqdm
-from multiprocessing import Process
 from datetime import datetime
 from joblib import Parallel, delayed
 from utility import plot_curves, sets_from_folds, start_processes_and_wait, list_of_combos
@@ -65,22 +65,18 @@ def cross_valid(net, tr_val_x, tr_val_y, loss, metr, lr, lr_decay=None, limit_st
         print("Loss: {} - std:(+/- {})\nAccuracy: {} - std:(+/- {})".format(avg_val_err, std_val_err,
                                                                             avg_val_metric, std_val_metric))
 
-    plot_curves(tr_error_values, val_error_values, tr_metric_values, val_metric_values)
-    return tr_error_values, tr_metric_values, val_error_values, val_metric_values
+    # plot_curves(tr_error_values, val_error_values, tr_metric_values, val_metric_values, lr, momentum)
+    return avg_val_err, std_val_err, avg_val_metric, std_val_metric
 
 
 def grid_search(dev_set_x, dev_set_y):
-    folder_path = "../results/"
-    if not os.path.exists(folder_path):
-        os.mkdir(folder_path)
-
     start = datetime.now()
     grid_search_params = {
-        'units_per_layer': ((10, 2), (15, 2), (10, 10, 2)),
-        'acts': (('leaky_relu', 'identity'), ('leaky_relu', 'leaky_relu', 'identity'),),
-        'momentum': (0., 0.6, 0.8),
-        'batch_size': (30, 15, 'full'),
-        'lr': (0.0002, 0.001),
+        'units_per_layer': ((15, 2),),
+        'acts': (('leaky_relu', 'identity'),),
+        'momentum': (0., 0.9),
+        'batch_size': ('full',),
+        'lr': (0.0002,),
         'init_type': ('uniform',),
         'lower_lim': (0.0001,),
         'upper_lim': (0.001,)
@@ -91,10 +87,22 @@ def grid_search(dev_set_x, dev_set_y):
         models.append(Network(input_dim=len(dev_set_x[0]), units_per_layer=combo['units_per_layer'], acts=combo['acts'],
                               init_type=combo['init_type'], lower_lim=combo['lower_lim'], upper_lim=combo['upper_lim']))
 
-    Parallel(n_jobs=os.cpu_count() - 1, verbose=50)(delayed(cross_valid)(
+    results = Parallel(n_jobs=os.cpu_count() - 1, verbose=50)(delayed(cross_valid)(
         net=models[i], tr_val_x=dev_set_x, tr_val_y=dev_set_y, loss='squared', metr='euclidean',
         lr=param_combos[i]['lr'], momentum=param_combos[i]['momentum'], epochs=10,
         batch_size=param_combos[i]['batch_size'], k_folds=5) for i in range(len(param_combos)))
 
     end = datetime.now()
     print('Time used: ', end - start)
+
+    # write results on file
+    folder_path = "../results/"
+    file_name = "results.txt"
+    if not os.path.exists(folder_path):
+        os.mkdir(folder_path)
+    with open(folder_path + file_name, 'w') as f:
+        for combo, res in zip(param_combos, results):
+            json.dump(combo, f)
+            f.write('\n')
+            json.dump(res, f)
+            f.write('\n')
