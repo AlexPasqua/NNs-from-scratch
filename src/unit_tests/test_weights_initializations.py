@@ -1,5 +1,5 @@
 import unittest
-from utility import weights_inits
+from weights_initializations import weights_inits
 
 
 class TestWeightsInitializations(unittest.TestCase):
