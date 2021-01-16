@@ -19,7 +19,8 @@ class Optimizer(ABC):
     """
 
     @abstractmethod
-    def __init__(self, net, loss, metr, lr, lr_decay, limit_step, decay_rate, decay_steps, momentum, reg_type, lambd):
+    def __init__(self, net, loss, metr, lr, lr_decay, limit_step, decay_rate, decay_steps, staircase, momentum,
+                 reg_type, lambd):
         # makes sure lr is a value between 0 and 1
         if lr <= 0 or lr > 1:
             raise ValueError('lr should be a value between 0 and 1, Got:{}'.format(lr))
@@ -33,6 +34,7 @@ class Optimizer(ABC):
         self.limit_step = limit_step
         self.decay_rate = decay_rate
         self.decay_steps = decay_steps
+        self.staircase = staircase
         self.momentum = momentum
         self.lambd = lambd
         self.reg_type = reg_type
@@ -53,9 +55,10 @@ class Optimizer(ABC):
 class GradientDescent(Optimizer, ABC):
     """ Gradient Descent """
 
-    def __init__(self, net, loss, metr, lr, lr_decay, limit_step, decay_rate, decay_steps, momentum, reg_type, lambd):
+    def __init__(self, net, loss, metr, lr, lr_decay, limit_step, decay_rate, decay_steps, staircase, momentum,
+                 reg_type, lambd):
         super(GradientDescent, self).__init__(net, loss, metr, lr, lr_decay, limit_step, decay_rate, decay_steps,
-                                              momentum, reg_type, lambd)
+                                              staircase, momentum, reg_type, lambd)
         self.__type = 'gd'
 
     @property
@@ -140,17 +143,17 @@ class GradientDescent(Optimizer, ABC):
                         limit_step=self.limit_step
                     )
 
-                # exp leraning rate decay
+                # exp learning rate decay
                 if self.lr_decay == 'exponential':
-                    step += 1
+                    # step += 1
                     self.lr = lr_decays[self.lr_decay].func(
                         curr_lr=self.lr,
                         decay_rate=self.decay_rate,
-                        step=step,
-                        decay_steps=self.decay_steps
+                        step=epoch,
+                        decay_steps=self.decay_steps,
+                        staircase=self.staircase
                     )
-                    print(f"epoch{epoch}, lr: {self.lr}")
-
+                print(f"epoch{epoch}, lr: {self.lr}")
 
                 # weights update
                 for layer_index in range(len(net.layers)):
@@ -176,7 +179,6 @@ class GradientDescent(Optimizer, ABC):
                         net.layers[layer_index].biases,
                         momentum_net[layer_index]['biases']
                     )
-
             # validation
             if val_x is not None:
                 for pattern, target in zip(val_x, val_y):

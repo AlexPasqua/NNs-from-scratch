@@ -1,3 +1,5 @@
+import math
+
 import numpy as np
 
 
@@ -201,10 +203,11 @@ def linear_lr_dec(curr_lr, base_lr, final_lr, curr_step, limit_step):
     return final_lr
 
 
-def exp_lr_decay(curr_lr, decay_rate, step, decay_steps, ):
-    if step % decay_steps == 0:
-        curr_lr = curr_lr * decay_rate**(step/decay_steps)
-    return curr_lr
+def exp_lr_decay(curr_lr, decay_rate, step, decay_steps, staircase=True):
+    cur_stage = step/decay_steps
+    if staircase:
+        cur_stage = np.floor(cur_stage)
+    return curr_lr * math.pow(decay_rate, cur_stage)
 
 
 """ Regularizations """
