@@ -5,7 +5,7 @@ from network.network import Network
 
 
 class TestOptimizers(unittest.TestCase):
-    gd = optimizers['gd'](
+    gd = optimizers['sgd'](
         Network(input_dim=2, units_per_layer=(2, 1), acts=('relu', 'sigmoid'), init_type='fixed', init_value=0.2),
         'squared',
         'bin_class_acc',
