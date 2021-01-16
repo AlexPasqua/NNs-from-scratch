@@ -58,8 +58,8 @@ class StochasticGradientDescent(Optimizer, ABC):
 
     def __init__(self, net, loss, metr, lr, lr_decay, limit_step, decay_rate, decay_steps, staircase, momentum,
                  reg_type, lambd):
-        super(StochasticGradientDescent, self).__init__(net, loss, metr, lr, lr_decay, limit_step, decay_rate, decay_steps,
-                                              staircase, momentum, reg_type, lambd)
+        super(StochasticGradientDescent, self).__init__(net, loss, metr, lr, lr_decay, limit_step, decay_rate,
+                                                        decay_steps,staircase, momentum, reg_type, lambd)
         self.__type = 'gd'
 
     @property
@@ -87,6 +87,10 @@ class StochasticGradientDescent(Optimizer, ABC):
         tr_error_values, tr_metric_values, val_error_values, val_metric_values = [], [], [], []
         net = self.net  # just to be shorter
         momentum_net = net.get_empty_struct()
+        step = 0
+
+        # learning rate results for plotting #TODO: DEBUG | remove later |
+        lr_plots = []
 
         # cycle through epochs
         for epoch in tqdm.tqdm(range(epochs), desc="Iterating over epochs", disable=False):
@@ -135,11 +139,12 @@ class StochasticGradientDescent(Optimizer, ABC):
 
                 # linear rate decay
                 if self.lr_decay == 'linear':
+                    step +=1
                     lr = lr_decays[self.lr_decay].func(
                         curr_lr=self.lr,
                         base_lr=self.base_lr,
                         final_lr=self.final_lr,
-                        curr_step=epoch + 1,
+                        curr_step=step,
                         limit_step=self.limit_step
                     )
                 # exp learning rate decay
@@ -147,12 +152,15 @@ class StochasticGradientDescent(Optimizer, ABC):
                     lr = lr_decays[self.lr_decay].func(
                         initial_lr=self.lr,
                         decay_rate=self.decay_rate,
-                        step=epoch + 1,
+                        step=epoch,
                         decay_steps=self.decay_steps,
                         staircase=self.staircase
                     )
                 else:
                     lr = self.lr
+                print(lr)
+                # saves learning rate values #TODO: DEBUG | remove later |
+                lr_plots.append(lr)
 
                 # weights update
                 for layer_index in range(len(net.layers)):
@@ -193,6 +201,10 @@ class StochasticGradientDescent(Optimizer, ABC):
             tr_error_values.append(epoch_tr_error / len(tr_x))
             epoch_tr_metric = np.sum(epoch_tr_metric) / len(epoch_tr_metric)
             tr_metric_values.append(epoch_tr_metric / len(tr_x))
+
+        # plot learning rate graph #TODO: DEBUG | remove later |
+        plt.plot(lr_plots)
+        plt.show()
 
         return tr_error_values, tr_metric_values, val_error_values, val_metric_values
 
