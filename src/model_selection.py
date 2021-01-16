@@ -86,13 +86,13 @@ def get_coarse_gs_params():
     return {'units_per_layer': ((4, 1), (2, 2, 1)),
             'acts': (('leaky_relu', 'tanh'), ('leaky_relu', 'leaky_relu', 'tanh')),
             'init_type': ('uniform',),
-            'limits': ((-0.1, 0.1),),
-            'momentum': (0.7,),
-            'batch_size': ('full',),
-            'lr': (0.1, 0.3),
+            'limits': ((-0.1, 0.1), (-0.2, 0.2), (-0.001, 0.001)),
+            'momentum': (0.7, 0.0, 0.6, 0.8),
+            'batch_size': ('full', 10, 1),
+            'lr': (0.1, 0.3, 0.01),
             'loss': ('squared',),
             'metric': ('bin_class_acc',),
-            'epochs': (50, 100, 150)}
+            'epochs': (50, 100, 150, 200, 300, 500)}
 
 
 def grid_search(dataset):
@@ -108,7 +108,7 @@ def grid_search(dataset):
     for combo in param_combos:
         models.append(Network(input_dim=input_dim, **combo))
 
-    results = Parallel(n_jobs=os.cpu_count() - 1, verbose=50)(delayed(cross_valid)(
+    results = Parallel(n_jobs=os.cpu_count(), verbose=50)(delayed(cross_valid)(
         net=models[i], dataset=dataset, k_folds=5, **param_combos[i]) for i in range(len(param_combos)))
 
     # write results on file
