@@ -4,6 +4,7 @@ import datetime
 import numpy as np
 import tqdm as tqdm
 from functions import losses, metrics, lr_decays, regs
+import matplotlib.pyplot as plt
 
 
 class Optimizer(ABC):
@@ -52,12 +53,12 @@ class Optimizer(ABC):
         return self.__metric
 
 
-class GradientDescent(Optimizer, ABC):
+class StochasticGradientDescent(Optimizer, ABC):
     """ Gradient Descent """
 
     def __init__(self, net, loss, metr, lr, lr_decay, limit_step, decay_rate, decay_steps, staircase, momentum,
                  reg_type, lambd):
-        super(GradientDescent, self).__init__(net, loss, metr, lr, lr_decay, limit_step, decay_rate, decay_steps,
+        super(StochasticGradientDescent, self).__init__(net, loss, metr, lr, lr_decay, limit_step, decay_rate, decay_steps,
                                               staircase, momentum, reg_type, lambd)
         self.__type = 'gd'
 
@@ -129,9 +130,10 @@ class GradientDescent(Optimizer, ABC):
                     dErr_dOut = self.loss.deriv(predicted=net_outputs, target=target)
                     # set the layers' gradients and add them into grad_net
                     # (emulate pass by reference of grad_net using return and reassign)
+
                     grad_net = net.propagate_back(dErr_dOut, grad_net)
 
-                # learning rate decay
+                # linear rate decay
                 if self.lr_decay == 'linear':
                     lr = lr_decays[self.lr_decay].func(
                         curr_lr=self.lr,
@@ -142,7 +144,6 @@ class GradientDescent(Optimizer, ABC):
                     )
                 # exp learning rate decay
                 elif self.lr_decay == 'exponential':
-                    # step += 1
                     lr = lr_decays[self.lr_decay].func(
                         initial_lr=self.lr,
                         decay_rate=self.decay_rate,
@@ -197,5 +198,5 @@ class GradientDescent(Optimizer, ABC):
 
 
 optimizers = {
-    'gd': GradientDescent
+    'sgd': StochasticGradientDescent
 }

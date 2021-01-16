@@ -195,8 +195,10 @@ def euclidean_loss(predicted, target):
 """ Learning rate decay """
 
 
-def linear_lr_dec(curr_lr, base_lr, final_lr, curr_step, limit_step):
+def linear_lr_decay(curr_lr, base_lr, final_lr, curr_step, limit_step):
     """
+    The linear_lr_decay, linearly decays the learning rate until iteration tau (limit_step). Then it stops
+    decaying and uses a fix learning rate (final_lr)::
 
     :param curr_lr:
     :param base_lr:
@@ -214,7 +216,7 @@ def linear_lr_dec(curr_lr, base_lr, final_lr, curr_step, limit_step):
 
 def exp_lr_decay(initial_lr, decay_rate, step, decay_steps, staircase=True):
     """
-    The exp_lr_decay decays the learning rate by `decay_rate` every
+    The exp_lr_decay, decays the learning rate by `decay_rate` every
         `decay_step`, starting from `initial_lr`::
             learning_rate = initial_lr * decay_rate ** cur_stage
         where::
@@ -235,7 +237,6 @@ def exp_lr_decay(initial_lr, decay_rate, step, decay_steps, staircase=True):
     cur_stage = step/decay_steps
     if staircase:
         cur_stage = np.floor(cur_stage)
-        print(f"cur_stage{cur_stage}")
     return initial_lr * math.pow(decay_rate, cur_stage)
 
 
@@ -294,7 +295,7 @@ metrics = {
     'euclidean': Euclidean
 }
 
-LinearLRDecay = Function(linear_lr_dec, 'linear')
+LinearLRDecay = Function(linear_lr_decay, 'linear')
 ExponentialLRDecay = Function(exp_lr_decay, 'exponential')
 
 lr_decays = {

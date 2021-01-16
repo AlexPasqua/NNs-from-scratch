@@ -19,18 +19,18 @@ if __name__ == '__main__':
 
     training_params = {
         'lr': 0.8,
-        'momentum': 0.9,
+        'momentum': 0.8,
         #'lambd': 0.01,
         #'reg_type': 'l2',
         'lr_decay': 'exponential',
-        'decay_rate': 0.1,
-        'decay_steps': 500,
+        'decay_rate': 0.95,
+        'decay_steps': 100,
         'staircase': False,
         #'limit_step':200,
         'loss': 'squared',
-        'opt': 'gd',
-        'epochs': 300,
-        'batch_size': 30,
+        'opt': 'sgd',
+        'epochs': 500,
+        'batch_size': 'full',
         'metr': 'bin_class_acc'
     }
 
