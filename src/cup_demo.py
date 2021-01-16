@@ -75,7 +75,7 @@ if __name__ == '__main__':
     #             batch_size=30, k_folds=5, verbose=True)
 
     # grid search
-    grid_search(dev_set_x=cup_tr_data, dev_set_y=cup_tr_targets)
+    grid_search(dataset="cup")
 
     # # plot graph
     # plot_curves(
