@@ -139,21 +139,20 @@ class GradientDescent(Optimizer, ABC):
                         curr_lr=self.lr,
                         base_lr=self.base_lr,
                         final_lr=self.final_lr,
-                        curr_step=step,
+                        curr_step= epoch + 1,
                         limit_step=self.limit_step
                     )
 
                 # exp learning rate decay
                 if self.lr_decay == 'exponential':
                     # step += 1
-                    self.lr = lr_decays[self.lr_decay].func(
+                    lr = lr_decays[self.lr_decay].func(
                         curr_lr=self.lr,
                         decay_rate=self.decay_rate,
-                        step=epoch,
+                        step=epoch +1,
                         decay_steps=self.decay_steps,
                         staircase=self.staircase
                     )
-                print(f"epoch{epoch}, lr: {self.lr}")
 
                 # weights update
                 for layer_index in range(len(net.layers)):
@@ -161,8 +160,8 @@ class GradientDescent(Optimizer, ABC):
                     grad_net[layer_index]['weights'] /= batch_size
                     grad_net[layer_index]['biases'] /= batch_size
                     # delta_w is equivalent to lrn_rate * local_grad * input_on_that_connection (local_grad = delta)
-                    delta_w = self.lr * grad_net[layer_index]['weights']
-                    delta_b = self.lr * grad_net[layer_index]['biases']
+                    delta_w = lr * grad_net[layer_index]['weights']
+                    delta_b = lr * grad_net[layer_index]['biases']
                     # momentum_net[layer_index]['weights'] is the new delta_w --> it adds the momentum
                     # Since it acts as delta_w, it multiplies itself by the momentum constant and then adds
                     # lrn_rate * local_grad * input_on_that_connection (i.e. "delta_w")

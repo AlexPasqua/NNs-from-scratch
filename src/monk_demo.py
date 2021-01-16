@@ -22,36 +22,36 @@ if __name__ == '__main__':
         'momentum': 0.7,
         'lambd': 0.01,
         'reg_type': 'l2',
-        'lr_decay': 'exponential',
+        'lr_decay': 'linear',
         'decay_rate': 0.95,
-        'decay_steps': 20,
-        'staircase': True,
-        # 'limit_step':200,
+        'decay_steps': 5,
+        'staircase': False,
+        'limit_step':200,
         'loss': 'squared',
         'opt': 'gd',
-        'epochs': 300,
+        'epochs': 50,
         'batch_size': 'full',
         'metr': 'bin_class_acc'
     }
 
     # cross validation
-    #tr_error_values, tr_metric_values, val_error_values, val_metric_values = cross_valid(
-  #       net=model,
-  #       tr_val_x=monk_train,
-   #      tr_val_y=labels,
-    #     k_folds=5,
-    #     **training_params
-    # )
+    tr_error_values, tr_metric_values, val_error_values, val_metric_values = cross_valid(
+        net=model,
+        tr_val_x=monk_train,
+        tr_val_y=labels,
+        k_folds=2,
+        **training_params
+    )
 
     # hold-out validation
-    model.compile(opt='gd', loss='squared', metr='bin_class_acc', lr=0.2, momentum=0.6)
-    tr_error_values, tr_metric_values, val_error_values, val_metric_values = model.fit(
-        tr_x=monk_train,
-        tr_y=labels,
-        epochs=600,
-        val_split=0.,
-        batch_size='full',
-    )
+    #model.compile(opt='gd', loss='squared', metr='bin_class_acc', lr=0.2, momentum=0.6)
+    #tr_error_values, tr_metric_values, val_error_values, val_metric_values = model.fit(
+   #     tr_x=monk_train,
+    #    tr_y=labels,
+  #      epochs=600,
+   #     val_split=0.,
+  #      batch_size='full',
+  #  )
 
     # plot graph
     plot_curves(

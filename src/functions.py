@@ -207,6 +207,7 @@ def exp_lr_decay(curr_lr, decay_rate, step, decay_steps, staircase=True):
     cur_stage = step/decay_steps
     if staircase:
         cur_stage = np.floor(cur_stage)
+        print(f"cur_stage{cur_stage}")
     return curr_lr * math.pow(decay_rate, cur_stage)
 
 
