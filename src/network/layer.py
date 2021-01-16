@@ -1,5 +1,5 @@
 import numpy as np
-from weights_initializations import weights_inits
+from utility import weights_inits
 from functions import act_funcs
 
 
