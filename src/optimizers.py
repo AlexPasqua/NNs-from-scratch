@@ -158,9 +158,9 @@ class StochasticGradientDescent(Optimizer, ABC):
                     )
                 else:
                     lr = self.lr
-                print(lr)
+                #print(lr)
                 # saves learning rate values #TODO: DEBUG | remove later |
-                lr_plots.append(lr)
+                #lr_plots.append(lr)
 
                 # weights update
                 for layer_index in range(len(net.layers)):
@@ -203,8 +203,8 @@ class StochasticGradientDescent(Optimizer, ABC):
             tr_metric_values.append(epoch_tr_metric / len(tr_x))
 
         # plot learning rate graph #TODO: DEBUG | remove later |
-        plt.plot(lr_plots)
-        plt.show()
+        #plt.plot(lr_plots)
+        #plt.show()
 
         return tr_error_values, tr_metric_values, val_error_values, val_metric_values
 

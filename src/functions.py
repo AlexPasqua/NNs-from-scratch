@@ -216,9 +216,9 @@ def linear_lr_decay(curr_lr, base_lr, final_lr, curr_step, limit_step):
 
 def exp_lr_decay(initial_lr, decay_rate, step, decay_steps, staircase=True):
     """
-    The exp_lr_decay, decays the learning rate by `decay_rate` every
+    The exp_lr_decay, decays exponentially the learning rate by `decay_rate` every
         `decay_step`, starting from `initial_lr`::
-            learning_rate = initial_lr * decay_rate ** cur_stage
+            learning_rate = initial_lr * exp(-decay_rate * cur_stage)
         where::
             cur_stage = step / decay_steps          if staircase = False
             cur_stage = floor(step / decay_steps)   if staircase = True
@@ -237,7 +237,8 @@ def exp_lr_decay(initial_lr, decay_rate, step, decay_steps, staircase=True):
     cur_stage = step/decay_steps
     if staircase:
         cur_stage = np.floor(cur_stage)
-    return initial_lr * math.pow(decay_rate, cur_stage)
+    decay = -decay_rate * cur_stage
+    return initial_lr * math.exp(decay)
 
 
 """ Regularizations """
