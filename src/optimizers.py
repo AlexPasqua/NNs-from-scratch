@@ -86,7 +86,6 @@ class GradientDescent(Optimizer, ABC):
         tr_error_values, tr_metric_values, val_error_values, val_metric_values = [], [], [], []
         net = self.net  # just to be shorter
         momentum_net = net.get_empty_struct()
-        step = 0
 
         # cycle through epochs
         for epoch in tqdm.tqdm(range(epochs), desc="Iterating over epochs", disable=False):
@@ -134,22 +133,20 @@ class GradientDescent(Optimizer, ABC):
 
                 # learning rate decay
                 if self.lr_decay == 'linear':
-                    step += 1
                     lr = lr_decays[self.lr_decay].func(
                         curr_lr=self.lr,
                         base_lr=self.base_lr,
                         final_lr=self.final_lr,
-                        curr_step= epoch + 1,
+                        curr_step=epoch + 1,
                         limit_step=self.limit_step
                     )
-
                 # exp learning rate decay
                 elif self.lr_decay == 'exponential':
                     # step += 1
                     lr = lr_decays[self.lr_decay].func(
                         curr_lr=self.lr,
                         decay_rate=self.decay_rate,
-                        step=epoch +1,
+                        step=epoch + 1,
                         decay_steps=self.decay_steps,
                         staircase=self.staircase
                     )

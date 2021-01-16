@@ -22,7 +22,7 @@ if __name__ == '__main__':
         'momentum': 0.9,
         #'lambd': 0.01,
         #'reg_type': 'l2',
-        #'lr_decay': 'exponential',
+        'lr_decay': 'exponential',
         'decay_rate': 0.96,
         'decay_steps': 500,
         'staircase': False,
@@ -30,7 +30,7 @@ if __name__ == '__main__':
         'loss': 'squared',
         'opt': 'gd',
         'epochs': 300,
-        'batch_size': 'full',
+        'batch_size': 30,
         'metr': 'bin_class_acc'
     }
 
