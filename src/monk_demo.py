@@ -19,17 +19,17 @@ if __name__ == '__main__':
 
     training_params = {
         'lr': 0.8,
-        'momentum': 0.7,
-        'lambd': 0.01,
-        'reg_type': 'l2',
-        'lr_decay': 'linear',
-        'decay_rate': 0.95,
-        'decay_steps': 5,
+        'momentum': 0.9,
+        #'lambd': 0.01,
+        #'reg_type': 'l2',
+        #'lr_decay': 'exponential',
+        'decay_rate': 0.96,
+        'decay_steps': 500,
         'staircase': False,
-        'limit_step':200,
+        #'limit_step':200,
         'loss': 'squared',
         'opt': 'gd',
-        'epochs': 50,
+        'epochs': 300,
         'batch_size': 'full',
         'metr': 'bin_class_acc'
     }
@@ -39,7 +39,7 @@ if __name__ == '__main__':
         net=model,
         tr_val_x=monk_train,
         tr_val_y=labels,
-        k_folds=2,
+        k_folds=5,
         **training_params
     )
 

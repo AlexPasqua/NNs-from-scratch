@@ -135,7 +135,7 @@ class GradientDescent(Optimizer, ABC):
                 # learning rate decay
                 if self.lr_decay == 'linear':
                     step += 1
-                    self.lr = lr_decays[self.lr_decay].func(
+                    lr = lr_decays[self.lr_decay].func(
                         curr_lr=self.lr,
                         base_lr=self.base_lr,
                         final_lr=self.final_lr,
@@ -144,7 +144,7 @@ class GradientDescent(Optimizer, ABC):
                     )
 
                 # exp learning rate decay
-                if self.lr_decay == 'exponential':
+                elif self.lr_decay == 'exponential':
                     # step += 1
                     lr = lr_decays[self.lr_decay].func(
                         curr_lr=self.lr,
@@ -153,6 +153,8 @@ class GradientDescent(Optimizer, ABC):
                         decay_steps=self.decay_steps,
                         staircase=self.staircase
                     )
+                else:
+                    lr = self.lr
 
                 # weights update
                 for layer_index in range(len(net.layers)):
