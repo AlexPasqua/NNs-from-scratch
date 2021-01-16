@@ -100,21 +100,29 @@ def list_of_combos(param_dict):
         # check if the current combination is formed of compatible parameters
         # c[0] = units per layer  ;  c[1] = activation functions  -->  their lengths must be equal
         if len(c[0]) == len(c[1]):
-            combos.append({'units_per_layer': c[0], 'acts': c[1], 'momentum': c[2], 'batch_size': c[3], 'lr': c[4],
-                           'init_type': c[5], 'lower_lim': c[6], 'upper_lim': c[7]})
+            combos.append({'units_per_layer': c[0], 'acts': c[1], 'init_type': c[2], 'lower_lim': c[3],
+                           'upper_lim': c[4], 'momentum': c[5], 'batch_size': c[6], 'lr': c[7], 'loss': c[8],
+                           'metr': c[9]})
     return combos
 
 
 def get_best_models(input_dim, n_models=1):
     with open("../results/results.json", 'r') as f:
         data = json.load(f)
-    models = []
+    models, params, errors, std_errors, accuracies, std_accuracies = [], [], [], [], [], []
+    for result in data['results']:
+        errors.append(result[0])
+        std_errors.append(result[1])
+        accuracies.append(result[2])
+        std_accuracies.append(result[3])
+
     for i in range(n_models):
-        for result in data['results']:
-            accuracies = result[2]
         index = np.argmax(accuracies)
+        accuracies = np.delete(accuracies, index)
         models.append(Network(input_dim=input_dim, **data['params'][index]))
-    return models
+        params.append(data['params'][index])
+
+    return models, params
 
 
 def plot_curves(tr_loss, val_loss, tr_acc, val_acc, lr=None, momentum=None, lambd=None, **kwargs):

@@ -84,7 +84,7 @@ class Network:
         return x
 
     def compile(self, opt='gd', loss='squared', metr='bin_class_acc', lr=0.01, lr_decay=None, limit_step=None,
-                momentum=0., reg_type='l2', lambd=0):
+                momentum=0., reg_type='l2', lambd=0, **kwargs):
         """
         Prepares the network for training by assigning an optimizer to it
         :param opt: ('Optimizer' object)
@@ -111,7 +111,7 @@ class Network:
             lambd=lambd
         )
 
-    def fit(self, tr_x, tr_y, val_x=None, val_y=None, epochs=1, batch_size=1, val_split=0):
+    def fit(self, tr_x, tr_y, val_x=None, val_y=None, epochs=1, batch_size=1, val_split=0, **kwargs):
         """
         Execute the training of the network
         :param tr_x: (numpy ndarray) input training set

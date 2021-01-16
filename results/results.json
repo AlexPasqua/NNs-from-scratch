@@ -1,1 +1,106 @@
-{"params": [{"units_per_layer": [4, 1], "acts": ["leaky_relu", "tanh"], "momentum": 0.7, "batch_size": "full", "lr": 0.1, "init_type": "uniform", "lower_lim": -0.1, "upper_lim": 0.1}, {"units_per_layer": [4, 1], "acts": ["leaky_relu", "tanh"], "momentum": 0.7, "batch_size": "full", "lr": 0.3, "init_type": "uniform", "lower_lim": -0.1, "upper_lim": 0.1}, {"units_per_layer": [2, 2, 1], "acts": ["leaky_relu", "leaky_relu", "tanh"], "momentum": 0.7, "batch_size": "full", "lr": 0.1, "init_type": "uniform", "lower_lim": -0.1, "upper_lim": 0.1}, {"units_per_layer": [2, 2, 1], "acts": ["leaky_relu", "leaky_relu", "tanh"], "momentum": 0.7, "batch_size": "full", "lr": 0.3, "init_type": "uniform", "lower_lim": -0.1, "upper_lim": 0.1}], "results": [[0.17104519476360294, 0.20116939418619822, 0.8226666666666667, 0.13033972703839933], [0.03258361005086259, 0.04954922940945802, 0.9119999999999999, 0.10552724766618336], [0.25655567569999777, 0.15701339350130072, 0.5740000000000001, 0.35730099356145095], [0.18374464536415971, 0.14606737702463893, 0.8956666666666665, 0.07390384142774838]]}
+{
+	"params": [
+		{
+			"units_per_layer": [
+				4, 
+				1
+			], 
+			"acts": [
+				"leaky_relu", 
+				"tanh"
+			], 
+			"init_type": "uniform", 
+			"lower_lim": -0.1, 
+			"upper_lim": 0.1, 
+			"momentum": 0.7, 
+			"batch_size": "full", 
+			"lr": 0.1, 
+			"loss": "squared", 
+			"metr": "bin_class_acc"
+		}, 
+		{
+			"units_per_layer": [
+				4, 
+				1
+			], 
+			"acts": [
+				"leaky_relu", 
+				"tanh"
+			], 
+			"init_type": "uniform", 
+			"lower_lim": -0.1, 
+			"upper_lim": 0.1, 
+			"momentum": 0.7, 
+			"batch_size": "full", 
+			"lr": 0.3, 
+			"loss": "squared", 
+			"metr": "bin_class_acc"
+		}, 
+		{
+			"units_per_layer": [
+				2, 
+				2, 
+				1
+			], 
+			"acts": [
+				"leaky_relu", 
+				"leaky_relu", 
+				"tanh"
+			], 
+			"init_type": "uniform", 
+			"lower_lim": -0.1, 
+			"upper_lim": 0.1, 
+			"momentum": 0.7, 
+			"batch_size": "full", 
+			"lr": 0.1, 
+			"loss": "squared", 
+			"metr": "bin_class_acc"
+		}, 
+		{
+			"units_per_layer": [
+				2, 
+				2, 
+				1
+			], 
+			"acts": [
+				"leaky_relu", 
+				"leaky_relu", 
+				"tanh"
+			], 
+			"init_type": "uniform", 
+			"lower_lim": -0.1, 
+			"upper_lim": 0.1, 
+			"momentum": 0.7, 
+			"batch_size": "full", 
+			"lr": 0.3, 
+			"loss": "squared", 
+			"metr": "bin_class_acc"
+		}
+	], 
+	"results": [
+		[
+			0.3121798064405661, 
+			0.09040359301945067, 
+			0.501, 
+			0.0925418824100742
+		], 
+		[
+			0.16126824927643754, 
+			0.15123619262903507, 
+			0.8706666666666667, 
+			0.11184115720272406
+		], 
+		[
+			0.5076851237623308, 
+			0.0032566289250022242, 
+			0.0, 
+			0.0
+		], 
+		[
+			0.4360599405730955, 
+			0.12846611868245322, 
+			0.12, 
+			0.24000000000000002
+		]
+	]
+}

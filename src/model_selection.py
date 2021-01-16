@@ -10,9 +10,10 @@ from network import Network
 
 def cross_valid(net, dev_set_x, dev_set_y, loss, metr, lr, lr_decay=None, limit_step=None, opt='gd', momentum=0.,
                 epochs=1, batch_size=1, k_folds=5, reg_type='l2', lambd=0, verbose=False, **kwargs):
-    # TODO: only for monks, set this up better
-    rescale = True if net.params['acts'][-1] in ('tanh',) else False
-    dev_set_x, dev_set_y = read_monk("monks-1", rescale=rescale)
+
+    # rescale the labels if it's the case
+    if net.params['acts'][-1] in ('tanh',):
+        dev_set_y[dev_set_y == 0] = -1
 
     # split the dataset into folds
     x_folds = np.array(np.array_split(dev_set_x, k_folds), dtype=object)
@@ -79,12 +80,14 @@ def get_coarse_gs_params():
     """
     return {'units_per_layer': ((4, 1), (2, 2, 1)),
             'acts': (('leaky_relu', 'tanh'), ('leaky_relu', 'leaky_relu', 'tanh')),
+            'init_type': ('uniform',),
+            'lower_lim': (-0.1,),
+            'upper_lim': (0.1,),
             'momentum': (0.7,),
             'batch_size': ('full',),
             'lr': (0.1, 0.3),
-            'init_type': ('uniform',),
-            'lower_lim': (-0.1,),
-            'upper_lim': (0.1,)}
+            'loss': ('squared',),
+            'metric': ('bin_class_acc',)}
 
 
 def grid_search(dev_set_x, dev_set_y):
@@ -97,8 +100,7 @@ def grid_search(dev_set_x, dev_set_y):
                               init_type=combo['init_type'], lower_lim=combo['lower_lim'], upper_lim=combo['upper_lim']))
 
     results = Parallel(n_jobs=os.cpu_count() - 1, verbose=50)(delayed(cross_valid)(
-        net=models[i], dev_set_x=dev_set_x, dev_set_y=dev_set_y, loss='squared', metr='bin_class_acc', epochs=500,
-        k_folds=5,
+        net=models[i], dev_set_x=dev_set_x, dev_set_y=dev_set_y, epochs=150, k_folds=5,
         **param_combos[i]) for i in range(len(param_combos)))
 
     # write results on file
@@ -108,4 +110,4 @@ def grid_search(dev_set_x, dev_set_y):
         os.mkdir(folder_path)
     data = {"params": param_combos, "results": results}
     with open(folder_path + file_name, 'w') as f:
-        json.dump(data, f)
+        json.dump(data, f, indent='\t')
