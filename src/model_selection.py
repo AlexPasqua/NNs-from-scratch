@@ -3,8 +3,8 @@ from network.network import Network
 import tqdm
 
 
-def cross_valid(net, tr_val_x, tr_val_y, loss, metr, lr, lr_decay=None, limit_step=None, opt='gd', momentum=0.,
-                epochs=1, batch_size=1, k_folds=5, reg_type='l2', lambd=0):
+def cross_valid(net, tr_val_x, tr_val_y, loss, metr, lr, lr_decay=None, limit_step=None, decay_rate=None,
+                decay_steps=None, opt='gd', momentum=0., epochs=1, batch_size=1, k_folds=5, reg_type='l2', lambd=0):
     # split the dataset into folds
     x_folds = np.array(np.array_split(tr_val_x, k_folds), dtype=object)
     y_folds = np.array(np.array_split(tr_val_y, k_folds), dtype=object)
@@ -36,6 +36,8 @@ def cross_valid(net, tr_val_x, tr_val_y, loss, metr, lr, lr_decay=None, limit_st
             lr=lr,
             lr_decay=lr_decay,
             limit_step=limit_step,
+            decay_rate=decay_rate,
+            decay_steps=decay_steps,
             momentum=momentum,
             reg_type=reg_type,
             lambd=lambd

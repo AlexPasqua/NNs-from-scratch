@@ -19,7 +19,7 @@ class Optimizer(ABC):
     """
 
     @abstractmethod
-    def __init__(self, net, loss, metr, lr, lr_decay, limit_step, momentum, reg_type, lambd):
+    def __init__(self, net, loss, metr, lr, lr_decay, limit_step, decay_rate, decay_steps, momentum, reg_type, lambd):
         # makes sure lr is a value between 0 and 1
         if lr <= 0 or lr > 1:
             raise ValueError('lr should be a value between 0 and 1, Got:{}'.format(lr))
@@ -31,6 +31,8 @@ class Optimizer(ABC):
         self.final_lr = self.base_lr / 100.0
         self.lr_decay = lr_decay
         self.limit_step = limit_step
+        self.decay_rate = decay_rate
+        self.decay_steps = decay_steps
         self.momentum = momentum
         self.lambd = lambd
         self.reg_type = reg_type
@@ -51,8 +53,9 @@ class Optimizer(ABC):
 class GradientDescent(Optimizer, ABC):
     """ Gradient Descent """
 
-    def __init__(self, net, loss, metr, lr, lr_decay, limit_step, momentum, reg_type, lambd):
-        super(GradientDescent, self).__init__(net, loss, metr, lr, lr_decay, limit_step, momentum, reg_type, lambd)
+    def __init__(self, net, loss, metr, lr, lr_decay, limit_step, decay_rate, decay_steps, momentum, reg_type, lambd):
+        super(GradientDescent, self).__init__(net, loss, metr, lr, lr_decay, limit_step, decay_rate, decay_steps,
+                                              momentum, reg_type, lambd)
         self.__type = 'gd'
 
     @property
@@ -127,7 +130,7 @@ class GradientDescent(Optimizer, ABC):
                     grad_net = net.propagate_back(dErr_dOut, grad_net)
 
                 # learning rate decay
-                if self.lr_decay is not None:
+                if self.lr_decay == 'linear':
                     step += 1
                     self.lr = lr_decays[self.lr_decay].func(
                         curr_lr=self.lr,
@@ -136,6 +139,18 @@ class GradientDescent(Optimizer, ABC):
                         curr_step=step,
                         limit_step=self.limit_step
                     )
+
+                # exp leraning rate decay
+                if self.lr_decay == 'exponential':
+                    step += 1
+                    self.lr = lr_decays[self.lr_decay].func(
+                        curr_lr=self.lr,
+                        decay_rate=self.decay_rate,
+                        step=step,
+                        decay_steps=self.decay_steps
+                    )
+                    print(f"epoch{epoch}, lr: {self.lr}")
+
 
                 # weights update
                 for layer_index in range(len(net.layers)):
