@@ -4,16 +4,21 @@ import numpy as np
 import tqdm
 from datetime import datetime
 from joblib import Parallel, delayed
-from utility import plot_curves, sets_from_folds, list_of_combos, read_monk
+from utility import plot_curves, sets_from_folds, list_of_combos, read_monk, read_cup
 from network import Network
 
 
-def cross_valid(net, dev_set_x, dev_set_y, loss, metr, lr, lr_decay=None, limit_step=None, opt='gd', momentum=0.,
+def cross_valid(net, dataset, loss, metr, lr, lr_decay=None, limit_step=None, opt='gd', momentum=0.,
                 epochs=1, batch_size=1, k_folds=5, reg_type='l2', lambd=0, verbose=False, **kwargs):
 
-    # rescale the labels if it's the case
-    if net.params['acts'][-1] in ('tanh',):
-        dev_set_y[dev_set_y == 0] = -1
+    # read the dataset
+    if dataset not in ('monks-1', 'monks-2', 'monks-3', 'cup'):
+        raise ValueError("Attribute dataset must be in {monks-1, monks-2, monks-3, cup}")
+    if dataset == "cup":
+        dev_set_x, dev_set_y, _ = read_cup()
+    else:
+        rescale = True if net.params['acts'][-1] in ('tanh',) else False
+        dev_set_x, dev_set_y = read_monk(name=dataset, rescale=rescale)
 
     # split the dataset into folds
     x_folds = np.array(np.array_split(dev_set_x, k_folds), dtype=object)
@@ -87,21 +92,25 @@ def get_coarse_gs_params():
             'batch_size': ('full',),
             'lr': (0.1, 0.3),
             'loss': ('squared',),
-            'metric': ('bin_class_acc',)}
+            'metric': ('bin_class_acc',),
+            'epochs': (50, 100, 150)}
 
 
-def grid_search(dev_set_x, dev_set_y):
+def grid_search(dataset):
+    """
+    Performs a grid search over a set of parameters to find the best combination of hyperparameters
+    :param dataset: name of the dataset (monks-1, monks-2, monks-3, cup)
+    """
     models = []
+    input_dim = 10 if dataset == "cup" else 17
     grid_search_params = get_coarse_gs_params()
     param_combos = list_of_combos(grid_search_params)
     print(f"Total number of trials: {len(param_combos)}")
     for combo in param_combos:
-        models.append(Network(input_dim=len(dev_set_x[0]), units_per_layer=combo['units_per_layer'], acts=combo['acts'],
-                              init_type=combo['init_type'], lower_lim=combo['lower_lim'], upper_lim=combo['upper_lim']))
+        models.append(Network(input_dim=input_dim, **combo))
 
     results = Parallel(n_jobs=os.cpu_count() - 1, verbose=50)(delayed(cross_valid)(
-        net=models[i], dev_set_x=dev_set_x, dev_set_y=dev_set_y, epochs=150, k_folds=5,
-        **param_combos[i]) for i in range(len(param_combos)))
+        net=models[i], dataset=dataset, k_folds=5, **param_combos[i]) for i in range(len(param_combos)))
 
     # write results on file
     folder_path = "../results/"

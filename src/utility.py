@@ -102,7 +102,7 @@ def list_of_combos(param_dict):
         if len(c[0]) == len(c[1]):
             combos.append({'units_per_layer': c[0], 'acts': c[1], 'init_type': c[2], 'lower_lim': c[3],
                            'upper_lim': c[4], 'momentum': c[5], 'batch_size': c[6], 'lr': c[7], 'loss': c[8],
-                           'metr': c[9]})
+                           'metr': c[9], 'epochs': c[10]})
     return combos
 
 

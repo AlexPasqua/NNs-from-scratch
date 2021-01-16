@@ -51,13 +51,13 @@ if __name__ == '__main__':
     # )
 
     # grid search
-    grid_search(dev_set_x=monk_train, dev_set_y=labels)
+    grid_search(dataset="monks-1")
     best_model, params = get_best_models(n_models=1, input_dim=len(monk_train[0]))
     best_model = best_model[0]
     params = params[0]
     best_model.print_topology()
     best_model.compile(opt='gd', **params)
-    best_model.fit(tr_x=monk_train, tr_y=labels, epochs=200, **params)
+    best_model.fit(tr_x=monk_train, tr_y=labels, **params)
 
     # # plot graph
     # plot_curves(
