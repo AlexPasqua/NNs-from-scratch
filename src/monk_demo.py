@@ -23,7 +23,7 @@ if __name__ == '__main__':
         #'lambd': 0.01,
         #'reg_type': 'l2',
         'lr_decay': 'exponential',
-        'decay_rate': 0.96,
+        'decay_rate': 0.1,
         'decay_steps': 500,
         'staircase': False,
         #'limit_step':200,

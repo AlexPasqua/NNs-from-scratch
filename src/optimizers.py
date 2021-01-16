@@ -144,7 +144,7 @@ class GradientDescent(Optimizer, ABC):
                 elif self.lr_decay == 'exponential':
                     # step += 1
                     lr = lr_decays[self.lr_decay].func(
-                        curr_lr=self.lr,
+                        initial_lr=self.lr,
                         decay_rate=self.decay_rate,
                         step=epoch + 1,
                         decay_steps=self.decay_steps,
