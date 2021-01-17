@@ -77,7 +77,7 @@ def cross_valid(net, dataset, loss, metr, lr, lr_decay=None, limit_step=None, de
         print("Loss: {} - std:(+/- {})\nAccuracy: {} - std:(+/- {})".format(avg_val_err, std_val_err,
                                                                             avg_val_metric, std_val_metric))
 
-    # plot_curves(tr_error_values, val_error_values, tr_metric_values, val_metric_values, lr, momentum)
+    plot_curves(tr_error_values, val_error_values, tr_metric_values, val_metric_values, lr, momentum)
     return avg_val_err, std_val_err, avg_val_metric, std_val_metric
 
 

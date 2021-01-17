@@ -99,7 +99,7 @@ class StochasticGradientDescent(Optimizer, ABC):
         lr_plots = []
 
         # cycle through epochs
-        for epoch in tqdm.tqdm(range(epochs), desc="Iterating over epochs", disable=True):
+        for epoch in tqdm.tqdm(range(epochs), desc="Iterating over epochs", disable=False):
             epoch_tr_error = np.zeros(net.layers[-1].n_units)
             epoch_tr_metric = np.zeros(net.layers[-1].n_units)
             epoch_val_error = np.zeros(net.layers[-1].n_units)
@@ -193,8 +193,7 @@ class StochasticGradientDescent(Optimizer, ABC):
             tr_metric_values.append(epoch_tr_metric / len(tr_x))
 
         # plot learning rate graph #TODO: DEBUG | remove later |
-        # print(lr_plots[-1])
-        # print(self.final_lr)
+        # print(lr_plots[-1], '\n', self.final_lr)
         # plt.plot(lr_plots)
         # plt.grid()
         # plt.show()
