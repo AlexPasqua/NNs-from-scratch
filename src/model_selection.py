@@ -3,6 +3,7 @@ import os
 import numpy as np
 import tqdm
 from datetime import datetime
+import warnings
 from joblib import Parallel, delayed
 from utility import plot_curves, sets_from_folds, list_of_combos, read_monk, read_cup
 from network import Network
@@ -11,7 +12,6 @@ from network import Network
 def cross_valid(net, dataset, loss, metr, lr, lr_decay=None, limit_step=None, decay_rate=None, decay_steps=None,
                 staircase=True, opt='sgd', momentum=0., epochs=1, batch_size=1, k_folds=5, reg_type='l2', lambd=0,
                 disable_tqdms=(True, True), verbose=False, **kwargs):
-
     # read the dataset
     if dataset not in ('monks-1', 'monks-2', 'monks-3', 'cup'):
         raise ValueError("Attribute dataset must be in {monks-1, monks-2, monks-3, cup}")
@@ -39,8 +39,13 @@ def cross_valid(net, dataset, loss, metr, lr, lr_decay=None, limit_step=None, de
         net.compile(opt=opt, loss=loss, metr=metr, lr=lr, lr_decay=lr_decay, limit_step=limit_step,
                     decay_rate=decay_rate, decay_steps=decay_steps, staircase=staircase, momentum=momentum,
                     reg_type=reg_type, lambd=lambd)
-        tr_history = net.fit(tr_x=tr_data, tr_y=tr_targets, val_x=val_data, val_y=val_targets, epochs=epochs,
-                             batch_size=batch_size, disable_tqdm=disable_tqdms[1])
+        warnings.simplefilter("error")
+        try:
+            tr_history = net.fit(tr_x=tr_data, tr_y=tr_targets, val_x=val_data, val_y=val_targets, epochs=epochs,
+                                 batch_size=batch_size, disable_tqdm=disable_tqdms[1])
+        except Exception as e:
+            print(f"{e.__class__.__name__} occurred. Training suppressed.")
+            return
 
         # metrics for the graph
         # composition of tr_history:
@@ -52,8 +57,12 @@ def cross_valid(net, dataset, loss, metr, lr, lr_decay=None, limit_step=None, de
         tr_metric_values += tr_history[1]
         val_error_values += tr_history[2]
         val_metric_values += tr_history[3]
-        val_error_per_fold.append(tr_history[2][-1])
-        val_metric_per_fold.append(tr_history[3][-1])
+        try:
+            val_error_per_fold.append(tr_history[2][-1])
+            val_metric_per_fold.append(tr_history[3][-1])
+        except TypeError:
+            val_error_per_fold.append(tr_history[2])
+            val_metric_per_fold.append(tr_history[3])
 
         # reset net's weights for the next iteration of CV
         net = Network(**net.params)
@@ -72,10 +81,10 @@ def cross_valid(net, dataset, loss, metr, lr, lr_decay=None, limit_step=None, de
     if verbose:
         print("\nValidation scores per fold:")
         for i in range(k_folds):
-            print(f"Fold {i + 1} - Loss: {val_error_per_fold[i]} - Accuracy: {val_metric_per_fold[i]}\n{'-' * 62}")
+            print(f"Fold {i + 1} - Loss: {val_error_per_fold[i]} - Metric: {val_metric_per_fold[i]}\n{'-' * 62}")
         print('\nAverage validation scores for all folds:')
-        print("Loss: {} - std:(+/- {})\nAccuracy: {} - std:(+/- {})".format(avg_val_err, std_val_err,
-                                                                            avg_val_metric, std_val_metric))
+        print("Loss: {} - std:(+/- {})\nMetric: {} - std:(+/- {})".format(avg_val_err, std_val_err,
+                                                                          avg_val_metric, std_val_metric))
 
     plot_curves(tr_error_values, val_error_values, tr_metric_values, val_metric_values, lr, momentum)
     return avg_val_err, std_val_err, avg_val_metric, std_val_metric
@@ -114,9 +123,15 @@ def grid_search(dataset, params):
         net=models[i], dataset=dataset, k_folds=5, disable_tqdm=(True, True),
         **param_combos[i]) for i in range(len(param_combos)))
 
+    # do not save models with suppressed training
+    for r, p in zip(results, param_combos):
+        if r is None:
+            results.remove(r)
+            param_combos.remove(p)
+
     # write results on file
     folder_path = "../results/"
-    file_name = "results.json"
+    file_name = "results_" + dataset + ".json"
     if not os.path.exists(folder_path):
         os.mkdir(folder_path)
     data = {"params": param_combos, "results": results}

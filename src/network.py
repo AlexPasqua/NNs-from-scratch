@@ -9,6 +9,7 @@ class Network:
     Attributes:
         layers: list of net's layers ('Layer' objects)
     """
+
     def __init__(self, input_dim, units_per_layer, acts, init_type, **kwargs):
         """
         Constructor
@@ -157,15 +158,8 @@ class Network:
         if target_len != self.layers[-1].n_units or n_patterns != n_targets or batch_size > n_patterns:
             raise AttributeError(f"Mismatching shapes")
 
-        return self.__opt.optimize(
-            tr_x=tr_x,
-            tr_y=tr_y,
-            val_x=val_x,
-            val_y=val_y,
-            epochs=epochs,
-            batch_size=batch_size,
-            **kwargs
-        )
+        return self.__opt.optimize(tr_x=tr_x, tr_y=tr_y, val_x=val_x, val_y=val_y, epochs=epochs,
+                                   batch_size=batch_size, **kwargs)
 
     def propagate_back(self, dErr_dOut, grad_net):
         curr_delta = dErr_dOut

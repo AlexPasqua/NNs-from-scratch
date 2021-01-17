@@ -105,19 +105,24 @@ def list_of_combos(param_dict):
     return combos
 
 
-def get_best_models(input_dim, n_models=1):
-    with open("../results/results.json", 'r') as f:
+def get_best_models(dataset, n_models=1):
+    if dataset not in ("monks-1", "monks-2", "monks-3", "cup"):
+        raise ValueError("dataset bust be in {monks-1, monks-2, monks-3, cup}")
+
+    with open("../results/results_" + dataset + ".json", 'r') as f:
         data = json.load(f)
-    models, params, errors, std_errors, accuracies, std_accuracies = [], [], [], [], [], []
+
+    input_dim = 10 if dataset == "cup" else 17
+    models, params, errors, std_errors, metrics, std_metrics = [], [], [], [], [], []
     for result in data['results']:
         errors.append(result[0])
         std_errors.append(result[1])
-        accuracies.append(result[2])
-        std_accuracies.append(result[3])
+        metrics.append(result[2])
+        std_metrics.append(result[3])
 
     for i in range(n_models):
-        index = np.argmax(accuracies)
-        accuracies = np.delete(accuracies, index)
+        index = np.argmin(metrics) if dataset == "cup" else np.argmax(metrics)
+        metrics = np.delete(metrics, index)
         models.append(Network(input_dim=input_dim, **data['params'][index]))
         params.append(data['params'][index])
 
