@@ -3,7 +3,6 @@ from utility import read_monk, plot_curves, get_best_models
 from model_selection import grid_search, cross_valid
 from functions import losses
 
-
 if __name__ == '__main__':
     # read the dataset
     monk_train, labels = read_monk(name='monks-1.train', rescale=True)
@@ -37,12 +36,12 @@ if __name__ == '__main__':
     }
 
     # cross validation
-  #  tr_error_values, tr_metric_values, val_error_values, val_metric_values = cross_valid(
-  #      net=model,
-  #      dataset="monks-2.train",
-  #      k_folds=5,
-   #     verbose=False,
-   #     disable_tqdms=(True, False),
+    #  tr_error_values, tr_metric_values, val_error_values, val_metric_values = cross_valid(
+    #      net=model,
+    #      dataset="monks-2.train",
+    #      k_folds=5,
+    #     verbose=False,
+    #     disable_tqdms=(True, False),
     #    **params
     #    )
 
@@ -76,11 +75,8 @@ if __name__ == '__main__':
     #     **params
     # )
 
-
     model.compile(**params)
     model.fit(**params, tr_x=monk_train, tr_y=labels, display_scores=False)
     pred_test = model.predict(inp=x_test)
     results = model.evaluate(predicted=pred_test, y_labels=y_test, metr='bin_class_acc', loss='squared')
     print(results)
-
-

@@ -10,8 +10,7 @@ from network import Network
 
 def cross_valid(net, dataset, loss, metr, lr, lr_decay=None, limit_step=None, decay_rate=None, decay_steps=None,
                 staircase=True, opt='sgd', momentum=0., epochs=1, batch_size=1, k_folds=5, reg_type='l2', lambd=0,
-                disable_tqdms =(True, True), verbose=False, **kwargs):
-
+                disable_tqdms=(True, True), verbose=False, **kwargs):
     # read the dataset
     if dataset not in ('monks-1.train', 'monks-2.train', 'monks-3.train', 'cup'):
         raise ValueError("Attribute dataset must be in {monks-1.train, monks-2.train, monks-3.train, cup}")
@@ -40,7 +39,7 @@ def cross_valid(net, dataset, loss, metr, lr, lr_decay=None, limit_step=None, de
                     decay_rate=decay_rate, decay_steps=decay_steps, staircase=staircase, momentum=momentum,
                     reg_type=reg_type, lambd=lambd)
         tr_history = net.fit(tr_x=tr_data, tr_y=tr_targets, val_x=val_data, val_y=val_targets, epochs=epochs,
-                             batch_size=batch_size, disable_tqdm=disable_tqdms[1], display_scores=False)
+                             batch_size=batch_size, disable_tqdm=disable_tqdms[1])
 
         # metrics for the graph
         # composition of tr_history:

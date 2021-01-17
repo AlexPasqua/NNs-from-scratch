@@ -10,6 +10,7 @@ class Network:
     Attributes:
         layers: list of net's layers ('Layer' objects)
     """
+
     def __init__(self, input_dim, units_per_layer, acts, init_type, **kwargs):
         """
         Constructor
@@ -85,7 +86,7 @@ class Network:
         return x
 
     def compile(self, opt='sgd', loss='squared', metr='bin_class_acc', lr=0.01, lr_decay=None, limit_step=None,
-                decay_rate=None, decay_steps=None, staircase=True, momentum=0., reg_type='l2',lambd=0, **kwargs):
+                decay_rate=None, decay_steps=None, staircase=True, momentum=0., reg_type='l2', lambd=0, **kwargs):
         """
         Prepares the network for training by assigning an optimizer to it
         :param opt: ('Optimizer' object)
@@ -115,8 +116,7 @@ class Network:
             lambd=lambd
         )
 
-    def fit(self, tr_x, tr_y, val_x=None, val_y=None, epochs=1, batch_size=1, val_split=0, display_scores=True,
-            **kwargs):
+    def fit(self, tr_x, tr_y, val_x=None, val_y=None, epochs=1, batch_size=1, val_split=0, **kwargs):
         """
         Execute the training of the network
         :param tr_x: (numpy ndarray) input training set
@@ -126,9 +126,6 @@ class Network:
         :param batch_size: (integer) the size of the batch
         :param epochs: (integer) number of epochs
         :param val_split: percentage of training data to use as validation data (alternative to val_x and val_y)
-        :param verbose: if True prints loss and accuracy scores per epoch
-                        if False displays a single progress bar without loss and accuracy scores
-
         """
         # transform sets to numpy array (if they're not already)
         tr_x, tr_y = np.array(tr_x), np.array(tr_y)
@@ -169,15 +166,14 @@ class Network:
             val_y=val_y,
             epochs=epochs,
             batch_size=batch_size,
-            display_scores=display_scores,
             **kwargs
         )
 
     def predict(self, inp):
-        predict = []
+        predictions = []
         for pattern in inp:
-            predict.append(self.forward(pattern))
-        return np.array(predict)
+            predictions.append(self.forward(pattern))
+        return np.array(predictions)
 
     def evaluate(self, predicted, y_labels, metr, loss):
         acc_scores = 0
@@ -187,7 +183,7 @@ class Network:
             los = float(losses[loss].func(predicted=x, target=y))
             acc_scores += pred
             loss_scores += los
-        return f"test_loss:{loss_scores/len(predicted)}  -  test_acc: {acc_scores/len(predicted)}"
+        return f"test_loss:{loss_scores / len(predicted)}  -  test_acc: {acc_scores / len(predicted)}"
 
     def propagate_back(self, dErr_dOut, grad_net):
         curr_delta = dErr_dOut

@@ -143,8 +143,3 @@ def plot_curves(tr_loss, val_loss, tr_acc, val_acc, lr=None, momentum=None, lamb
     # ax[1].set_ylim((0., 1.1))
     ax[1].grid()
     plt.show()
-
-
-def prog_bar(loss_score, acc_score, epoch_num, tot_epochs):
-    print(f"Epoch {epoch_num+1}/{tot_epochs}\n" \
-          f"[=========================================] - loss: {loss_score}  -  acc: {acc_score}")
