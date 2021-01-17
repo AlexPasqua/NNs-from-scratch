@@ -62,8 +62,8 @@ class Optimizer(ABC):
 class StochasticGradientDescent(Optimizer, ABC):
     """ Gradient Descent """
 
-    def __init__(self, net, loss, metr, lr, lr_decay, limit_step, decay_rate, decay_steps, staircase, momentum,
-                 reg_type, lambd):
+    def __init__(self, net, loss, metr, lr, momentum, reg_type, lambd, lr_decay=None, limit_step=None, decay_rate=None,
+                 decay_steps=None, staircase=False):
         super(StochasticGradientDescent, self).__init__(net, loss, metr, lr, lr_decay, limit_step, decay_rate,
                                                         decay_steps, staircase, momentum, reg_type, lambd)
         self.__type = 'sgd'

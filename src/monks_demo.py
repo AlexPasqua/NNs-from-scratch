@@ -18,18 +18,18 @@ if __name__ == '__main__':
     model = Network(**model_params)
 
     training_params = {
-        'lr': 0.4,
-        'momentum': 0.8,
+        'lr': 0.3,
+        'momentum': 0.9,
         # 'lambd': 0.0,
         # 'reg_type': 'l2',
-        'lr_decay': 'exponential',
-        'decay_rate': 0.95,
-        'decay_steps': 500,
-        'staircase': False,
+        # 'lr_decay': 'exponential',
+        # 'decay_rate': 0.95,
+        # 'decay_steps': 500,
+        # 'staircase': False,
         # 'limit_step': 200,
         'loss': 'squared',
         'opt': 'sgd',
-        'epochs': 200,
+        'epochs': 400,
         'batch_size': 'full',
         'metr': 'bin_class_acc'
     }
