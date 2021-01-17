@@ -105,13 +105,6 @@ def list_of_combos(param_dict):
     combo_list = list(it.product(*(param_dict[k] for k in param_dict.keys())))
     combos = []
     for c in combo_list:
-        # check if the current combination is formed of compatible parameters
-        # print(c)
-        # print(expected_keys)
-        # print(len(c))
-        # print(len(expected_keys))
-        # print(c[expected_keys.index('units_per_layer')], '\t', c[expected_keys.index('acts')])
-        # exit()
         if len(c[expected_keys.index('units_per_layer')]) == len(c[expected_keys.index('acts')]):
             d = {k: c[i] for k, i in zip(expected_keys, range(len(expected_keys)))}
             combos.append(d)
