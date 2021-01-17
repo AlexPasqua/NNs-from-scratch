@@ -31,7 +31,7 @@ if __name__ == '__main__':
         # 'limit_step': 200,
         'loss': 'squared',
         'opt': 'sgd',
-        'epochs': 100,
+        'epochs': 400,
         'batch_size': 'full',
         'metr': 'bin_class_acc'
     }
@@ -81,7 +81,6 @@ if __name__ == '__main__':
     model.fit(**params, tr_x=monk_train, tr_y=labels, display_scores=False)
     pred_test = model.predict(inp=x_test)
     results = model.evaluate(predicted=pred_test, y_labels=y_test, metr='bin_class_acc', loss='squared')
-    print(pred_test)
     print(results)
 
 

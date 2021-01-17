@@ -112,7 +112,7 @@ class Network:
             staircase=staircase,
             momentum=momentum,
             reg_type=reg_type,
-            lambd=lambd,
+            lambd=lambd
         )
 
     def fit(self, tr_x, tr_y, val_x=None, val_y=None, epochs=1, batch_size=1, val_split=0, display_scores=True,

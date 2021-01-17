@@ -5,8 +5,6 @@ import numpy as np
 import tqdm as tqdm
 from functions import losses, metrics, lr_decays, regs
 import matplotlib.pyplot as plt
-import time
-
 from utility import prog_bar
 
 
