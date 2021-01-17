@@ -47,8 +47,9 @@ if __name__ == '__main__':
 
     # hold-out validation
     model.compile(**params)
-    tr_error_values, tr_metric_values, val_error_values, val_metric_values = model.fit(tr_x=monk_train, tr_y=labels, **params)
-    pred_test = model.predict(inp=x_test)
+    tr_error_values, tr_metric_values, val_error_values, val_metric_values = model.fit(tr_x=monk_train, tr_y=labels,
+                                                                                       disable_tqdm=False, **params)
+    pred_test = model.predict(inp=x_test[0])
     results = model.evaluate(predicted=pred_test, y_labels=y_test, metr=params['metr'], loss=params['loss'])
     print(results)
 

@@ -170,6 +170,8 @@ class Network:
         )
 
     def predict(self, inp):
+        inp = np.array(inp)
+        inp = inp[np.newaxis, :] if len(inp.shape) < 2 else inp
         predictions = []
         for pattern in inp:
             predictions.append(self.forward(pattern))
