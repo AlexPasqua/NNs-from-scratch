@@ -1,5 +1,5 @@
 import warnings
-from network.layer import Layer
+from layer import Layer
 from optimizers import *
 
 
@@ -84,7 +84,7 @@ class Network:
         return x
 
     def compile(self, opt='sgd', loss='squared', metr='bin_class_acc', lr=0.01, lr_decay=None, limit_step=None,
-                decay_rate=None, decay_steps=None, staircase=True, momentum=0., reg_type='l2', lambd=0):
+                decay_rate=None, decay_steps=None, staircase=True, momentum=0., reg_type='l2', lambd=0, **kwargs):
         """
         Prepares the network for training by assigning an optimizer to it
         :param opt: ('Optimizer' object)
@@ -114,7 +114,7 @@ class Network:
             lambd=lambd
         )
 
-    def fit(self, tr_x, tr_y, val_x=None, val_y=None, epochs=1, batch_size=1, val_split=0):
+    def fit(self, tr_x, tr_y, val_x=None, val_y=None, epochs=1, batch_size=1, val_split=0, **kwargs):
         """
         Execute the training of the network
         :param tr_x: (numpy ndarray) input training set
@@ -182,15 +182,13 @@ class Network:
         for layer_index in range(len(self.__layers)):
             struct[layer_index] = {'weights': [], 'biases': []}
             weights_matrix = self.__layers[layer_index].weights
-            struct[layer_index]['weights'] = np.zeros(shape=(len(weights_matrix[:, 0]), len(weights_matrix[0, :])))
+            weights_matrix = weights_matrix[np.newaxis, :] if len(weights_matrix.shape) < 2 else weights_matrix
+            struct[layer_index]['weights'] = np.zeros(shape=weights_matrix.shape)
             struct[layer_index]['biases'] = np.zeros(shape=(len(weights_matrix[0, :])))
         return struct
 
-    def print_net(self):
+    def print_topology(self):
         """ Prints the network's architecture and parameters """
-        print('Neural Network:')
-        for layer in self.layers:
-            print('  Layer:')
-            for unit in layer.units:
-                print(f"\tUnit:\n\t  weights: {unit.w}\n\t  bias: {unit.b}\n\t  activation function: {unit.act.name}")
-            print()
+        print("Model's topology:")
+        print("Units per layer: ", self.__params['units_per_layer'])
+        print("Activation functions: ", self.__params['acts'])

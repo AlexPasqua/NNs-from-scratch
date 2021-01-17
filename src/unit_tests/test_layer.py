@@ -1,6 +1,6 @@
 import unittest
 import numpy as np
-from network.layer import Layer
+from layer import Layer
 import datetime
 
 

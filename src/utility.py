@@ -1,30 +1,9 @@
 import pandas as pd
 from sklearn.preprocessing import OneHotEncoder, MinMaxScaler, StandardScaler
 import matplotlib.pyplot as plt
-import numpy as np
-
-
-def weights_inits(init_type, **kwargs):
-    inits = {
-        'fixed': _fixed_init,
-        'uniform': _rand_init
-    }
-    return inits[init_type](**kwargs)
-
-
-def _fixed_init(n_weights, n_units, init_value, **kwargs):
-    if n_weights == 1:
-        return np.full(shape=n_units, fill_value=init_value)
-    return np.full(shape=(n_weights, n_units), fill_value=init_value)
-
-
-def _rand_init(n_weights, n_units, lower_lim=0., upper_lim=1., **kwargs):
-    if lower_lim >= upper_lim:
-        raise ValueError(f"lower_lim must be <= than upper_lim")
-    res = np.random.uniform(low=lower_lim, high=upper_lim, size=(n_weights, n_units))
-    if n_weights == 1:
-        return res[0]
-    return res
+import itertools as it
+import json
+from network import Network
 
 
 def read_monk(name, rescale=False):
@@ -58,6 +37,10 @@ def read_monk(name, rescale=False):
 
 
 def read_cup():
+    """
+    Reads the CUP training and testing sets
+    :return: CUP training data, CUP training targets and CUP test data (as numpy ndarray)
+    """
     # read the dataset
     directory = "../datasets/cup/"
     file = "ML-CUP20-TR.csv"
@@ -83,7 +66,66 @@ def read_cup():
     return cup_tr_data, cup_tr_targets, cup_ts_data
 
 
+def sets_from_folds(x_folds, y_folds, val_fold_index):
+    """
+    Takes folds from cross validation and return training and validation sets as a whole (not lists of folds)
+    :param x_folds: list of folds containing the data
+    :param y_folds: list of folds containing the targets
+    :param val_fold_index: index of the fold to use as validation set
+    :return: training data set, training targets set, validation data set, validation targets set (as numpy ndarray)
+    """
+    val_data, val_targets = x_folds[val_fold_index], y_folds[val_fold_index]
+    tr_data_folds = np.concatenate((x_folds[: val_fold_index], x_folds[val_fold_index + 1:]))
+    tr_targets_folds = np.concatenate((y_folds[: val_fold_index], y_folds[val_fold_index + 1:]))
+    # here tr_data_folds & tr_targets_folds are still a "list of folds", we need a single seq as a whole
+    tr_data = tr_data_folds[0]
+    tr_targets = tr_targets_folds[0]
+    for j in range(1, len(tr_data_folds)):
+        tr_data = np.concatenate((tr_data, tr_data_folds[j]))
+        tr_targets = np.concatenate((tr_targets, tr_targets_folds[j]))
+    return tr_data, tr_targets, val_data, val_targets
+
+
+def list_of_combos(param_dict):
+    """
+    Takes a dictionary with the combinations of params to use in the grid search and creates a list of dictionaries, one
+    for each combination (so it's possible to iterate over this list in the GS, instead of having many nested loops)
+    :param param_dict: dict{kind_of_param: tuple of all the values of that param to try in the grid search)
+    :return: list of dictionaries{kind_of_param: value of that param}
+    """
+    combo_list = list(it.product(*(param_dict[k] for k in param_dict.keys())))
+    combos = []
+    for c in combo_list:
+        # check if the current combination is formed of compatible parameters
+        # c[0] = units per layer  ;  c[1] = activation functions  -->  their lengths must be equal
+        if len(c[0]) == len(c[1]):
+            combos.append({'units_per_layer': c[0], 'acts': c[1], 'init_type': c[2], 'lower_lim': c[3][0],
+                           'upper_lim': c[3][1], 'momentum': c[4], 'batch_size': c[5], 'lr': c[6], 'loss': c[7],
+                           'metr': c[8], 'epochs': c[9]})
+    return combos
+
+
+def get_best_models(input_dim, n_models=1):
+    with open("../results/results.json", 'r') as f:
+        data = json.load(f)
+    models, params, errors, std_errors, accuracies, std_accuracies = [], [], [], [], [], []
+    for result in data['results']:
+        errors.append(result[0])
+        std_errors.append(result[1])
+        accuracies.append(result[2])
+        std_accuracies.append(result[3])
+
+    for i in range(n_models):
+        index = np.argmax(accuracies)
+        accuracies = np.delete(accuracies, index)
+        models.append(Network(input_dim=input_dim, **data['params'][index]))
+        params.append(data['params'][index])
+
+    return models, params
+
+
 def plot_curves(tr_loss, val_loss, tr_acc, val_acc, lr=None, momentum=None, lambd=None, **kwargs):
+    """ Plot the curves of training loss, training metric, validation loss, validation metric """
     figure, ax = plt.subplots(1, 2, figsize=(12, 4))
     ax[0].plot(range(len(tr_loss)), tr_loss, color='b', linestyle='dashed', label='training error')
     ax[0].plot(range(len(val_loss)), val_loss, color='r', label='validation error')
@@ -101,4 +143,3 @@ def plot_curves(tr_loss, val_loss, tr_acc, val_acc, lr=None, momentum=None, lamb
     # ax[1].set_ylim((0., 1.1))
     ax[1].grid()
     plt.show()
-
