@@ -1,0 +1,330 @@
+{
+	"params": [
+		{
+			"units_per_layer": [
+				4,
+				1
+			],
+			"acts": [
+				"leaky_relu",
+				"tanh"
+			],
+			"init_type": "uniform",
+			"limits": [
+				-0.2,
+				0.2
+			],
+			"momentum": 0.0,
+			"batch_size": "full",
+			"lr": 0.3,
+			"loss": "squared",
+			"metr": "bin_class_acc",
+			"epochs": 200
+		},
+		{
+			"units_per_layer": [
+				4,
+				1
+			],
+			"acts": [
+				"leaky_relu",
+				"tanh"
+			],
+			"init_type": "uniform",
+			"limits": [
+				-0.2,
+				0.2
+			],
+			"momentum": 0.0,
+			"batch_size": "full",
+			"lr": 0.5,
+			"loss": "squared",
+			"metr": "bin_class_acc",
+			"epochs": 200
+		},
+		{
+			"units_per_layer": [
+				4,
+				1
+			],
+			"acts": [
+				"leaky_relu",
+				"tanh"
+			],
+			"init_type": "uniform",
+			"limits": [
+				-0.2,
+				0.2
+			],
+			"momentum": 0.6,
+			"batch_size": "full",
+			"lr": 0.3,
+			"loss": "squared",
+			"metr": "bin_class_acc",
+			"epochs": 200
+		},
+		{
+			"units_per_layer": [
+				4,
+				1
+			],
+			"acts": [
+				"leaky_relu",
+				"tanh"
+			],
+			"init_type": "uniform",
+			"limits": [
+				-0.2,
+				0.2
+			],
+			"momentum": 0.6,
+			"batch_size": "full",
+			"lr": 0.5,
+			"loss": "squared",
+			"metr": "bin_class_acc",
+			"epochs": 200
+		},
+		{
+			"units_per_layer": [
+				4,
+				1
+			],
+			"acts": [
+				"leaky_relu",
+				"tanh"
+			],
+			"init_type": "uniform",
+			"limits": [
+				-0.2,
+				0.2
+			],
+			"momentum": 0.8,
+			"batch_size": "full",
+			"lr": 0.3,
+			"loss": "squared",
+			"metr": "bin_class_acc",
+			"epochs": 200
+		},
+		{
+			"units_per_layer": [
+				4,
+				1
+			],
+			"acts": [
+				"leaky_relu",
+				"tanh"
+			],
+			"init_type": "uniform",
+			"limits": [
+				-0.2,
+				0.2
+			],
+			"momentum": 0.8,
+			"batch_size": "full",
+			"lr": 0.5,
+			"loss": "squared",
+			"metr": "bin_class_acc",
+			"epochs": 200
+		},
+		{
+			"units_per_layer": [
+				4,
+				1
+			],
+			"acts": [
+				"leaky_relu",
+				"tanh"
+			],
+			"init_type": "uniform",
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"momentum": 0.0,
+			"batch_size": "full",
+			"lr": 0.3,
+			"loss": "squared",
+			"metr": "bin_class_acc",
+			"epochs": 200
+		},
+		{
+			"units_per_layer": [
+				4,
+				1
+			],
+			"acts": [
+				"leaky_relu",
+				"tanh"
+			],
+			"init_type": "uniform",
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"momentum": 0.0,
+			"batch_size": "full",
+			"lr": 0.5,
+			"loss": "squared",
+			"metr": "bin_class_acc",
+			"epochs": 200
+		},
+		{
+			"units_per_layer": [
+				4,
+				1
+			],
+			"acts": [
+				"leaky_relu",
+				"tanh"
+			],
+			"init_type": "uniform",
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"momentum": 0.6,
+			"batch_size": "full",
+			"lr": 0.3,
+			"loss": "squared",
+			"metr": "bin_class_acc",
+			"epochs": 200
+		},
+		{
+			"units_per_layer": [
+				4,
+				1
+			],
+			"acts": [
+				"leaky_relu",
+				"tanh"
+			],
+			"init_type": "uniform",
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"momentum": 0.6,
+			"batch_size": "full",
+			"lr": 0.5,
+			"loss": "squared",
+			"metr": "bin_class_acc",
+			"epochs": 200
+		},
+		{
+			"units_per_layer": [
+				4,
+				1
+			],
+			"acts": [
+				"leaky_relu",
+				"tanh"
+			],
+			"init_type": "uniform",
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"momentum": 0.8,
+			"batch_size": "full",
+			"lr": 0.3,
+			"loss": "squared",
+			"metr": "bin_class_acc",
+			"epochs": 200
+		},
+		{
+			"units_per_layer": [
+				4,
+				1
+			],
+			"acts": [
+				"leaky_relu",
+				"tanh"
+			],
+			"init_type": "uniform",
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"momentum": 0.8,
+			"batch_size": "full",
+			"lr": 0.5,
+			"loss": "squared",
+			"metr": "bin_class_acc",
+			"epochs": 200
+		}
+	],
+	"results": [
+		[
+			0.21759749235509593,
+			0.0973557278733008,
+			0.596,
+			0.09156418513807676
+		],
+		[
+			0.12763167989236662,
+			0.12524747912163406,
+			0.751,
+			0.09123595782365633
+		],
+		[
+			0.13390696558814597,
+			0.13652863573000856,
+			0.8556666666666667,
+			0.10273807040776613
+		],
+		[
+			0.1350007991618844,
+			0.16735723709984018,
+			0.8276666666666666,
+			0.19147265543094602
+		],
+		[
+			0.09639185316931938,
+			0.12183921370481499,
+			0.9353333333333333,
+			0.05447119524217466
+		],
+		[
+			0.08642706469159761,
+			0.10010428904261506,
+			0.8953333333333333,
+			0.069525375063913
+		],
+		[
+			0.3008835456946281,
+			0.14004183608838766,
+			0.364,
+			0.16894969665554302
+		],
+		[
+			0.26254253044142,
+			0.09027908859022737,
+			0.5793333333333333,
+			0.09063725012990582
+		],
+		[
+			0.1960209785005703,
+			0.15855501867174598,
+			0.7350000000000001,
+			0.13423859355639867
+		],
+		[
+			0.1806171320334325,
+			0.16812061040399756,
+			0.8230000000000001,
+			0.12245815611873306
+		],
+		[
+			0.29100660641883974,
+			0.1558529687582749,
+			0.7753333333333333,
+			0.1082302073257636
+		],
+		[
+			0.22869143201787043,
+			0.0892130389307176,
+			0.7976666666666667,
+			0.06982199589750432
+		]
+	]
+}

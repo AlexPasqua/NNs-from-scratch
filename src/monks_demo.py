@@ -4,7 +4,8 @@ from model_selection import grid_search, cross_valid
 
 if __name__ == '__main__':
     # read the dataset
-    monk_train, labels = read_monk(name='monks-1', rescale=True)
+    ds_name = "monks-1"
+    monk_train, labels = read_monk(name=ds_name, rescale=True)
 
     model_params = {
         'input_dim': 17,
@@ -66,7 +67,7 @@ if __name__ == '__main__':
                  'metric': ('bin_class_acc',),
                  'epochs': (200,)}
     grid_search(dataset="monks-1", params=gs_params)
-    best_model, params = get_best_models(n_models=1, input_dim=len(monk_train[0]))
+    best_model, params = get_best_models(dataset=ds_name, n_models=1)
     best_model = best_model[0]
     params = params[0]
     best_model.print_topology()
