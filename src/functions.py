@@ -52,7 +52,7 @@ def identity(x):
     return x
 
 
-def indentity_deriv(x):
+def identity_deriv(x):
     """
     Computes the derivative of the identity function
     :param x: net -> input's weighted sum
@@ -269,7 +269,7 @@ def ridge_l2_deriv(w, lambd):
 """ Function objects and dictionaries to use them in other scripts """
 
 
-Identity = DerivableFunction(identity, indentity_deriv, 'identity')
+Identity = DerivableFunction(identity, identity_deriv, 'identity')
 ReLU = DerivableFunction(relu, relu_deriv, 'ReLU')
 LeakyReLU = DerivableFunction(leaky_relu, leaky_relu_deriv, 'LeakyReLU')
 Sigmoid = DerivableFunction(sigmoid, sigmoid_deriv, 'Sigmoid')
