@@ -4,7 +4,8 @@ from model_selection import grid_search, cross_valid
 
 if __name__ == '__main__':
     # read the dataset
-    monk_train, labels = read_monk(name='monks-1', rescale=True)
+    ds_name = "monks-1"
+    monk_train, labels = read_monk(name=ds_name, rescale=True)
 
     model_params = {
         'input_dim': 17,
@@ -33,15 +34,15 @@ if __name__ == '__main__':
         'metr': 'bin_class_acc'
     }
 
-    # cross validation
-    tr_error_values, tr_metric_values, val_error_values, val_metric_values = cross_valid(
-        net=model,
-        dataset="monks-2",
-        k_folds=5,
-        verbose=True,
-        disable_tqdms=(True, False),
-        **params
-    )
+    # # cross validation
+    # tr_error_values, tr_metric_values, val_error_values, val_metric_values = cross_valid(
+    #     net=model,
+    #     dataset="monks-2",
+    #     k_folds=5,
+    #     verbose=True,
+    #     disable_tqdms=(True, False),
+    #     **params
+    # )
 
     # # hold-out validation
     # model.compile(opt='sgd', loss='squared', metr='bin_class_acc', lr=0.2, momentum=0.6)
@@ -54,21 +55,31 @@ if __name__ == '__main__':
     #     disable_tqdm=False
     # )
 
-    # # grid search
-    # grid_search(dataset="monks-1")
-    # best_model, params = get_best_models(n_models=1, input_dim=len(monk_train[0]))
-    # best_model = best_model[0]
-    # params = params[0]
-    # best_model.print_topology()
-    # best_model.compile(opt='sgd', **params)
-    # tr_error_values, tr_metric_values, val_error_values, val_metric_values = best_model.fit(
-    #     tr_x=monk_train, tr_y=labels, disable_tqdm=False, **params)
+    # grid search
+    gs_params = {'units_per_layer': ((4, 1),),
+                 'acts': (('leaky_relu', 'tanh'), ('leaky_relu', 'leaky_relu', 'tanh')),
+                 'init_type': ('uniform',),
+                 'limits': ((-0.2, 0.2), (-0.001, 0.001)),
+                 'momentum': (0.0, 0.6, 0.8),
+                 'batch_size': ('full',),
+                 'lr': (0.3, 0.5),
+                 'loss': ('squared',),
+                 'metric': ('bin_class_acc',),
+                 'epochs': (200,)}
+    grid_search(dataset="monks-1", params=gs_params)
+    best_model, params = get_best_models(dataset=ds_name, n_models=1)
+    best_model = best_model[0]
+    params = params[0]
+    best_model.print_topology()
+    best_model.compile(opt='sgd', **params)
+    tr_error_values, tr_metric_values, val_error_values, val_metric_values = best_model.fit(
+        tr_x=monk_train, tr_y=labels, disable_tqdm=False, **params)
 
-    # # plot graph
-    # plot_curves(
-    #     tr_loss=tr_error_values,
-    #     val_loss=val_error_values,
-    #     tr_acc=tr_metric_values,
-    #     val_acc=val_metric_values,
-    #     **params
-    # )
+    # plot graph
+    plot_curves(
+        tr_loss=tr_error_values,
+        val_loss=val_error_values,
+        tr_acc=tr_metric_values,
+        val_acc=val_metric_values,
+        **params
+    )

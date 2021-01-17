@@ -41,9 +41,9 @@ if __name__ == '__main__':
     model = Network(
         input_dim=len(cup_tr_data[0]),
         units_per_layer=(10, 10, 2),
-        acts=('identity', 'identity', 'identity'),
+        acts=('leaky_relu', 'leaky_relu', 'identity'),
         init_type='uniform',
-        limits=(0.1, 0.2)
+        limits=(0.0001, 0.001)
     )
 
     # with Manager() as manager:
@@ -70,11 +70,21 @@ if __name__ == '__main__':
     #         print(k, ': ', v)
 
     # cross validation
-    # cross_valid(model, "cup", 'squared', 'euclidean', lr=0.3, momentum=0.6, epochs=15,
+    # cross_valid(model, "cup", 'squared', 'euclidean', lr=0.002, momentum=0.6, epochs=15,
     #             batch_size=30, k_folds=5, disable_tqdms=(True, False), verbose=True)
 
     # grid search
-    grid_search(dataset="cup")
+    gs_params = {'units_per_layer': ((2, 2),),
+                 'acts': (('leaky_relu', 'identity'),),
+                 'init_type': ('uniform',),
+                 'limits': ((-0.5, 0.5), (-0.001, 0.001)),
+                 'momentum': (0.0,),
+                 'batch_size': ('full',),
+                 'lr': (0.002, 0.5),
+                 'loss': ('squared',),
+                 'metric': ('euclidean',),
+                 'epochs': (20,)}
+    grid_search(dataset="cup", params=gs_params)
     best_model, params = get_best_models("cup", 1)
     best_model = best_model[0]
     params = params[0]

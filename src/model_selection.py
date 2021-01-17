@@ -90,31 +90,31 @@ def cross_valid(net, dataset, loss, metr, lr, lr_decay=None, limit_step=None, de
     return avg_val_err, std_val_err, avg_val_metric, std_val_metric
 
 
-def get_coarse_gs_params():
-    """
-    :return: dictionary of all the parameters to try in a grid search
-    """
-    return {'units_per_layer': ((2, 2),),
-            'acts': (('leaky_relu', 'identity'),),
-            'init_type': ('uniform',),
-            'limits': ((-0.5, 0.5), (-0.001, 0.001)),
-            'momentum': (0.0,),
-            'batch_size': ('full',),
-            'lr': (0.002, 0.5),
-            'loss': ('squared',),
-            'metric': ('euclidean',),
-            'epochs': (20,)}
+# def get_coarse_gs_params():
+#     """
+#     :return: dictionary of all the parameters to try in a grid search
+#     """
+#     return {'units_per_layer': ((4, 1),),
+#             'acts': (('leaky_relu', 'tanh'), ('leaky_relu', 'leaky_relu', 'tanh')),
+#             'init_type': ('uniform',),
+#             'limits': ((-0.2, 0.2), (-0.001, 0.001)),
+#             'momentum': (0.0, 0.6, 0.8),
+#             'batch_size': ('full',),
+#             'lr': (0.3, 0.5),
+#             'loss': ('squared',),
+#             'metric': ('bin_class_acc',),
+#             'epochs': (200,)}
 
 
-def grid_search(dataset):
+def grid_search(dataset, params):
     """
     Performs a grid search over a set of parameters to find the best combination of hyperparameters
     :param dataset: name of the dataset (monks-1, monks-2, monks-3, cup)
+    :param params: dictionary with all the values of the params to try in the grid search
     """
     models = []
     input_dim = 10 if dataset == "cup" else 17
-    grid_search_params = get_coarse_gs_params()
-    param_combos = list_of_combos(grid_search_params)
+    param_combos = list_of_combos(params)
     print(f"Total number of trials: {len(param_combos)}")
     for combo in param_combos:
         models.append(Network(input_dim=input_dim, **combo))
