@@ -67,7 +67,6 @@ def relu(x):
     :param x: net -> input's weighted sum
     :return: ReLU of x
     """
-
     return np.maximum(x, 0)
 
 
@@ -89,7 +88,6 @@ def leaky_relu(x):
     :param x: input's weighted sum
     :return: leaky ReLu of x
     """
-
     return [i if i >= 0 else 0.01 * i for i in x]
 
 

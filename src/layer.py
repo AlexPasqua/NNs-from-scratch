@@ -56,7 +56,6 @@ class Layer:
         :return: the vector of the current layer's soutputs
         """
 
-
         self.__inputs = np.array(inp)
         self.__nets = np.matmul(inp, self.weights)
         self.__nets = np.add(self.__nets, self.biases)
