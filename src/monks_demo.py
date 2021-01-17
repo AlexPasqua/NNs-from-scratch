@@ -45,16 +45,12 @@ if __name__ == '__main__':
     #    **params
     #    )
 
-    # # hold-out validation
-    # model.compile(opt='sgd', loss='squared', metr='bin_class_acc', lr=0.2, momentum=0.6)
-    # tr_error_values, tr_metric_values, val_error_values, val_metric_values = model.fit(
-    #     tr_x=monk_train,
-    #     tr_y=labels,
-    #     epochs=100,
-    #     val_split=0.1,
-    #     batch_size='full',
-    #     disable_tqdm=False
-    # )
+    # hold-out validation
+    model.compile(**params)
+    tr_error_values, tr_metric_values, val_error_values, val_metric_values = model.fit(tr_x=monk_train, tr_y=labels, **params)
+    pred_test = model.predict(inp=x_test)
+    results = model.evaluate(predicted=pred_test, y_labels=y_test, metr=params['metr'], loss=params['loss'])
+    print(results)
 
     # # grid search
     # grid_search(dataset="monks-1")
@@ -75,8 +71,3 @@ if __name__ == '__main__':
     #     **params
     # )
 
-    model.compile(**params)
-    model.fit(**params, tr_x=monk_train, tr_y=labels, display_scores=False)
-    pred_test = model.predict(inp=x_test)
-    results = model.evaluate(predicted=pred_test, y_labels=y_test, metr='bin_class_acc', loss='squared')
-    print(results)
