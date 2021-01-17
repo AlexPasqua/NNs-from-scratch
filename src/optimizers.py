@@ -72,7 +72,7 @@ class StochasticGradientDescent(Optimizer, ABC):
     def type(self):
         return self.__type
 
-    def optimize(self, tr_x, tr_y, val_x, val_y, epochs, batch_size=1):
+    def optimize(self, tr_x, tr_y, val_x, val_y, epochs, batch_size, disable_tqdm=True, **kwargs):
         """
         :param tr_x: (numpy ndarray) input training set
         :param tr_y: (numpy ndarray) targets for each input training pattern
@@ -80,6 +80,7 @@ class StochasticGradientDescent(Optimizer, ABC):
         :param val_y: (numpy ndarray) targets for each input validation pattern
         :param epochs: (int) number of training epochs
         :param batch_size: (int) number of patterns per single batch
+        :param disable_tqdm: True to disable progress bar
         :return:
         """
         # add one dimension to the sets if they are one-dimensional
@@ -99,7 +100,7 @@ class StochasticGradientDescent(Optimizer, ABC):
         lr_plots = []
 
         # cycle through epochs
-        for epoch in tqdm.tqdm(range(epochs), desc="Iterating over epochs", disable=False):
+        for epoch in tqdm.tqdm(range(epochs), desc="Iterating over epochs", disable=disable_tqdm):
             epoch_tr_error = np.zeros(net.layers[-1].n_units)
             epoch_tr_metric = np.zeros(net.layers[-1].n_units)
             epoch_val_error = np.zeros(net.layers[-1].n_units)

@@ -163,7 +163,8 @@ class Network:
             val_x=val_x,
             val_y=val_y,
             epochs=epochs,
-            batch_size=batch_size
+            batch_size=batch_size,
+            **kwargs
         )
 
     def propagate_back(self, dErr_dOut, grad_net):

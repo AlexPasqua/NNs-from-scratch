@@ -10,7 +10,7 @@ from network import Network
 
 def cross_valid(net, dataset, loss, metr, lr, lr_decay=None, limit_step=None, decay_rate=None, decay_steps=None,
                 staircase=True, opt='sgd', momentum=0., epochs=1, batch_size=1, k_folds=5, reg_type='l2', lambd=0,
-                verbose=False, **kwargs):
+                disable_tqdms=(True, True), verbose=False, **kwargs):
 
     # read the dataset
     if dataset not in ('monks-1', 'monks-2', 'monks-3', 'cup'):
@@ -31,7 +31,7 @@ def cross_valid(net, dataset, loss, metr, lr, lr_decay=None, limit_step=None, de
     val_metric_per_fold, val_error_per_fold = [], []
 
     # CV cycle
-    for i in tqdm.tqdm(range(k_folds), desc='Iterating over folds', disable=True):
+    for i in tqdm.tqdm(range(k_folds), desc='Iterating over folds', disable=disable_tqdms[0]):
         # create validation set and training set using the folds (for one iteration of CV)
         tr_data, tr_targets, val_data, val_targets = sets_from_folds(x_folds, y_folds, val_fold_index=i)
 
@@ -40,7 +40,7 @@ def cross_valid(net, dataset, loss, metr, lr, lr_decay=None, limit_step=None, de
                     decay_rate=decay_rate, decay_steps=decay_steps, staircase=staircase, momentum=momentum,
                     reg_type=reg_type, lambd=lambd)
         tr_history = net.fit(tr_x=tr_data, tr_y=tr_targets, val_x=val_data, val_y=val_targets, epochs=epochs,
-                             batch_size=batch_size)
+                             batch_size=batch_size, disable_tqdm=disable_tqdms[1])
 
         # metrics for the graph
         # composition of tr_history:
@@ -85,16 +85,16 @@ def get_coarse_gs_params():
     """
     :return: dictionary of all the parameters to try in a grid search
     """
-    return {'units_per_layer': ((4, 1), (2, 2, 1)),
+    return {'units_per_layer': ((4, 1),),
             'acts': (('leaky_relu', 'tanh'), ('leaky_relu', 'leaky_relu', 'tanh')),
             'init_type': ('uniform',),
-            'limits': ((-0.1, 0.1), (-0.2, 0.2), (-0.001, 0.001)),
-            'momentum': (0.7, 0.0, 0.6, 0.8),
-            'batch_size': ('full', 10, 1),
-            'lr': (0.1, 0.3, 0.01),
+            'limits': ((-0.2, 0.2), (-0.001, 0.001)),
+            'momentum': (0.0, 0.6, 0.8),
+            'batch_size': ('full',),
+            'lr': (0.3, 0.5),
             'loss': ('squared',),
             'metric': ('bin_class_acc',),
-            'epochs': (50, 100, 150, 200, 300, 500)}
+            'epochs': (200, 500)}
 
 
 def grid_search(dataset):
@@ -111,7 +111,8 @@ def grid_search(dataset):
         models.append(Network(input_dim=input_dim, **combo))
 
     results = Parallel(n_jobs=os.cpu_count(), verbose=50)(delayed(cross_valid)(
-        net=models[i], dataset=dataset, k_folds=5, **param_combos[i]) for i in range(len(param_combos)))
+        net=models[i], dataset=dataset, k_folds=5, disable_tqdm=(True, True),
+        **param_combos[i]) for i in range(len(param_combos)))
 
     # write results on file
     folder_path = "../results/"
