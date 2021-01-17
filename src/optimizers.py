@@ -41,6 +41,12 @@ class Optimizer(ABC):
         self.reg_type = reg_type
 
     @property
+    def lr_params(self):
+        return {'lr': self.lr, 'base_lr': self.base_lr, 'final_lr': self.final_lr, 'lr_decay': self.lr_decay,
+                'limit_step': self.limit_step, 'decay_rate': self.decay_rate, 'decay_steps': self.decay_steps,
+                'staircase': self.staircase}
+
+    @property
     def net(self):
         return self.__net
 
@@ -137,29 +143,14 @@ class StochasticGradientDescent(Optimizer, ABC):
 
                     grad_net = net.propagate_back(dErr_dOut, grad_net)
 
-                # linear rate decay
-                if self.lr_decay == 'linear':
+                # learning rate decays
+                if self.lr_decay is not None:
                     step += 1
-                    self.lr = lr_decays[self.lr_decay].func(
-                        curr_lr=self.lr,
-                        base_lr=self.base_lr,
-                        final_lr=self.final_lr,
-                        curr_step=step,
-                        limit_step=self.limit_step
-                    )
-                # exp learning rate decay
-                elif self.lr_decay == 'exponential':
-                    step += 1
-                    self.lr = lr_decays[self.lr_decay].func(
-                        initial_lr=self.base_lr,
-                        decay_rate=self.decay_rate,
-                        step=step,
-                        decay_steps=self.decay_steps,
-                        staircase=self.staircase
-                    )
-                # print(lr)
+                    self.lr = lr_decays[self.lr_decay].func(step=step, **self.lr_params)
+
                 # saves learning rate values #TODO: DEBUG | remove later |
                 # lr_plots.append(self.lr)
+                # print(lr)
 
                 # weights update
                 for layer_index in range(len(net.layers)):
