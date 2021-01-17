@@ -1,0 +1,60 @@
+{
+	"params": [
+		{
+			"units_per_layer": [
+				2,
+				2
+			],
+			"acts": [
+				"leaky_relu",
+				"identity"
+			],
+			"init_type": "uniform",
+			"limits": [
+				-0.5,
+				0.5
+			],
+			"momentum": 0.0,
+			"batch_size": "full",
+			"lr": 0.002,
+			"loss": "squared",
+			"metr": "euclidean",
+			"epochs": 20
+		},
+		{
+			"units_per_layer": [
+				2,
+				2
+			],
+			"acts": [
+				"leaky_relu",
+				"identity"
+			],
+			"init_type": "uniform",
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"momentum": 0.0,
+			"batch_size": "full",
+			"lr": 0.002,
+			"loss": "squared",
+			"metr": "euclidean",
+			"epochs": 20
+		}
+	],
+	"results": [
+		[
+			588.6116810286118,
+			242.66853676873046,
+			44.4208105608278,
+			11.059198831399808
+		],
+		[
+			814.828227316103,
+			28.07516687577353,
+			54.63995047848645,
+			1.04115584657599
+		]
+	]
+}
