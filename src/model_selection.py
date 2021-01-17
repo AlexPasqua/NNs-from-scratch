@@ -10,7 +10,7 @@ from network import Network
 
 def cross_valid(net, dataset, loss, metr, lr, lr_decay=None, limit_step=None, decay_rate=None, decay_steps=None,
                 staircase=True, opt='sgd', momentum=0., epochs=1, batch_size=1, k_folds=5, reg_type='l2', lambd=0,
-                disable_tqdms=(True, True), verbose=False, **kwargs):
+                disable_tqdms =(True, True), verbose=False, **kwargs):
 
     # read the dataset
     if dataset not in ('monks-1', 'monks-2', 'monks-3', 'cup'):

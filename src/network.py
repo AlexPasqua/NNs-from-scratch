@@ -1,6 +1,7 @@
 import warnings
 from layer import Layer
 from optimizers import *
+from functions import losses
 
 
 class Network:
@@ -171,6 +172,16 @@ class Network:
             display_scores=display_scores,
             **kwargs
         )
+
+    def evaluate(self, predicted, labels, metr, loss):
+        acc_scores = 0
+        loss_scores = 0
+        for x, d in zip(predicted, labels):
+            pred = int(metrics[metr].func(predicted=x, target=d))
+            los = float(losses[loss].func(predicted=x, target=d))
+            acc_scores += pred
+            loss_scores += los
+        return f"test_loss:{loss_scores/len(predicted)}  -  test_acc: {acc_scores/len(predicted)}"
 
     def propagate_back(self, dErr_dOut, grad_net):
         curr_delta = dErr_dOut

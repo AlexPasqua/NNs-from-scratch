@@ -16,7 +16,7 @@ def read_monk(name, rescale=False):
     """
     # read the dataset
     col_names = ['class', 'a1', 'a2', 'a3', 'a4', 'a5', 'a6', 'Id']
-    monk_train = pd.read_csv(f"../datasets/monks/{str(name)}.train", sep=' ', names=col_names)
+    monk_train = pd.read_csv(f"../datasets/monks/{str(name)}", sep=' ', names=col_names)
     monk_train.set_index('Id', inplace=True)
     labels = monk_train.pop('class')
 
