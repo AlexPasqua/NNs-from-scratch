@@ -163,7 +163,7 @@ class Network:
         return self.__opt.optimize(tr_x=tr_x, tr_y=tr_y, val_x=val_x, val_y=val_y, epochs=epochs,
                                    batch_size=batch_size, **kwargs)
 
-    def predict(self, inp):
+    def predict(self, inp, disable_tqdm=True):
         """
         Computs the outputs for a batch of patterns (like a wrapper to call 'forward()' in a cycle)
         :param inp: batch of input patterns
@@ -172,11 +172,11 @@ class Network:
         inp = np.array(inp)
         inp = inp[np.newaxis, :] if len(inp.shape) < 2 else inp
         predictions = []
-        for pattern in tqdm.tqdm(inp, desc="Predicting patterns"):
+        for pattern in tqdm.tqdm(inp, desc="Predicting patterns", disable=disable_tqdm):
             predictions.append(self.forward(pattern))
         return np.array(predictions)
 
-    def evaluate(self, targets, metr, loss, net_outputs=None, inp=None):
+    def evaluate(self, targets, metr, loss, net_outputs=None, inp=None, disable_tqdm=True):
         """
         Performs an evaluation of the network based on the targets and either the computed outputs ('net_outputs')
         or the input data ('inp'). In the latter case, the outputs will be computed from the input data.
@@ -191,14 +191,18 @@ class Network:
         if net_outputs is None:
             if inp is None:
                 raise AttributeError("Both net_outputs and inp cannot be None")
-            net_outputs = self.predict(inp)
-        metr_scores = 0
-        loss_scores = 0
-        for x, y in tqdm.tqdm(zip(net_outputs, targets), total=len(targets), desc="Evaluating model"):
-            curr_metr = int(metrics[metr].func(predicted=x, target=y))
-            curr_loss = float(losses[loss].func(predicted=x, target=y))
-            metr_scores += curr_metr
-            loss_scores += curr_loss
+            net_outputs = self.predict(inp, disable_tqdm=disable_tqdm)
+        metr_scores = np.zeros(self.layers[-1].n_units)
+        loss_scores = np.zeros(self.layers[-1].n_units)
+        for x, y in tqdm.tqdm(zip(net_outputs, targets), total=len(targets), desc="Evaluating model", disable=disable_tqdm):
+            # metr_scores += metrics[metr].func(predicted=x, target=y)
+            # loss_scores += losses[loss].func(predicted=x, target=y)
+
+            metr_scores = np.add(metr_scores, metrics[metr].func(predicted=x, target=y))
+            loss_scores = np.add(loss_scores, losses[loss].func(predicted=x, target=y))
+
+        loss_scores = np.sum(loss_scores) / len(loss_scores)
+        metr_scores = np.sum(metr_scores) / len(metr_scores)
         loss_scores /= len(net_outputs)
         metr_scores /= len(net_outputs)
         return loss_scores, metr_scores

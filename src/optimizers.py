@@ -179,14 +179,9 @@ class StochasticGradientDescent(Optimizer, ABC):
                     )
             # validation
             if val_x is not None:
-                for pattern, target in zip(val_x, val_y):
-                    net_outputs = net.forward(inp=pattern)
-                    epoch_val_error = np.add(epoch_val_error, self.loss.func(predicted=net_outputs, target=target))
-                    epoch_val_metric = np.add(epoch_val_metric, self.metr.func(predicted=net_outputs, target=target))
-                epoch_val_error = np.sum(epoch_val_error) / len(epoch_val_error)
-                val_error_values.append(epoch_val_error / len(val_x))
-                epoch_val_metric = np.sum(epoch_val_metric) / len(epoch_val_metric)
-                val_metric_values.append(epoch_val_metric / len(val_x))
+                epoch_val_error, epoch_val_metric = net.evaluate(inp=val_x, targets=val_y, metr=self.metr.name, loss=self.loss.name)
+                val_error_values.append(epoch_val_error)
+                val_metric_values.append(epoch_val_metric)
 
             epoch_tr_error = np.sum(epoch_tr_error) / len(epoch_tr_error)
             tr_error_values.append(epoch_tr_error / len(tr_x))

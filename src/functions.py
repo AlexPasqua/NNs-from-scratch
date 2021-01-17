@@ -287,7 +287,7 @@ losses = {
     'squared': SquaredLoss,
 }
 
-BinClassAcc = Function(binary_class_accuracy, 'class_acc')
+BinClassAcc = Function(binary_class_accuracy, 'bin_class_acc')
 Euclidean = Function(euclidean_loss, 'euclidean')
 metrics = {
     'bin_class_acc': BinClassAcc,
