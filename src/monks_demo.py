@@ -38,7 +38,7 @@ if __name__ == '__main__':
         net=model,
         dataset="monks-2",
         k_folds=5,
-        verbose=True,
+        verbose=False,
         disable_tqdms=(True, False),
         **params
     )
@@ -72,3 +72,6 @@ if __name__ == '__main__':
     #     val_acc=val_metric_values,
     #     **params
     # )
+
+#model.compile(**params)
+#model.fit(**params, tr_x=monk_train, tr_y=labels, display_scores=True)

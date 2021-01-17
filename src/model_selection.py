@@ -40,7 +40,7 @@ def cross_valid(net, dataset, loss, metr, lr, lr_decay=None, limit_step=None, de
                     decay_rate=decay_rate, decay_steps=decay_steps, staircase=staircase, momentum=momentum,
                     reg_type=reg_type, lambd=lambd)
         tr_history = net.fit(tr_x=tr_data, tr_y=tr_targets, val_x=val_data, val_y=val_targets, epochs=epochs,
-                             batch_size=batch_size, disable_tqdm=disable_tqdms[1])
+                             batch_size=batch_size, disable_tqdm=disable_tqdms[1], display_scores=False)
 
         # metrics for the graph
         # composition of tr_history:

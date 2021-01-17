@@ -5,6 +5,9 @@ import numpy as np
 import tqdm as tqdm
 from functions import losses, metrics, lr_decays, regs
 import matplotlib.pyplot as plt
+import time
+
+from utility import prog_bar
 
 
 class Optimizer(ABC):
@@ -21,7 +24,7 @@ class Optimizer(ABC):
 
     @abstractmethod
     def __init__(self, net, loss, metr, lr, lr_decay, limit_step, decay_rate, decay_steps, staircase, momentum,
-                 reg_type, lambd):
+                 reg_type, lambd, display_scores):
         # makes sure lr is a value between 0 and 1
         if lr <= 0 or lr > 1:
             raise ValueError('lr should be a value between 0 and 1, Got:{}'.format(lr))
@@ -39,6 +42,8 @@ class Optimizer(ABC):
         self.momentum = momentum
         self.lambd = lambd
         self.reg_type = reg_type
+        self.display_scores = display_scores
+
 
     @property
     def lr_params(self):
@@ -63,16 +68,17 @@ class StochasticGradientDescent(Optimizer, ABC):
     """ Gradient Descent """
 
     def __init__(self, net, loss, metr, lr, momentum, reg_type, lambd, lr_decay=None, limit_step=None, decay_rate=None,
-                 decay_steps=None, staircase=False):
+                 decay_steps=None, staircase=False, display_scores=True):
         super(StochasticGradientDescent, self).__init__(net, loss, metr, lr, lr_decay, limit_step, decay_rate,
-                                                        decay_steps, staircase, momentum, reg_type, lambd)
+                                                        decay_steps, staircase, momentum, reg_type, lambd,
+                                                        display_scores)
         self.__type = 'sgd'
 
     @property
     def type(self):
         return self.__type
 
-    def optimize(self, tr_x, tr_y, val_x, val_y, epochs, batch_size, disable_tqdm=True, **kwargs):
+    def optimize(self, tr_x, tr_y, val_x, val_y, epochs, batch_size, disable_tqdm= True, display_scores=True, **kwargs):
         """
         :param tr_x: (numpy ndarray) input training set
         :param tr_y: (numpy ndarray) targets for each input training pattern
@@ -98,6 +104,9 @@ class StochasticGradientDescent(Optimizer, ABC):
 
         # learning rate results for plotting #TODO: DEBUG | remove later |
         lr_plots = []
+
+        if not display_scores:
+            disable_tqdm = False
 
         # cycle through epochs
         for epoch in tqdm.tqdm(range(epochs), desc="Iterating over epochs", disable=disable_tqdm):
@@ -198,6 +207,10 @@ class StochasticGradientDescent(Optimizer, ABC):
         # plt.plot(lr_plots)
         # plt.grid()
         # plt.show()
+
+            if display_scores:
+                prog_bar(loss_score=epoch_tr_error, acc_score=epoch_tr_metric, epoch_num=epoch, tot_epochs=epochs)
+                time.sleep(0.2)
 
         return tr_error_values, tr_metric_values, val_error_values, val_metric_values
 
