@@ -59,7 +59,7 @@ class StochasticGradientDescent(Optimizer, ABC):
     def __init__(self, net, loss, metr, lr, lr_decay, limit_step, decay_rate, decay_steps, staircase, momentum,
                  reg_type, lambd):
         super(StochasticGradientDescent, self).__init__(net, loss, metr, lr, lr_decay, limit_step, decay_rate,
-                                                        decay_steps,staircase, momentum, reg_type, lambd)
+                                                        decay_steps, staircase, momentum, reg_type, lambd)
         self.__type = 'sgd'
 
     @property
@@ -139,8 +139,8 @@ class StochasticGradientDescent(Optimizer, ABC):
 
                 # linear rate decay
                 if self.lr_decay == 'linear':
-                    step +=1
-                    lr = lr_decays[self.lr_decay].func(
+                    step += 1
+                    self.lr = lr_decays[self.lr_decay].func(
                         curr_lr=self.lr,
                         base_lr=self.base_lr,
                         final_lr=self.final_lr,
@@ -149,18 +149,17 @@ class StochasticGradientDescent(Optimizer, ABC):
                     )
                 # exp learning rate decay
                 elif self.lr_decay == 'exponential':
-                    lr = lr_decays[self.lr_decay].func(
-                        initial_lr=self.lr,
+                    step += 1
+                    self.lr = lr_decays[self.lr_decay].func(
+                        initial_lr=self.base_lr,
                         decay_rate=self.decay_rate,
-                        step=epoch,
+                        step=step,
                         decay_steps=self.decay_steps,
                         staircase=self.staircase
                     )
-                else:
-                    lr = self.lr
-                #print(lr)
+                # print(lr)
                 # saves learning rate values #TODO: DEBUG | remove later |
-                #lr_plots.append(lr)
+                # lr_plots.append(self.lr)
 
                 # weights update
                 for layer_index in range(len(net.layers)):
@@ -168,8 +167,8 @@ class StochasticGradientDescent(Optimizer, ABC):
                     grad_net[layer_index]['weights'] /= batch_size
                     grad_net[layer_index]['biases'] /= batch_size
                     # delta_w is equivalent to lrn_rate * local_grad * input_on_that_connection (local_grad = delta)
-                    delta_w = lr * grad_net[layer_index]['weights']
-                    delta_b = lr * grad_net[layer_index]['biases']
+                    delta_w = self.lr * grad_net[layer_index]['weights']
+                    delta_b = self.lr * grad_net[layer_index]['biases']
                     # momentum_net[layer_index]['weights'] is the new delta_w --> it adds the momentum
                     # Since it acts as delta_w, it multiplies itself by the momentum constant and then adds
                     # lrn_rate * local_grad * input_on_that_connection (i.e. "delta_w")
@@ -203,8 +202,11 @@ class StochasticGradientDescent(Optimizer, ABC):
             tr_metric_values.append(epoch_tr_metric / len(tr_x))
 
         # plot learning rate graph #TODO: DEBUG | remove later |
-        #plt.plot(lr_plots)
-        #plt.show()
+        # print(lr_plots[-1])
+        # print(self.final_lr)
+        # plt.plot(lr_plots)
+        # plt.grid()
+        # plt.show()
 
         return tr_error_values, tr_metric_values, val_error_values, val_metric_values
 

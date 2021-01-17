@@ -199,7 +199,6 @@ def linear_lr_decay(curr_lr, base_lr, final_lr, curr_step, limit_step):
     """
     The linear_lr_decay, linearly decays the learning rate until iteration tau (limit_step). Then it stops
     decaying and uses a fix learning rate (final_lr)::
-
     :param curr_lr:
     :param base_lr:
     :param final_lr:
@@ -214,14 +213,13 @@ def linear_lr_decay(curr_lr, base_lr, final_lr, curr_step, limit_step):
     return final_lr
 
 
-def exp_lr_decay(initial_lr, decay_rate, step, decay_steps, staircase=True):
+def exp_lr_decay(initial_lr, decay_rate, step, decay_steps, staircase=False):
     """
-    The exp_lr_decay, decays exponentially the learning rate by `decay_rate` every
-        `decay_step`, starting from `initial_lr`::
-            learning_rate = initial_lr * exp(-decay_rate * cur_stage)
-        where::
-            cur_stage = step / decay_steps          if staircase = False
-            cur_stage = floor(step / decay_steps)   if staircase = True
+    The exp_lr_decay, decays exponentially the learning rate by `decay_rate` every `decay_step`,
+    starting from `initial_lr`: learning_rate = initial_lr * exp(-decay_rate * cur_stage)
+    where:
+        cur_stage = step / decay_steps          if staircase = False
+        cur_stage = floor(step / decay_steps)   if staircase = True
 
     :param initial_lr: The learning rate at the first step
     :param decay_rate: The amount to decay the learning rate at each new stage
@@ -234,7 +232,7 @@ def exp_lr_decay(initial_lr, decay_rate, step, decay_steps, staircase=True):
                       Default is True
     :return: exponentially decayed learning rate
     """
-    cur_stage = step/decay_steps
+    cur_stage = step / decay_steps
     if staircase:
         cur_stage = np.floor(cur_stage)
     decay = -decay_rate * cur_stage

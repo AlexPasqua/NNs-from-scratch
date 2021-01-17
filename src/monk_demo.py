@@ -20,13 +20,13 @@ if __name__ == '__main__':
     training_params = {
         'lr': 0.4,
         'momentum': 0.8,
-        #'lambd': 0.01,
-        #'reg_type': 'l2',
+        # 'lambd': 0.01,
+        # 'reg_type': 'l2',
         'lr_decay': 'exponential',
         'decay_rate': 0.95,
-        'decay_steps': 500,
+        'decay_steps': 20,
         'staircase': False,
-        #'limit_step':200,
+        # 'limit_step':200,
         'loss': 'squared',
         'opt': 'sgd',
         'epochs': 200,
@@ -44,14 +44,14 @@ if __name__ == '__main__':
     )
 
     # hold-out validation
-    #model.compile(opt='gd', loss='squared', metr='bin_class_acc', lr=0.2, momentum=0.6)
-    #tr_error_values, tr_metric_values, val_error_values, val_metric_values = model.fit(
-   #     tr_x=monk_train,
+    # model.compile(opt='gd', loss='squared', metr='bin_class_acc', lr=0.2, momentum=0.6)
+    # tr_error_values, tr_metric_values, val_error_values, val_metric_values = model.fit(
+    #     tr_x=monk_train,
     #    tr_y=labels,
-  #      epochs=600,
-   #     val_split=0.,
-  #      batch_size='full',
-  #  )
+    #      epochs=600,
+    #     val_split=0.,
+    #      batch_size='full',
+    #  )
 
     # plot graph
     plot_curves(
