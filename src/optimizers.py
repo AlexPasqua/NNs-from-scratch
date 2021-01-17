@@ -4,6 +4,7 @@ import datetime
 import numpy as np
 import tqdm as tqdm
 from functions import losses, metrics, lr_decays, regs
+import matplotlib.pyplot as plt
 
 
 class Optimizer(ABC):
@@ -19,7 +20,8 @@ class Optimizer(ABC):
     """
 
     @abstractmethod
-    def __init__(self, net, loss, metr, lr, lr_decay, limit_step, momentum, reg_type, lambd):
+    def __init__(self, net, loss, metr, lr, lr_decay, limit_step, decay_rate, decay_steps, staircase, momentum,
+                 reg_type, lambd):
         # makes sure lr is a value between 0 and 1
         if lr <= 0 or lr > 1:
             raise ValueError('lr should be a value between 0 and 1, Got:{}'.format(lr))
@@ -31,9 +33,18 @@ class Optimizer(ABC):
         self.final_lr = self.base_lr / 100.0
         self.lr_decay = lr_decay
         self.limit_step = limit_step
+        self.decay_rate = decay_rate
+        self.decay_steps = decay_steps
+        self.staircase = staircase
         self.momentum = momentum
         self.lambd = lambd
         self.reg_type = reg_type
+
+    @property
+    def lr_params(self):
+        return {'lr': self.lr, 'base_lr': self.base_lr, 'final_lr': self.final_lr, 'lr_decay': self.lr_decay,
+                'limit_step': self.limit_step, 'decay_rate': self.decay_rate, 'decay_steps': self.decay_steps,
+                'staircase': self.staircase}
 
     @property
     def net(self):
@@ -48,12 +59,14 @@ class Optimizer(ABC):
         return self.__metric
 
 
-class GradientDescent(Optimizer, ABC):
+class StochasticGradientDescent(Optimizer, ABC):
     """ Gradient Descent """
 
-    def __init__(self, net, loss, metr, lr, lr_decay, limit_step, momentum, reg_type, lambd):
-        super(GradientDescent, self).__init__(net, loss, metr, lr, lr_decay, limit_step, momentum, reg_type, lambd)
-        self.__type = 'gd'
+    def __init__(self, net, loss, metr, lr, momentum, reg_type, lambd, lr_decay=None, limit_step=None, decay_rate=None,
+                 decay_steps=None, staircase=False):
+        super(StochasticGradientDescent, self).__init__(net, loss, metr, lr, lr_decay, limit_step, decay_rate,
+                                                        decay_steps, staircase, momentum, reg_type, lambd)
+        self.__type = 'sgd'
 
     @property
     def type(self):
@@ -82,8 +95,11 @@ class GradientDescent(Optimizer, ABC):
         momentum_net = net.get_empty_struct()
         step = 0
 
+        # learning rate results for plotting #TODO: DEBUG | remove later |
+        lr_plots = []
+
         # cycle through epochs
-        for epoch in tqdm.tqdm(range(epochs), desc="Iterating over epochs", disable=True):
+        for epoch in tqdm.tqdm(range(epochs), desc="Iterating over epochs", disable=False):
             epoch_tr_error = np.zeros(net.layers[-1].n_units)
             epoch_tr_metric = np.zeros(net.layers[-1].n_units)
             epoch_val_error = np.zeros(net.layers[-1].n_units)
@@ -124,18 +140,17 @@ class GradientDescent(Optimizer, ABC):
                     dErr_dOut = self.loss.deriv(predicted=net_outputs, target=target)
                     # set the layers' gradients and add them into grad_net
                     # (emulate pass by reference of grad_net using return and reassign)
+
                     grad_net = net.propagate_back(dErr_dOut, grad_net)
 
-                # learning rate decay
+                # learning rate decays
                 if self.lr_decay is not None:
                     step += 1
-                    self.lr = lr_decays[self.lr_decay].func(
-                        curr_lr=self.lr,
-                        base_lr=self.base_lr,
-                        final_lr=self.final_lr,
-                        curr_step=step,
-                        limit_step=self.limit_step
-                    )
+                    self.lr = lr_decays[self.lr_decay].func(step=step, **self.lr_params)
+
+                # saves learning rate values #TODO: DEBUG | remove later |
+                # lr_plots.append(self.lr)
+                # print(lr)
 
                 # weights update
                 for layer_index in range(len(net.layers)):
@@ -161,7 +176,6 @@ class GradientDescent(Optimizer, ABC):
                         net.layers[layer_index].biases,
                         momentum_net[layer_index]['biases']
                     )
-
             # validation
             if val_x is not None:
                 for pattern, target in zip(val_x, val_y):
@@ -178,9 +192,15 @@ class GradientDescent(Optimizer, ABC):
             epoch_tr_metric = np.sum(epoch_tr_metric) / len(epoch_tr_metric)
             tr_metric_values.append(epoch_tr_metric / len(tr_x))
 
+        # plot learning rate graph #TODO: DEBUG | remove later |
+        # print(lr_plots[-1], '\n', self.final_lr)
+        # plt.plot(lr_plots)
+        # plt.grid()
+        # plt.show()
+
         return tr_error_values, tr_metric_values, val_error_values, val_metric_values
 
 
 optimizers = {
-    'gd': GradientDescent
+    'sgd': StochasticGradientDescent
 }

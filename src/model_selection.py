@@ -8,8 +8,9 @@ from utility import plot_curves, sets_from_folds, list_of_combos, read_monk, rea
 from network import Network
 
 
-def cross_valid(net, dataset, loss, metr, lr, lr_decay=None, limit_step=None, opt='gd', momentum=0.,
-                epochs=1, batch_size=1, k_folds=5, reg_type='l2', lambd=0, verbose=False, **kwargs):
+def cross_valid(net, dataset, loss, metr, lr, lr_decay=None, limit_step=None, decay_rate=None, decay_steps=None,
+                staircase=True, opt='sgd', momentum=0., epochs=1, batch_size=1, k_folds=5, reg_type='l2', lambd=0,
+                verbose=False, **kwargs):
 
     # read the dataset
     if dataset not in ('monks-1', 'monks-2', 'monks-3', 'cup'):
@@ -35,7 +36,8 @@ def cross_valid(net, dataset, loss, metr, lr, lr_decay=None, limit_step=None, op
         tr_data, tr_targets, val_data, val_targets = sets_from_folds(x_folds, y_folds, val_fold_index=i)
 
         # compile and fit the model on the current training set and evaluate it on the current validation set
-        net.compile(opt=opt, loss=loss, metr=metr, lr=lr, lr_decay=lr_decay, limit_step=limit_step, momentum=momentum,
+        net.compile(opt=opt, loss=loss, metr=metr, lr=lr, lr_decay=lr_decay, limit_step=limit_step,
+                    decay_rate=decay_rate, decay_steps=decay_steps, staircase=staircase, momentum=momentum,
                     reg_type=reg_type, lambd=lambd)
         tr_history = net.fit(tr_x=tr_data, tr_y=tr_targets, val_x=val_data, val_y=val_targets, epochs=epochs,
                              batch_size=batch_size)
@@ -75,7 +77,7 @@ def cross_valid(net, dataset, loss, metr, lr, lr_decay=None, limit_step=None, op
         print("Loss: {} - std:(+/- {})\nAccuracy: {} - std:(+/- {})".format(avg_val_err, std_val_err,
                                                                             avg_val_metric, std_val_metric))
 
-    # plot_curves(tr_error_values, val_error_values, tr_metric_values, val_metric_values, lr, momentum)
+    plot_curves(tr_error_values, val_error_values, tr_metric_values, val_metric_values, lr, momentum)
     return avg_val_err, std_val_err, avg_val_metric, std_val_metric
 
 
