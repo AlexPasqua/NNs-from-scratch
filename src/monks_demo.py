@@ -49,9 +49,9 @@ if __name__ == '__main__':
     model.compile(**params)
     tr_error_values, tr_metric_values, val_error_values, val_metric_values = model.fit(tr_x=monk_train, tr_y=labels,
                                                                                        disable_tqdm=False, **params)
-    pred_test = model.predict(inp=x_test[0])
-    results = model.evaluate(predicted=pred_test, y_labels=y_test, metr=params['metr'], loss=params['loss'])
-    print(results)
+    pred_test = model.predict(inp=x_test)
+    loss_scores, metr_scores = model.evaluate(net_outputs=pred_test, targets=y_test, metr=params['metr'], loss=params['loss'])
+    print(f"test_loss:{loss_scores}  -  test_acc: {metr_scores}")
 
     # # grid search
     # grid_search(dataset="monks-1")

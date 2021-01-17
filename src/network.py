@@ -1,4 +1,5 @@
 import warnings
+from tqdm import tqdm
 from layer import Layer
 from optimizers import *
 from functions import losses
@@ -170,22 +171,44 @@ class Network:
         )
 
     def predict(self, inp):
+        """
+        Computs the outputs for a batch of patterns (like a wrapper to call 'forward()' in a cycle)
+        :param inp: batch of input patterns
+        :return: array of net's outputs
+        """
         inp = np.array(inp)
         inp = inp[np.newaxis, :] if len(inp.shape) < 2 else inp
         predictions = []
-        for pattern in inp:
+        for pattern in tqdm.tqdm(inp, desc="Predicting patterns"):
             predictions.append(self.forward(pattern))
         return np.array(predictions)
 
-    def evaluate(self, predicted, y_labels, metr, loss):
-        acc_scores = 0
+    def evaluate(self, targets, metr, loss, net_outputs=None, inp=None):
+        """
+        Performs an evaluation of the network based on the targets and either the computed outputs ('net_outputs')
+        or the input data ('inp'). In the latter case, the outputs will be computed from the input data.
+        If both 'predicted' and 'inp' are None, an AttributeError is raised
+        :param targets: the targets for the input on which the net is evaluated
+        :param metr: the metric to track for the evaluation
+        :param loss: the loss to track for the evaluation
+        :param net_outputs: the output of the net for a certain input
+        :param inp: the input on which the net has to be evaluated
+        :return: the loss and the metric
+        """
+        if net_outputs is None:
+            if inp is None:
+                raise AttributeError("Both net_outputs and inp cannot be None")
+            net_outputs = self.predict(inp)
+        metr_scores = 0
         loss_scores = 0
-        for x, y in zip(predicted, y_labels):
-            pred = int(metrics[metr].func(predicted=x, target=y))
-            los = float(losses[loss].func(predicted=x, target=y))
-            acc_scores += pred
-            loss_scores += los
-        return f"test_loss:{loss_scores / len(predicted)}  -  test_acc: {acc_scores / len(predicted)}"
+        for x, y in zip(net_outputs, targets):
+            curr_metr = int(metrics[metr].func(predicted=x, target=y))
+            curr_loss = float(losses[loss].func(predicted=x, target=y))
+            metr_scores += curr_metr
+            loss_scores += curr_loss
+        loss_scores /= len(net_outputs)
+        metr_scores /= len(net_outputs)
+        return loss_scores, metr_scores
 
     def propagate_back(self, dErr_dOut, grad_net):
         curr_delta = dErr_dOut
