@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 from sklearn.preprocessing import OneHotEncoder, MinMaxScaler, StandardScaler
 import matplotlib.pyplot as plt
+from collections import OrderedDict
 import itertools as it
 import json
 from network import Network
@@ -94,14 +95,26 @@ def list_of_combos(param_dict):
     :param param_dict: dict{kind_of_param: tuple of all the values of that param to try in the grid search)
     :return: list of dictionaries{kind_of_param: value of that param}
     """
+    expected_keys = sorted(['units_per_layer', 'acts', 'init_type', 'limits', 'momentum', 'batch_size', 'lr', 'loss',
+                            'metr', 'epochs', 'lr_decay', 'decay_rate', 'decay_steps', 'staircase', 'limit_step',
+                            'lambd', 'reg_type'])
+    for k in expected_keys:
+        if k not in param_dict.keys():
+            param_dict[k] = ('l2',) if k == 'reg_type' else ((0,) if k == 'lambd' else (None,))
+    param_dict = OrderedDict(sorted(param_dict.items()))
     combo_list = list(it.product(*(param_dict[k] for k in param_dict.keys())))
     combos = []
     for c in combo_list:
         # check if the current combination is formed of compatible parameters
-        # c[0] = units per layer  ;  c[1] = activation functions  -->  their lengths must be equal
-        if len(c[0]) == len(c[1]):
-            combos.append({'units_per_layer': c[0], 'acts': c[1], 'init_type': c[2], 'limits': c[3], 'momentum': c[4],
-                           'batch_size': c[5], 'lr': c[6], 'loss': c[7], 'metr': c[8], 'epochs': c[9]})
+        # print(c)
+        # print(expected_keys)
+        # print(len(c))
+        # print(len(expected_keys))
+        # print(c[expected_keys.index('units_per_layer')], '\t', c[expected_keys.index('acts')])
+        # exit()
+        if len(c[expected_keys.index('units_per_layer')]) == len(c[expected_keys.index('acts')]):
+            d = {k: c[i] for k, i in zip(expected_keys, range(len(expected_keys)))}
+            combos.append(d)
     return combos
 
 

@@ -82,7 +82,7 @@ if __name__ == '__main__':
                  'batch_size': ('full',),
                  'lr': (0.002, 0.5),
                  'loss': ('squared',),
-                 'metric': ('euclidean',),
+                 'metr': ('euclidean',),
                  'epochs': (20,)}
     grid_search(dataset="cup", params=gs_params)
     best_model, params = get_best_models("cup", 1)
