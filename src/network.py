@@ -201,7 +201,7 @@ class Network:
             net_outputs = self.predict(inp)
         metr_scores = 0
         loss_scores = 0
-        for x, y in zip(net_outputs, targets):
+        for x, y in tqdm.tqdm(zip(net_outputs, targets), total=len(targets), desc="Evaluating model"):
             curr_metr = int(metrics[metr].func(predicted=x, target=y))
             curr_loss = float(losses[loss].func(predicted=x, target=y))
             metr_scores += curr_metr
