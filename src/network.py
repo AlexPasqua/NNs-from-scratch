@@ -173,12 +173,18 @@ class Network:
             **kwargs
         )
 
-    def evaluate(self, predicted, labels, metr, loss):
+    def predict(self, inp):
+        predict = []
+        for pattern in inp:
+            predict.append(self.forward(pattern))
+        return np.array(predict)
+
+    def evaluate(self, predicted, y_labels, metr, loss):
         acc_scores = 0
         loss_scores = 0
-        for x, d in zip(predicted, labels):
-            pred = int(metrics[metr].func(predicted=x, target=d))
-            los = float(losses[loss].func(predicted=x, target=d))
+        for x, y in zip(predicted, y_labels):
+            pred = int(metrics[metr].func(predicted=x, target=y))
+            los = float(losses[loss].func(predicted=x, target=y))
             acc_scores += pred
             loss_scores += los
         return f"test_loss:{loss_scores/len(predicted)}  -  test_acc: {acc_scores/len(predicted)}"

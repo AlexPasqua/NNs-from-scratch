@@ -11,8 +11,8 @@ if __name__ == '__main__':
 
     model_params = {
         'input_dim': 17,
-        'units_per_layer': (15, 1),
-        'acts': ('relu', 'tanh'),
+        'units_per_layer': (4, 1),
+        'acts': ('leaky_relu', 'tanh'),
         'init_type': 'uniform',
         'init_value': 0.2,
         'limits': (-0.1, 0.1)
@@ -20,7 +20,7 @@ if __name__ == '__main__':
     model = Network(**model_params)
 
     params = {
-        'lr': 0.6,
+        'lr': 0.3,
         'momentum': 0.9,
         # 'lambd': 0.0,
         # 'reg_type': 'l2',
@@ -37,14 +37,14 @@ if __name__ == '__main__':
     }
 
     # cross validation
-    tr_error_values, tr_metric_values, val_error_values, val_metric_values = cross_valid(
-        net=model,
-        dataset="monks-2.train",
-        k_folds=5,
-        verbose=False,
-        disable_tqdms=(True, False),
-        **params
-    )
+  #  tr_error_values, tr_metric_values, val_error_values, val_metric_values = cross_valid(
+  #      net=model,
+  #      dataset="monks-2.train",
+  #      k_folds=5,
+   #     verbose=False,
+   #     disable_tqdms=(True, False),
+    #    **params
+    #    )
 
     # # hold-out validation
     # model.compile(opt='sgd', loss='squared', metr='bin_class_acc', lr=0.2, momentum=0.6)
@@ -76,12 +76,12 @@ if __name__ == '__main__':
     #     **params
     # )
 
-'''
 
     model.compile(**params)
     model.fit(**params, tr_x=monk_train, tr_y=labels, display_scores=False)
-    pred_test = model.forward(inp=x_test)
-    results = model.evaluate(predicted=pred_test, labels=y_test, metr='bin_class_acc', loss='squared')
+    pred_test = model.predict(inp=x_test)
+    results = model.evaluate(predicted=pred_test, y_labels=y_test, metr='bin_class_acc', loss='squared')
+    print(pred_test)
     print(results)
 
-'''
+
