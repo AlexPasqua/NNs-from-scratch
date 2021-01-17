@@ -1,4 +1,4 @@
-from utility import read_cup, plot_curves
+from utility import read_cup, plot_curves, get_best_models
 from network import Network
 from model_selection import grid_search, cross_valid
 from multiprocessing import Process, Manager
@@ -70,16 +70,33 @@ if __name__ == '__main__':
     #         print(k, ': ', v)
 
     # cross validation
-    cross_valid(model, "cup", 'squared', 'euclidean', lr=0.002, momentum=0.6, epochs=15,
-                batch_size=30, k_folds=5, disable_tqdms=(True, False), verbose=True)
+    # cross_valid(model, "cup", 'squared', 'euclidean', lr=0.002, momentum=0.6, epochs=15,
+    #             batch_size=30, k_folds=5, disable_tqdms=(True, False), verbose=True)
 
     # grid search
-    # grid_search(dataset="cup")
+    gs_params = {'units_per_layer': ((2, 2),),
+                 'acts': (('leaky_relu', 'identity'),),
+                 'init_type': ('uniform',),
+                 'limits': ((-0.5, 0.5), (-0.001, 0.001)),
+                 'momentum': (0.0,),
+                 'batch_size': ('full',),
+                 'lr': (0.002, 0.5),
+                 'loss': ('squared',),
+                 'metr': ('euclidean',),
+                 'epochs': (20,)}
+    grid_search(dataset="cup", params=gs_params)
+    best_model, params = get_best_models("cup", 1)
+    best_model = best_model[0]
+    params = params[0]
+    best_model.print_topology()
+    best_model.compile(opt='sgd', **params)
+    tr_error_values, tr_metric_values, val_error_values, val_metric_values = best_model.fit(
+        tr_x=cup_tr_data, tr_y=cup_tr_targets, disable_tqdm=False, **params)
 
-    # # plot graph
-    # plot_curves(
-    #     tr_loss=tr_error_values,
-    #     val_loss=val_error_values,
-    #     tr_acc=tr_metric_values,
-    #     val_acc=val_metric_values
-    # )
+    # plot graph
+    plot_curves(
+        tr_loss=tr_error_values,
+        val_loss=val_error_values,
+        tr_acc=tr_metric_values,
+        val_acc=val_metric_values
+    )

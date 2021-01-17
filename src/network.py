@@ -160,15 +160,8 @@ class Network:
         if target_len != self.layers[-1].n_units or n_patterns != n_targets or batch_size > n_patterns:
             raise AttributeError(f"Mismatching shapes")
 
-        return self.__opt.optimize(
-            tr_x=tr_x,
-            tr_y=tr_y,
-            val_x=val_x,
-            val_y=val_y,
-            epochs=epochs,
-            batch_size=batch_size,
-            **kwargs
-        )
+        return self.__opt.optimize(tr_x=tr_x, tr_y=tr_y, val_x=val_x, val_y=val_y, epochs=epochs,
+                                   batch_size=batch_size, **kwargs)
 
     def predict(self, inp):
         """
