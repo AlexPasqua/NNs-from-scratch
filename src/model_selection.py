@@ -94,7 +94,7 @@ def get_coarse_gs_params():
             'lr': (0.3, 0.5),
             'loss': ('squared',),
             'metric': ('bin_class_acc',),
-            'epochs': (200, 500)}
+            'epochs': (200,)}
 
 
 def grid_search(dataset):

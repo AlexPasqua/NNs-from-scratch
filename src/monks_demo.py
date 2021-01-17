@@ -6,68 +6,69 @@ if __name__ == '__main__':
     # read the dataset
     monk_train, labels = read_monk(name='monks-1', rescale=True)
 
-    # model_params = {
-    #     'input_dim': 17,
-    #     'units_per_layer': (4, 1),
-    #     'acts': ('leaky_relu', 'tanh'),
-    #     'init_type': 'uniform',
-    #     'init_value': 0.2,
-    #     'lower_lim': -0.1,
-    #     'upper_lim': 0.1
-    # }
-    # model = Network(**model_params)
-    #
-    # training_params = {
-    #     'lr': 0.3,
-    #     'momentum': 0.9,
-    #     # 'lambd': 0.0,
-    #     # 'reg_type': 'l2',
-    #     # 'lr_decay': 'exponential',
-    #     # 'decay_rate': 0.95,
-    #     # 'decay_steps': 500,
-    #     # 'staircase': False,
-    #     # 'limit_step': 200,
-    #     'loss': 'squared',
-    #     'opt': 'sgd',
-    #     'epochs': 400,
-    #     'batch_size': 'full',
-    #     'metr': 'bin_class_acc'
-    # }
+    model_params = {
+        'input_dim': 17,
+        'units_per_layer': (4, 1),
+        'acts': ('leaky_relu', 'tanh'),
+        'init_type': 'uniform',
+        'init_value': 0.2,
+        'limits': (-0.1, 0.1)
+    }
+    model = Network(**model_params)
 
-    # # cross validation
-    # tr_error_values, tr_metric_values, val_error_values, val_metric_values = cross_valid(
-    #     net=model,
-    #     dataset="monks-2",
-    #     k_folds=5,
-    #     verbose=True,
-    #     **training_params
-    # )
+    params = {
+        'lr': 0.3,
+        'momentum': 0.9,
+        # 'lambd': 0.0,
+        # 'reg_type': 'l2',
+        # 'lr_decay': 'exponential',
+        # 'decay_rate': 0.95,
+        # 'decay_steps': 500,
+        # 'staircase': False,
+        # 'limit_step': 200,
+        'loss': 'squared',
+        'opt': 'sgd',
+        'epochs': 400,
+        'batch_size': 'full',
+        'metr': 'bin_class_acc'
+    }
+
+    # cross validation
+    tr_error_values, tr_metric_values, val_error_values, val_metric_values = cross_valid(
+        net=model,
+        dataset="monks-2",
+        k_folds=5,
+        verbose=True,
+        disable_tqdms=(True, False),
+        **params
+    )
 
     # # hold-out validation
-    # model.compile(opt='gd', loss='squared', metr='bin_class_acc', lr=0.2, momentum=0.6)
+    # model.compile(opt='sgd', loss='squared', metr='bin_class_acc', lr=0.2, momentum=0.6)
     # tr_error_values, tr_metric_values, val_error_values, val_metric_values = model.fit(
     #     tr_x=monk_train,
     #     tr_y=labels,
     #     epochs=100,
-    #     val_split=0.,
+    #     val_split=0.1,
     #     batch_size='full',
+    #     disable_tqdm=False
     # )
 
-    # grid search
-    grid_search(dataset="monks-1")
-    best_model, params = get_best_models(n_models=1, input_dim=len(monk_train[0]))
-    best_model = best_model[0]
-    params = params[0]
-    best_model.print_topology()
-    best_model.compile(opt='sgd', **params)
-    tr_error_values, tr_metric_values, val_error_values, val_metric_values = best_model.fit(
-        tr_x=monk_train, tr_y=labels, disable_tqdm=False, **params)
+    # # grid search
+    # grid_search(dataset="monks-1")
+    # best_model, params = get_best_models(n_models=1, input_dim=len(monk_train[0]))
+    # best_model = best_model[0]
+    # params = params[0]
+    # best_model.print_topology()
+    # best_model.compile(opt='sgd', **params)
+    # tr_error_values, tr_metric_values, val_error_values, val_metric_values = best_model.fit(
+    #     tr_x=monk_train, tr_y=labels, disable_tqdm=False, **params)
 
-    # plot graph
-    plot_curves(
-        tr_loss=tr_error_values,
-        val_loss=val_error_values,
-        tr_acc=tr_metric_values,
-        val_acc=val_metric_values,
-        **params
-    )
+    # # plot graph
+    # plot_curves(
+    #     tr_loss=tr_error_values,
+    #     val_loss=val_error_values,
+    #     tr_acc=tr_metric_values,
+    #     val_acc=val_metric_values,
+    #     **params
+    # )

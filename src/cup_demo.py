@@ -14,18 +14,18 @@ def holdout_validation(pnum, cup_tr_data, cup_tr_targets, res):
         units_per_layer=(10, 10, 2),
         acts=('leaky_relu', 'leaky_relu', 'identity'),
         init_type='uniform',
-        lower_lim=0.0001,
-        upper_lim=0.001,
+        limits=(0.0001, 0.001)
     )
 
     # hold-out validation
-    model.compile(opt='gd', loss='squared', metr='euclidean', lr=0.0002, momentum=0.6)
+    model.compile(opt='sgd', loss='squared', metr='euclidean', lr=0.0002, momentum=0.6)
     tr_error_values, tr_metric_values, val_error_values, val_metric_values = model.fit(
         tr_x=cup_tr_data,
         tr_y=cup_tr_targets,
         epochs=80,
         val_split=0.2,
         batch_size=30,
+        disable_tqdm=True
     )
     # print(f"Final values:\nTR loss: {tr_error_values[-1]}\tTR metric: {tr_metric_values[-1]}")
     # print(f"VAL loss: {val_error_values[-1]}\tVAL metric: {val_metric_values[-1]}\n")
@@ -43,8 +43,7 @@ if __name__ == '__main__':
         units_per_layer=(10, 10, 2),
         acts=('leaky_relu', 'leaky_relu', 'identity'),
         init_type='uniform',
-        lower_lim=0.0001,
-        upper_lim=0.001,
+        limits=(0.0001, 0.001)
     )
 
     # with Manager() as manager:
@@ -71,11 +70,11 @@ if __name__ == '__main__':
     #         print(k, ': ', v)
 
     # cross validation
-    # cross_valid(model, cup_tr_data, cup_tr_targets, 'squared', 'euclidean', lr=0.002, momentum=0.6, epochs=15,
-    #             batch_size=30, k_folds=5, verbose=True)
+    cross_valid(model, "cup", 'squared', 'euclidean', lr=0.002, momentum=0.6, epochs=15,
+                batch_size=30, k_folds=5, disable_tqdms=(True, False), verbose=True)
 
     # grid search
-    grid_search(dataset="cup")
+    # grid_search(dataset="cup")
 
     # # plot graph
     # plot_curves(

@@ -15,7 +15,8 @@ def _fixed_init(n_weights, n_units, init_value, **kwargs):
     return np.full(shape=(n_weights, n_units), fill_value=init_value)
 
 
-def _rand_init(n_weights, n_units, lower_lim=0., upper_lim=1., **kwargs):
+def _rand_init(n_weights, n_units, limits=(-0.1, 0.1), **kwargs):
+    lower_lim, upper_lim = limits[0], limits[1]
     if lower_lim >= upper_lim:
         raise ValueError(f"lower_lim must be <= than upper_lim")
     res = np.random.uniform(low=lower_lim, high=upper_lim, size=(n_weights, n_units))

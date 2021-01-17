@@ -14,8 +14,8 @@ class TestWeightsInitializations(unittest.TestCase):
     def test_values(self):
         value = 0.2
         self.assertEqual(weights_inits(init_type='fixed', init_value=value, n_weights=1, n_units=1), value)
-        self.assertLessEqual(weights_inits(init_type='uniform', lower_lim=0., upper_lim=value, n_weights=1, n_units=1), value)
-        self.assertGreaterEqual(weights_inits(init_type='uniform', lower_lim=value, upper_lim=value+1, n_weights=1, n_units=1), value)
+        self.assertLessEqual(weights_inits(init_type='uniform', limits=(0., value), n_weights=1, n_units=1), value)
+        self.assertGreaterEqual(weights_inits(init_type='uniform', limits=(value, value+1), n_weights=1, n_units=1), value)
 
 
 if __name__ == '__main__':

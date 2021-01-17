@@ -100,9 +100,8 @@ def list_of_combos(param_dict):
         # check if the current combination is formed of compatible parameters
         # c[0] = units per layer  ;  c[1] = activation functions  -->  their lengths must be equal
         if len(c[0]) == len(c[1]):
-            combos.append({'units_per_layer': c[0], 'acts': c[1], 'init_type': c[2], 'lower_lim': c[3][0],
-                           'upper_lim': c[3][1], 'momentum': c[4], 'batch_size': c[5], 'lr': c[6], 'loss': c[7],
-                           'metr': c[8], 'epochs': c[9]})
+            combos.append({'units_per_layer': c[0], 'acts': c[1], 'init_type': c[2], 'limits': c[3], 'momentum': c[4],
+                           'batch_size': c[5], 'lr': c[6], 'loss': c[7], 'metr': c[8], 'epochs': c[9]})
     return combos
 
 
