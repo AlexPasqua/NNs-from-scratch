@@ -13,8 +13,8 @@ def cross_valid(net, dataset, loss, metr, lr, lr_decay=None, limit_step=None, de
                 disable_tqdms =(True, True), verbose=False, **kwargs):
 
     # read the dataset
-    if dataset not in ('monks-1', 'monks-2', 'monks-3', 'cup'):
-        raise ValueError("Attribute dataset must be in {monks-1, monks-2, monks-3, cup}")
+    if dataset not in ('monks-1.train', 'monks-2.train', 'monks-3.train', 'cup'):
+        raise ValueError("Attribute dataset must be in {monks-1.train, monks-2.train, monks-3.train, cup}")
     if dataset == "cup":
         dev_set_x, dev_set_y, _ = read_cup()
     else:

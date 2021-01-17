@@ -7,6 +7,7 @@ from functions import losses
 if __name__ == '__main__':
     # read the dataset
     monk_train, labels = read_monk(name='monks-1.train', rescale=True)
+    x_test, y_test = read_monk(name='monks-1.test', rescale=True)
 
     model_params = {
         'input_dim': 17,
@@ -36,14 +37,14 @@ if __name__ == '__main__':
     }
 
     # cross validation
-    #tr_error_values, tr_metric_values, val_error_values, val_metric_values = cross_valid(
-    #    net=model,
-    #    dataset="monks-2",
-    #    k_folds=5,
-    #    verbose=False,
-    #    disable_tqdms=(True, False),
-    #    **params
-    #)
+    tr_error_values, tr_metric_values, val_error_values, val_metric_values = cross_valid(
+        net=model,
+        dataset="monks-2.train",
+        k_folds=5,
+        verbose=False,
+        disable_tqdms=(True, False),
+        **params
+    )
 
     # # hold-out validation
     # model.compile(opt='sgd', loss='squared', metr='bin_class_acc', lr=0.2, momentum=0.6)
@@ -75,12 +76,12 @@ if __name__ == '__main__':
     #     **params
     # )
 
-x_test, y_test = read_monk(name='monks-1.test', rescale=True)
+'''
 
-model.compile(**params)
-model.fit(**params, tr_x=monk_train, tr_y=labels, display_scores=False)
-pred_test = model.forward(inp=x_test)
-results = model.evaluate(predicted=pred_test, labels=y_test, metr='bin_class_acc', loss='squared')
-print(results)
+    model.compile(**params)
+    model.fit(**params, tr_x=monk_train, tr_y=labels, display_scores=False)
+    pred_test = model.forward(inp=x_test)
+    results = model.evaluate(predicted=pred_test, labels=y_test, metr='bin_class_acc', loss='squared')
+    print(results)
 
-
+'''
