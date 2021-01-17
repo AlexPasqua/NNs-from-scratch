@@ -17,12 +17,12 @@ def read_monk(name, rescale=False):
     """
     # read the dataset
     col_names = ['class', 'a1', 'a2', 'a3', 'a4', 'a5', 'a6', 'Id']
-    monk_train = pd.read_csv(f"../datasets/monks/{str(name)}.train", sep=' ', names=col_names)
-    monk_train.set_index('Id', inplace=True)
-    labels = monk_train.pop('class')
+    monk_dataset = pd.read_csv(f"../datasets/monks/{str(name)}", sep=' ', names=col_names)
+    monk_dataset.set_index('Id', inplace=True)
+    labels = monk_dataset.pop('class')
 
     # 1-hot encoding (and transform dataframe to numpy array)
-    monk_train = OneHotEncoder().fit_transform(monk_train).toarray()
+    monk_dataset = OneHotEncoder().fit_transform(monk_dataset).toarray()
 
     # transform labels from pandas dataframe to numpy ndarray
     labels = labels.to_numpy()[:, np.newaxis]
@@ -30,12 +30,12 @@ def read_monk(name, rescale=False):
         labels[labels == 0] = -1
 
     # shuffle the whole dataset once
-    indexes = list(range(len(monk_train)))
+    indexes = list(range(len(monk_dataset)))
     np.random.shuffle(indexes)
-    monk_train = monk_train[indexes]
+    monk_dataset = monk_dataset[indexes]
     labels = labels[indexes]
 
-    return monk_train, labels
+    return monk_dataset, labels
 
 
 def read_cup():
@@ -112,7 +112,7 @@ def list_of_combos(param_dict):
 
 
 def get_best_models(dataset, n_models=1):
-    if dataset not in ("monks-1", "monks-2", "monks-3", "cup"):
+    if dataset not in ("monks-1.train", "monks-2.train", "monks-3.train", "cup"):
         raise ValueError("dataset bust be in {monks-1, monks-2, monks-3, cup}")
 
     with open("../results/results_" + dataset + ".json", 'r') as f:

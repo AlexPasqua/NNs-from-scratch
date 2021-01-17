@@ -72,7 +72,7 @@ class StochasticGradientDescent(Optimizer, ABC):
     def type(self):
         return self.__type
 
-    def optimize(self, tr_x, tr_y, val_x, val_y, epochs, batch_size, disable_tqdm=True, **kwargs):
+    def optimize(self, tr_x, tr_y, val_x, val_y, epochs, batch_size, disable_tqdm= True, **kwargs):
         """
         :param tr_x: (numpy ndarray) input training set
         :param tr_y: (numpy ndarray) targets for each input training pattern
