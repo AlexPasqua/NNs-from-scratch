@@ -64,7 +64,7 @@ if __name__ == '__main__':
                  'loss': ('squared',),
                  'metr': ('bin_class_acc',),
                  'epochs': (200,)}
-    grid_search(dataset="monks-1", params=gs_params)
+    grid_search(dataset=ds_name, params=gs_params)
     best_model, params = get_best_models(dataset=ds_name, n_models=1)
     best_model = best_model[0]
     params = params[0]
