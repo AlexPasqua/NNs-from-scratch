@@ -85,10 +85,12 @@ if __name__ == '__main__':
                  'metr': ('euclidean',),
                  'epochs': (150, 500)}
     # grid_search(dataset="cup", params=gs_params, coarse=True)
-    _, best_params = get_best_models("cup", 1)
-    best_params = best_params[0]
-    grid_search(dataset="cup", params=best_params, coarse=False, n_config=2)
+    # _, best_params = get_best_models("cup", 1)
+    # best_params = best_params[0]
+    # grid_search(dataset="cup", params=best_params, coarse=False, n_config=2)
     best_model, best_params = get_best_models("cup", 1)
+    best_model = best_model[0]
+    best_params = best_params[0]
     best_model.compile(opt='sgd', **best_params)
     tr_error_values, tr_metric_values, val_error_values, val_metric_values = best_model.fit(
         tr_x=cup_tr_data, tr_y=cup_tr_targets, disable_tqdm=False, **best_params)
