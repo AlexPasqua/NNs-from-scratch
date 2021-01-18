@@ -84,19 +84,19 @@ if __name__ == '__main__':
                  'loss': ('squared',),
                  'metr': ('euclidean',),
                  'epochs': (20,)}
-    grid_search(dataset="cup", params=gs_params)
-    best_model, params = get_best_models("cup", 1)
+    # grid_search(dataset="cup", params=gs_params)
+    best_model, best_params = get_best_models("cup", 1)
     best_model = best_model[0]
-    params = params[0]
-    best_model.print_topology()
-    best_model.compile(opt='sgd', **params)
-    tr_error_values, tr_metric_values, val_error_values, val_metric_values = best_model.fit(
-        tr_x=cup_tr_data, tr_y=cup_tr_targets, disable_tqdm=False, **params)
+    best_params = best_params[0]
+    grid_search(dataset="cup", params=best_params, coarse=False, n_config=3)
+    # best_model.compile(opt='sgd', **best_model)
+    # tr_error_values, tr_metric_values, val_error_values, val_metric_values = best_model.fit(
+    #     tr_x=cup_tr_data, tr_y=cup_tr_targets, disable_tqdm=False, **best_model)
 
-    # plot graph
-    plot_curves(
-        tr_loss=tr_error_values,
-        val_loss=val_error_values,
-        tr_acc=tr_metric_values,
-        val_acc=val_metric_values
-    )
+    # # plot graph
+    # plot_curves(
+    #     tr_loss=tr_error_values,
+    #     val_loss=val_error_values,
+    #     tr_acc=tr_metric_values,
+    #     val_acc=val_metric_values
+    # )

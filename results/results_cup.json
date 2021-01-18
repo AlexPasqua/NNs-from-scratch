@@ -20,7 +20,7 @@
 			"lr": 0.002,
 			"lr_decay": null,
 			"metr": "euclidean",
-			"momentum": 0.0,
+			"momentum": 0.8,
 			"reg_type": "l2",
 			"staircase": null,
 			"units_per_layer": [
@@ -48,7 +48,7 @@
 			"lr": 0.002,
 			"lr_decay": null,
 			"metr": "euclidean",
-			"momentum": 0.0,
+			"momentum": 0.8,
 			"reg_type": "l2",
 			"staircase": null,
 			"units_per_layer": [

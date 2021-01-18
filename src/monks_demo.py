@@ -23,10 +23,10 @@ if __name__ == '__main__':
         'momentum': 0.9,
         # 'lambd': 0.0,
         # 'reg_type': 'l2',
-        # 'lr_decay': 'exponential',
-        # 'decay_rate': 0.95,
-        # 'decay_steps': 500,
-        # 'staircase': False,
+        'lr_decay': 'exponential',
+        'decay_rate': 0.95,
+        'decay_steps': 250,
+        'staircase': False,
         # 'limit_step': 200,
         'loss': 'squared',
         'opt': 'sgd',
@@ -55,7 +55,7 @@ if __name__ == '__main__':
                                               loss=params['loss'], disable_tqdm=False)
     print(f"test_loss:{loss_scores}  -  test_acc: {metr_scores}")
 
-    # # grid search
+    # grid search
     # gs_params = {'units_per_layer': ((4, 1),),
     #              'acts': (('leaky_relu', 'tanh'), ('leaky_relu', 'leaky_relu', 'tanh')),
     #              'init_type': ('uniform',),
@@ -66,11 +66,14 @@ if __name__ == '__main__':
     #              'loss': ('squared',),
     #              'metr': ('bin_class_acc',),
     #              'epochs': (200,)}
-    # grid_search(dataset=ds_name, params=gs_params)
-    # best_model, params = get_best_models(dataset=ds_name, n_models=1)
+    # # grid_search(dataset=ds_name, params=gs_params, coarse=True)
+    # best_model, best_params = get_best_models(dataset=ds_name, n_models=1)
     # best_model = best_model[0]
-    # params = params[0]
-    # best_model.print_topology()
+    # best_params = best_params[0]
+    # grid_search(dataset=ds_name, params=best_params, coarse=False)
+    # best_model, best_params = get_best_models(dataset=ds_name, n_models=1)
+    # best_model = best_model[0]
+    # best_params = best_params[0]
     # best_model.compile(opt='sgd', **params)
     # tr_error_values, tr_metric_values, val_error_values, val_metric_values = best_model.fit(
     #     tr_x=monk_train, tr_y=labels, disable_tqdm=False, **params)
