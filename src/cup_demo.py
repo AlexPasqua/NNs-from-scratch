@@ -74,21 +74,21 @@ if __name__ == '__main__':
     #             batch_size=30, k_folds=5, disable_tqdms=(True, False), verbose=True)
 
     # grid search
-    gs_params = {'units_per_layer': ((10, 2), (15, 2), (10, 10, 2)),
-                 'acts': (('leaky_relu', 'identity'), ('leaky_relu', 'leaky_relu', 'identity')),
+    gs_params = {'units_per_layer': ((10, 2),),
+                 'acts': (('leaky_relu', 'identity'),),
                  'init_type': ('uniform',),
                  'limits': ((-0.5, 0.5), (-0.001, 0.001)),
-                 'momentum': (0.0, 0.6, 0.9),
-                 'batch_size': ('full', 30),
-                 'lr': (0.002, 0.02),
+                 'momentum': (0.0, 0.6,),
+                 'batch_size': ('full',),
+                 'lr': (0.002,),
                  'loss': ('squared',),
                  'metr': ('euclidean',),
-                 'epochs': (150, 500)}
-    # grid_search(dataset="cup", params=gs_params, coarse=True)
-    # _, best_params = get_best_models("cup", 1)
-    # best_params = best_params[0]
-    # grid_search(dataset="cup", params=best_params, coarse=False, n_config=2)
-    best_model, best_params = get_best_models("cup", 1)
+                 'epochs': (20,)}
+    grid_search(dataset="cup", params=gs_params, coarse=True)
+    _, best_params = get_best_models("cup", coarse=True, n_models=1)
+    best_params = best_params[0]
+    grid_search(dataset="cup", params=best_params, coarse=False, n_config=1)
+    best_model, best_params = get_best_models("cup", coarse=False, n_models=1)
     best_model = best_model[0]
     best_params = best_params[0]
     best_model.compile(opt='sgd', **best_params)

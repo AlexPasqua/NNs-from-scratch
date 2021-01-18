@@ -6,7 +6,7 @@ if __name__ == '__main__':
     # read the dataset
     ds_name = "monks-2.train"
     monk_train, labels = read_monk(name=ds_name, rescale=True)
-    x_test, y_test = read_monk(name='monks-1.test', rescale=True)
+    x_test, y_test = read_monk(name='monks-2.test', rescale=True)
 
     # model_params = {
     #     'input_dim': 17,
@@ -57,20 +57,20 @@ if __name__ == '__main__':
 
     # grid search
     gs_params = {'units_per_layer': ((4, 1),),
-                 'acts': (('leaky_relu', 'tanh'), ('leaky_relu', 'sigmoid')),
+                 'acts': (('leaky_relu', 'tanh'),),
                  'init_type': ('uniform',),
-                 'limits': ((-0.2, 0.2), (0.001, 0.3)),
-                 'momentum': (0., 0.6, 0.9),
-                 'batch_size': ('full', 1, 30),
-                 'lr': (0.1, 0.4),
+                 'limits': ((-0.2, 0.2),),
+                 'momentum': (0., 0.6),
+                 'batch_size': ('full',),
+                 'lr': (0.2, 0.4),
                  'loss': ('squared',),
                  'metr': ('bin_class_acc',),
-                 'epochs': (200, 300)}
+                 'epochs': (200,)}
     grid_search(dataset=ds_name, params=gs_params, coarse=True)
-    _, best_params = get_best_models(dataset=ds_name, n_models=1)
+    _, best_params = get_best_models(dataset=ds_name, coarse=True, n_models=1)
     best_params = best_params[0]
     grid_search(dataset=ds_name, params=best_params, coarse=False, n_config=2)
-    best_model, best_params = get_best_models(dataset=ds_name, n_models=1)
+    best_model, best_params = get_best_models(dataset=ds_name, coarse=False, n_models=1)
     best_model = best_model[0]
     best_params = best_params[0]
     best_model.compile(**best_params)
@@ -85,3 +85,7 @@ if __name__ == '__main__':
         val_acc=val_metric_values,
         **best_params
     )
+
+    loss_scores, metr_scores = best_model.evaluate(inp=x_test, targets=y_test, loss='squared', metr='bin_class_acc', disable_tqdm=False)
+    print(f"test_loss:{loss_scores}  -  test_acc: {metr_scores}")
+    print(best_params)

@@ -1,0 +1,142 @@
+{
+	"params": [
+		{
+			"acts": [
+				"leaky_relu",
+				"tanh"
+			],
+			"batch_size": "full",
+			"decay_rate": null,
+			"decay_steps": null,
+			"epochs": 200,
+			"init_type": "uniform",
+			"lambd": 0,
+			"limit_step": null,
+			"limits": [
+				-0.2,
+				0.2
+			],
+			"loss": "squared",
+			"lr": 0.2,
+			"lr_decay": null,
+			"metr": "bin_class_acc",
+			"momentum": 0.0,
+			"reg_type": "l2",
+			"staircase": null,
+			"units_per_layer": [
+				4,
+				1
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"tanh"
+			],
+			"batch_size": "full",
+			"decay_rate": null,
+			"decay_steps": null,
+			"epochs": 200,
+			"init_type": "uniform",
+			"lambd": 0,
+			"limit_step": null,
+			"limits": [
+				-0.2,
+				0.2
+			],
+			"loss": "squared",
+			"lr": 0.2,
+			"lr_decay": null,
+			"metr": "bin_class_acc",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": null,
+			"units_per_layer": [
+				4,
+				1
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"tanh"
+			],
+			"batch_size": "full",
+			"decay_rate": null,
+			"decay_steps": null,
+			"epochs": 200,
+			"init_type": "uniform",
+			"lambd": 0,
+			"limit_step": null,
+			"limits": [
+				-0.2,
+				0.2
+			],
+			"loss": "squared",
+			"lr": 0.4,
+			"lr_decay": null,
+			"metr": "bin_class_acc",
+			"momentum": 0.0,
+			"reg_type": "l2",
+			"staircase": null,
+			"units_per_layer": [
+				4,
+				1
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"tanh"
+			],
+			"batch_size": "full",
+			"decay_rate": null,
+			"decay_steps": null,
+			"epochs": 200,
+			"init_type": "uniform",
+			"lambd": 0,
+			"limit_step": null,
+			"limits": [
+				-0.2,
+				0.2
+			],
+			"loss": "squared",
+			"lr": 0.4,
+			"lr_decay": null,
+			"metr": "bin_class_acc",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": null,
+			"units_per_layer": [
+				4,
+				1
+			]
+		}
+	],
+	"results": [
+		[
+			0.29967714627003356,
+			0.04680490632545081,
+			0.27807486631016043,
+			0.09934153655336556
+		],
+		[
+			0.013975530224176805,
+			0.006449055012585175,
+			0.9764705882352942,
+			0.03429971702850177
+		],
+		[
+			0.1546564946084648,
+			0.21831039330060045,
+			0.7294117647058823,
+			0.34969091641651406
+		],
+		[
+			0.004746335869557128,
+			0.003944788757333086,
+			0.9762923351158644,
+			0.034332124613200704
+		]
+	]
+}
