@@ -136,7 +136,7 @@ def grid_search(dataset, params, coarse=True, n_config=1):
 
     # write results on file
     folder_path = "../results/"
-    file_name = "results_" + dataset + ".json"
+    file_name = ("coarse_gs_" if coarse else "fine_gs_") + "results_" + dataset + ".json"
     if not os.path.exists(folder_path):
         os.mkdir(folder_path)
     data = {"params": param_combos, "results": results}

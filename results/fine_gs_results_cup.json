@@ -1,0 +1,40 @@
+{
+	"params": [
+		{
+			"acts": [
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": "full",
+			"decay_rate": null,
+			"decay_steps": null,
+			"epochs": 20,
+			"init_type": "uniform",
+			"lambd": 0,
+			"limit_step": null,
+			"limits": [
+				-0.5,
+				0.5
+			],
+			"loss": "squared",
+			"lr": 0.002,
+			"lr_decay": null,
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": null,
+			"units_per_layer": [
+				10,
+				2
+			]
+		}
+	],
+	"results": [
+		[
+			36.7801710168912,
+			6.225402611194816,
+			10.638627671073078,
+			0.87718774939628
+		]
+	]
+}

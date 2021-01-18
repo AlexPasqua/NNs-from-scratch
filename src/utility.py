@@ -175,11 +175,9 @@ def list_of_combos(param_dict):
     return combos
 
 
-def get_best_models(dataset, n_models=1):
-    if dataset not in ("monks-1.train", "monks-2.train", "monks-3.train", "cup"):
-        raise ValueError("dataset bust be in {monks-1, monks-2, monks-3, cup}")
-
-    with open("../results/results_" + dataset + ".json", 'r') as f:
+def get_best_models(dataset, coarse, n_models=1):
+    file_name = ("coarse_gs_" if coarse else "fine_gs_") + "results_" + dataset + ".json"
+    with open("../results/" + file_name, 'r') as f:
         data = json.load(f)
 
     input_dim = 10 if dataset == "cup" else 17
