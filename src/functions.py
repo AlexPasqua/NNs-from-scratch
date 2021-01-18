@@ -187,9 +187,7 @@ def binary_class_accuracy(predicted, target):
     correctly classified (returns 1). Else returns 0
     where:
           the applied threshold is '0.3'
-    :param predicted:
-    :param target:
-    :return:
+
     """
     predicted = predicted[0]
     target = target[0]
