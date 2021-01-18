@@ -3,6 +3,7 @@ import pandas as pd
 from sklearn.preprocessing import OneHotEncoder, MinMaxScaler, StandardScaler
 import matplotlib.pyplot as plt
 from collections import OrderedDict
+import random
 import itertools as it
 import json
 from network import Network
@@ -11,7 +12,7 @@ from network import Network
 def read_monk(name, rescale=False):
     """
     Reads the monks dataset
-    :param name: name of the dataset (either "monks-1", "monks-2" or "monks-3")
+    :param name: name of the dataset
     :param rescale: Whether or not to rescale the targets to [-1, +1]
     :return: monk dataset and labels (as numpy ndarrays)
     """
@@ -88,6 +89,69 @@ def sets_from_folds(x_folds, y_folds, val_fold_index):
     return tr_data, tr_targets, val_data, val_targets
 
 
+def randomize_params(base_params, dataset, n_config=2):
+    ds = read_cup() if dataset == "cup" else read_monk(dataset)
+    fb_dim = len(ds[0])
+    n_config -= 1
+    rand_params = {}
+    for k, v in base_params.items():
+        # if the parameter does not have to change
+        if k in ('acts', 'init_type', 'decay_rate', 'loss', 'lr_decay', 'metr', 'reg_type', 'staircase',
+                 'units_per_layer'):
+            rand_params[k] = (v,)
+        else:
+            rand_params[k] = [v]
+            for i in range(n_config):
+                # generate n_config random value centered in v
+                if k == "batch_size":
+                    if v == "full":
+                        rand_params[k] = ("full",)
+                        continue
+                    lower = max(v - 15, 1)
+                    upper = min(v + 15, fb_dim)
+                    value = random.randint(lower, upper)
+                    while value in rand_params[k]:
+                        lower = max(v - 15, 1)
+                        upper = min(v + 15, fb_dim)
+                        value = random.randint(lower, upper)
+                    rand_params[k].append(value)
+                # elif k == "decay_rate":
+                #     if v is not None:
+                #         lower = max(0., v - 0.2)
+                #         upper = min(1., v + 0.2)
+                #         rand_params[k].append(random.uniform(lower, upper))
+                #     else:
+                #         rand_params[k] = (None,)
+                elif k in ("epochs", "limit_step", "decay_steps"):
+                    if v is None:
+                        rand_params[k] = (None,)
+                        continue
+                    lower = max(1, v - 100)
+                    upper = v + 100
+                    rand_params[k].append(random.randint(lower, upper))
+                elif k in ("lambd", "lr"):
+                    value = max(0., np.random.normal(loc=v, scale=0.0001))
+                    while value in rand_params[k]:
+                        value = max(0., np.random.normal(loc=v, scale=0.0001))
+                    rand_params[k].append(value)
+                elif k == "limits":
+                    lower, upper = v[0], v[1]
+                    lower = np.random.normal(loc=lower, scale=0.1)
+                    upper = np.random.normal(loc=upper, scale=0.1)
+                    if lower > upper:
+                        aux = lower,
+                        lower = upper
+                        upper = aux
+                    rand_params[k].append((lower, upper))
+                elif k == "momentum":
+                    value = max(0., np.random.normal(loc=v, scale=0.1))
+                    while value in rand_params[k] or value < 0.:
+                        value = min(1., np.random.normal(loc=v, scale=0.1))
+                    rand_params[k].append(value)
+
+    return rand_params
+
+
 def list_of_combos(param_dict):
     """
     Takes a dictionary with the combinations of params to use in the grid search and creates a list of dictionaries, one
@@ -121,10 +185,11 @@ def get_best_models(dataset, n_models=1):
     input_dim = 10 if dataset == "cup" else 17
     models, params, errors, std_errors, metrics, std_metrics = [], [], [], [], [], []
     for result in data['results']:
-        errors.append(result[0])
-        std_errors.append(result[1])
-        metrics.append(result[2])
-        std_metrics.append(result[3])
+        if result is not None:
+            errors.append(result[0])
+            std_errors.append(result[1])
+            metrics.append(result[2])
+            std_metrics.append(result[3])
 
     for i in range(n_models):
         index = np.argmin(metrics) if dataset == "cup" else np.argmax(metrics)

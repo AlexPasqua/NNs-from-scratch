@@ -5,13 +5,13 @@ import tqdm
 from datetime import datetime
 import warnings
 from joblib import Parallel, delayed
-from utility import plot_curves, sets_from_folds, list_of_combos, read_monk, read_cup
+from utility import plot_curves, sets_from_folds, list_of_combos, read_monk, read_cup, randomize_params
 from network import Network
 
 
 def cross_valid(net, dataset, loss, metr, lr, lr_decay=None, limit_step=None, decay_rate=None, decay_steps=None,
                 staircase=True, opt='sgd', momentum=0., epochs=1, batch_size=1, k_folds=5, reg_type='l2', lambd=0,
-                disable_tqdms=(True, True), verbose=False, **kwargs):
+                disable_tqdms=(True, True), interplot=True, verbose=False, **kwargs):
     # read the dataset
     if dataset not in ('monks-1.train', 'monks-2.train', 'monks-3.train', 'cup'):
         raise ValueError("Attribute dataset must be in {monks-1.train, monks-2.train, monks-3.train, cup}")
@@ -86,7 +86,8 @@ def cross_valid(net, dataset, loss, metr, lr, lr_decay=None, limit_step=None, de
         print("Loss: {} - std:(+/- {})\nMetric: {} - std:(+/- {})".format(avg_val_err, std_val_err,
                                                                           avg_val_metric, std_val_metric))
 
-    plot_curves(tr_error_values, val_error_values, tr_metric_values, val_metric_values, lr, momentum)
+    if interplot:
+        plot_curves(tr_error_values, val_error_values, tr_metric_values, val_metric_values, lr, momentum)
     return avg_val_err, std_val_err, avg_val_metric, std_val_metric
 
 
@@ -106,7 +107,7 @@ def cross_valid(net, dataset, loss, metr, lr, lr_decay=None, limit_step=None, de
 #             'epochs': (200,)}
 
 
-def grid_search(dataset, params):
+def grid_search(dataset, params, coarse=True, n_config=1):
     """
     Performs a grid search over a set of parameters to find the best combination of hyperparameters
     :param dataset: name of the dataset (monks-1, monks-2, monks-3, cup)
@@ -114,13 +115,17 @@ def grid_search(dataset, params):
     """
     models = []
     input_dim = 10 if dataset == "cup" else 17
+
+    if not coarse:
+        params = randomize_params(params, dataset, n_config)
+
     param_combos = list_of_combos(params)
     print(f"Total number of trials: {len(param_combos)}")
     for combo in param_combos:
         models.append(Network(input_dim=input_dim, **combo))
 
     results = Parallel(n_jobs=os.cpu_count(), verbose=50)(delayed(cross_valid)(
-        net=models[i], dataset=dataset, k_folds=5, disable_tqdm=(True, True),
+        net=models[i], dataset=dataset, k_folds=5, disable_tqdm=(True, True), interplot=False,
         **param_combos[i]) for i in range(len(param_combos)))
 
     # do not save models with suppressed training

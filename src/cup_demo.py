@@ -37,14 +37,14 @@ if __name__ == '__main__':
     # read dataset
     cup_tr_data, cup_tr_targets, cup_ts_data = read_cup()
 
-    # create model
-    model = Network(
-        input_dim=len(cup_tr_data[0]),
-        units_per_layer=(10, 10, 2),
-        acts=('leaky_relu', 'leaky_relu', 'identity'),
-        init_type='uniform',
-        limits=(0.0001, 0.001)
-    )
+    # # create model
+    # model = Network(
+    #     input_dim=len(cup_tr_data[0]),
+    #     units_per_layer=(10, 10, 2),
+    #     acts=('leaky_relu', 'leaky_relu', 'identity'),
+    #     init_type='uniform',
+    #     limits=(0.0001, 0.001)
+    # )
 
     # with Manager() as manager:
     #     res = manager.dict()
@@ -74,24 +74,26 @@ if __name__ == '__main__':
     #             batch_size=30, k_folds=5, disable_tqdms=(True, False), verbose=True)
 
     # grid search
-    gs_params = {'units_per_layer': ((2, 2),),
-                 'acts': (('leaky_relu', 'identity'),),
+    gs_params = {'units_per_layer': ((10, 2), (15, 2), (10, 10, 2)),
+                 'acts': (('leaky_relu', 'identity'), ('leaky_relu', 'leaky_relu', 'identity')),
                  'init_type': ('uniform',),
                  'limits': ((-0.5, 0.5), (-0.001, 0.001)),
-                 'momentum': (0.0,),
-                 'batch_size': ('full',),
-                 'lr': (0.002, 0.5),
+                 'momentum': (0.0, 0.6, 0.9),
+                 'batch_size': ('full', 30),
+                 'lr': (0.002, 0.02),
                  'loss': ('squared',),
                  'metr': ('euclidean',),
-                 'epochs': (20,)}
-    grid_search(dataset="cup", params=gs_params)
-    best_model, params = get_best_models("cup", 1)
+                 'epochs': (150, 500)}
+    # grid_search(dataset="cup", params=gs_params, coarse=True)
+    # _, best_params = get_best_models("cup", 1)
+    # best_params = best_params[0]
+    # grid_search(dataset="cup", params=best_params, coarse=False, n_config=2)
+    best_model, best_params = get_best_models("cup", 1)
     best_model = best_model[0]
-    params = params[0]
-    best_model.print_topology()
-    best_model.compile(opt='sgd', **params)
+    best_params = best_params[0]
+    best_model.compile(opt='sgd', **best_params)
     tr_error_values, tr_metric_values, val_error_values, val_metric_values = best_model.fit(
-        tr_x=cup_tr_data, tr_y=cup_tr_targets, disable_tqdm=False, **params)
+        tr_x=cup_tr_data, tr_y=cup_tr_targets, disable_tqdm=False, **best_params)
 
     # plot graph
     plot_curves(
