@@ -89,9 +89,10 @@ def sets_from_folds(x_folds, y_folds, val_fold_index):
     return tr_data, tr_targets, val_data, val_targets
 
 
-def randomize_params(base_params, dataset, n_config=1):
+def randomize_params(base_params, dataset, n_config=2):
     ds = read_cup() if dataset == "cup" else read_monk(dataset)
     fb_dim = len(ds[0])
+    n_config -= 1
     rand_params = {}
     for k, v in base_params.items():
         # if the parameter does not have to change
@@ -108,7 +109,12 @@ def randomize_params(base_params, dataset, n_config=1):
                         continue
                     lower = max(v - 15, 1)
                     upper = min(v + 15, fb_dim)
-                    rand_params[k].append(random.randint(lower, upper))
+                    value = random.randint(lower, upper)
+                    while value in rand_params[k]:
+                        lower = max(v - 15, 1)
+                        upper = min(v + 15, fb_dim)
+                        value = random.randint(lower, upper)
+                    rand_params[k].append(value)
                 # elif k == "decay_rate":
                 #     if v is not None:
                 #         lower = max(0., v - 0.2)
