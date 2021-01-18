@@ -40,7 +40,9 @@ class DerivableFunction(Function):
         return self.__deriv
 
 
-""" Activation Functions """
+################################################
+#            Activation Functions              #
+################################################
 
 
 def identity(x):
@@ -147,7 +149,9 @@ def tanh_deriv(x):
     )
 
 
-""" Loss Functions """
+############################################
+#            Loss Functions                #
+############################################
 
 
 def squared_loss(predicted, target):
@@ -171,10 +175,22 @@ def squared_loss_deriv(predicted, target):
     return np.subtract(predicted, target)
 
 
-""" Metrics """
+############################################
+#                Metrics                   #
+############################################
 
 
 def binary_class_accuracy(predicted, target):
+    """
+    Applies a threshold for computing classification accuracy.
+    If the difference in absolute value between predicted - target is less than a specified threshold it considers it
+    correctly classified (returns 1). Else returns 0
+    where:
+          the applied threshold is '0.3'
+    :param predicted:
+    :param target:
+    :return:
+    """
     predicted = predicted[0]
     target = target[0]
     if np.abs(predicted - target) < 0.3:
@@ -192,19 +208,25 @@ def euclidean_loss(predicted, target):
     return np.linalg.norm(np.subtract(predicted, target))
 
 
-""" Learning rate decay """
+#############################################
+#         Learning rate schedulers          #
+#############################################
 
 
 def linear_lr_decay(curr_lr, base_lr, final_lr, curr_step, limit_step, **kwargs):
     """
-    The linear_lr_decay, linearly decays the learning rate until iteration tau (limit_step). Then it stops
-    decaying and uses a fix learning rate (final_lr)::
-    :param curr_lr:
-    :param base_lr:
-    :param final_lr:
-    :param curr_step:
-    :param limit_step:
-    :return:
+    The linear_lr_decay, linearly decays the learning rate (base_lr) by a decay_rate until iteration tau (limit_step).
+    Then it stops decaying and uses a fix learning rate (final_lr)::
+    learning_rate =  (1 - decay_rate) * base_lr + decay_rate * final_lr
+    where:
+          decay_rate = curr_step / limit_step
+
+    :param curr_lr: current learning (decayed)
+    :param base_lr: initial learning rate
+    :param final_lr: final (fixed) learning rate
+    :param curr_step: current iteration
+    :param limit_step: corresponds to the number of step when the learning rate will stop decaying
+    :return: linearly decayed learning rate
     """
     if curr_step < limit_step and curr_lr > final_lr:
         decay_rate = curr_step / limit_step
@@ -215,8 +237,8 @@ def linear_lr_decay(curr_lr, base_lr, final_lr, curr_step, limit_step, **kwargs)
 
 def exp_lr_decay(base_lr, decay_rate, step, decay_steps, staircase=False, **kwargs):
     """
-    The exp_lr_decay, decays exponentially the learning rate by `decay_rate` every `decay_step`,
-    starting from `initial_lr`: learning_rate = initial_lr * exp(-decay_rate * cur_stage)
+    The exp_lr_decay, decays exponentially the learning rate by `decay_rate` every `decay_steps`,
+    starting from a `base_lr`: learning_rate = base_lr * exp(-decay_rate * cur_stage)
     where:
         cur_stage = step / decay_steps          if staircase = False
         cur_stage = floor(step / decay_steps)   if staircase = True
@@ -239,7 +261,9 @@ def exp_lr_decay(base_lr, decay_rate, step, decay_steps, staircase=False, **kwar
     return base_lr * math.exp(decay)
 
 
-""" Regularizations """
+###########################################
+#            Regularizations              #
+###########################################
 
 
 def lasso_l1(w, lambd):
@@ -259,15 +283,28 @@ def lasso_l1_deriv(w, lambd):
 
 
 def ridge_l2(w, lambd):
+    """
+    Computes Tikhonov regularization (L2) on the nets' weights
+    :param w: weights vector
+    :param lambd: regularization term
+    :return: regularized weights
+    """
     return lambd * np.sum(np.square(w))
 
 
 def ridge_l2_deriv(w, lambd):
+    """
+    Computes the derivative of Tikhonov regularization (L1)
+    :param w: connection's weight
+    :param lambd: regularization term
+    :return: derivative of L2 regularization
+    """
     return 2 * lambd * w
 
 
-""" Function objects and dictionaries to use them in other scripts """
-
+###########################################################################
+#     Function objects and dictionaries to use them in other scripts      #
+###########################################################################
 
 Identity = DerivableFunction(identity, identity_deriv, 'identity')
 ReLU = DerivableFunction(relu, relu_deriv, 'ReLU')
