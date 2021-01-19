@@ -180,20 +180,54 @@ def get_best_models(dataset, coarse, n_models=1):
     with open("../results/" + file_name, 'r') as f:
         data = json.load(f)
 
+    # put the data into apposite lists
     input_dim = 10 if dataset == "cup" else 17
     models, params, errors, std_errors, metrics, std_metrics = [], [], [], [], [], []
     for result in data['results']:
         if result is not None:
-            errors.append(result[0])
-            std_errors.append(result[1])
-            metrics.append(result[2])
-            std_metrics.append(result[3])
+            errors.append(round(result[0], 3))
+            std_errors.append(round(result[1], 3))
+            metrics.append(round(result[2], 3))
+            std_metrics.append(round(result[3], 3))
 
+    errors, std_errors = np.array(errors), np.array(std_errors)
+    metrics, std_metrics = np.array(metrics), np.array(std_metrics)
     for i in range(n_models):
-        index = np.argmin(metrics) if dataset == "cup" else np.argmax(metrics)
-        metrics = np.delete(metrics, index)
-        models.append(Network(input_dim=input_dim, **data['params'][index]))
-        params.append(data['params'][index])
+        # find best metric model and its index
+        index_of_best = np.argmin(metrics) if dataset == "cup" else np.argmax(metrics)
+        value_of_best = min(metrics) if dataset == "cup" else max(metrics)
+
+        # search elements with the same value
+        if len(metrics) > index_of_best + 1:
+            indexes = [index_of_best]
+            for j in range(index_of_best + 1, len(metrics)):
+                if metrics[j] == value_of_best:
+                    indexes.append(j)
+
+            std_metr_to_check = std_metrics[indexes]
+            value_of_best = min(std_metr_to_check)
+            index_of_best = indexes[np.argmin(std_metr_to_check)]
+            for j in indexes:
+                if std_metrics[j] != value_of_best:
+                    indexes.remove(j)
+
+            err_to_check = errors[indexes]
+            value_of_best = min(err_to_check)
+            index_of_best = indexes[np.argmin(err_to_check)]
+            for j in indexes:
+                if errors[j] != value_of_best:
+                    indexes.remove(j)
+
+            std_err_to_check = std_errors[indexes]
+            value_of_best = min(std_err_to_check)
+            index_of_best = indexes[np.argmin(std_err_to_check)]
+            for j in indexes:
+                if std_errors[j] != value_of_best:
+                    indexes.remove(j)
+
+        metrics = np.delete(metrics, index_of_best)
+        models.append(Network(input_dim=input_dim, **data['params'][index_of_best]))
+        params.append(data['params'][index_of_best])
 
     return models, params
 

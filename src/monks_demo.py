@@ -66,11 +66,11 @@ if __name__ == '__main__':
                  'loss': ('squared',),
                  'metr': ('bin_class_acc',),
                  'epochs': (200,)}
-    grid_search(dataset=ds_name, params=gs_params, coarse=True)
-    _, best_params = get_best_models(dataset=ds_name, coarse=True, n_models=1)
-    best_params = best_params[0]
-    grid_search(dataset=ds_name, params=best_params, coarse=False, n_config=2)
-    best_model, best_params = get_best_models(dataset=ds_name, coarse=False, n_models=1)
+    # grid_search(dataset=ds_name, params=gs_params, coarse=True)
+    # _, best_params = get_best_models(dataset=ds_name, coarse=True, n_models=1)
+    # best_params = best_params[0]
+    # grid_search(dataset=ds_name, params=best_params, coarse=False, n_config=2)
+    best_model, best_params = get_best_models(dataset=ds_name, coarse=False, n_models=3)
     best_model = best_model[0]
     best_params = best_params[0]
     best_model.compile(**best_params)
