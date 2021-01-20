@@ -145,7 +145,7 @@ def randomize_params(base_params, dataset, n_config=2):
                     rand_params[k].append((lower, upper))
                 elif k == "momentum":
                     value = max(0., np.random.normal(loc=v, scale=0.1))
-                    while value in rand_params[k] or value < 0.:
+                    while value in rand_params[k] or value > 1.:
                         value = min(1., np.random.normal(loc=v, scale=0.1))
                     rand_params[k].append(value)
 
