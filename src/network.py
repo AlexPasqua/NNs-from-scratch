@@ -84,6 +84,11 @@ class Network:
     def weights(self):
         return [layer.weights.tolist() for layer in self.__layers]
 
+    @weights.setter
+    def weights(self, value):
+        for i in range(len(value)):
+            self.__layers[i].weights = value[i]
+
     def forward(self, inp=(2, 2, 2)):
         """
         Performs a prediction on the whole NN
