@@ -18,7 +18,10 @@ def read_monk(name, rescale=False):
     """
     # read the dataset
     col_names = ['class', 'a1', 'a2', 'a3', 'a4', 'a5', 'a6', 'Id']
-    monk_dataset = pd.read_csv(f"../datasets/monks/{str(name)}", sep=' ', names=col_names)
+    try:
+        monk_dataset = pd.read_csv(f"../datasets/monks/{str(name)}", sep=' ', names=col_names)
+    except FileNotFoundError:
+        monk_dataset = pd.read_csv(f"../../datasets/monks/{str(name)}", sep=' ', names=col_names)
     monk_dataset.set_index('Id', inplace=True)
     labels = monk_dataset.pop('class')
 
