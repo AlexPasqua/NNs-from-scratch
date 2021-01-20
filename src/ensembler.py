@@ -9,6 +9,8 @@ from utility import read_cup
 class Ensembler:
     def __init__(self, models_filenames: list, retrain: bool):
         self.models = []
+        self.tr_x, self.tr_y, self.test_x = read_cup()
+
         for filename in models_filenames:
             with open(filename, 'r') as f:
                 models_data = json.load(f)
@@ -31,12 +33,16 @@ class Ensembler:
             model['model'].compile(**model['train_params'])
 
     def fit_serial(self):
-        tr_x, tr_y, _ = read_cup()
         for model in self.models:
-            model['model'].fit(tr_x=tr_x, tr_y=tr_y, disable_tqdm=False, **model['train_params'])
+            model['model'].fit(tr_x=self.tr_x, tr_y=self.tr_y, disable_tqdm=False, **model['train_params'])
 
     def fit_parallel(self):
-        tr_x, tr_y, _ = read_cup()
         Parallel(n_jobs=os.cpu_count())(delayed(m['model'].fit)(
-            tr_x=tr_x, tr_y=tr_y, disable_tqdm=False, **m['train_params']
+            tr_x=self.tr_x, tr_y=self.tr_y, disable_tqdm=False, **m['train_params']
         ) for m in self.models)
+
+    def predict(self):
+        res = []
+        for i in range(len(self.models)):
+            res.append(self.models[i]['model'].predict(inp=self.test_x, disable_tqdm=False))
+        return res

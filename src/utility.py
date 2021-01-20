@@ -59,7 +59,7 @@ def read_cup():
 
     cup_tr_targets = pd.read_csv(directory + file, sep=',', names=col_names, skiprows=range(7), usecols=range(11, 13))
     file = "ML-CUP20-TS.csv"
-    cup_ts_data = pd.read_csv(directory + file, sep=',', names=col_names[: -2], skiprows=range(7))
+    cup_ts_data = pd.read_csv(directory + file, sep=',', names=col_names[: -2], skiprows=range(7), usecols=range(1, 11))
     cup_tr_data = cup_tr_data.to_numpy()
     cup_tr_targets = cup_tr_targets.to_numpy()
     cup_ts_data = cup_ts_data.to_numpy()
