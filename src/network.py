@@ -82,7 +82,7 @@ class Network:
 
     @property
     def weights(self):
-        return [layer.weights for layer in self.__layers]
+        return [layer.weights.tolist() for layer in self.__layers]
 
     def forward(self, inp=(2, 2, 2)):
         """
@@ -240,5 +240,5 @@ class Network:
 
     def save_model(self, filename: str):
         data = {'model_params': self.__params, 'train_params': self.__train_params, 'weights': self.weights}
-        for k, v in data.items():
-            print(k, ': ', v)
+        with open(filename, 'w') as f:
+            json.dump(data, f, indent='\t')
