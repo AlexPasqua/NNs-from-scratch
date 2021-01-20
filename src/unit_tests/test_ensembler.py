@@ -12,7 +12,7 @@ class TestEnsembler(unittest.TestCase):
         net.fit(tr_x=x, tr_y=y, epochs=50, batch_size='full', disable_tqdm=False)
         filename = "test_model.json"
         net.save_model(filename)
-        ens = Ensembler((filename,), retrain=False)
+        ens = Ensembler((filename, filename), retrain=False)
 
         # test weights loading
         for i in range(len(net.layers)):
@@ -24,8 +24,8 @@ class TestEnsembler(unittest.TestCase):
         ens.compile()
 
         # test fit
-        ens.fit()
-        ens.fit_parallel()
+        ens.fit_serial()
+        # ens.fit_parallel()
 
 
 if __name__ == '__main__':

@@ -30,10 +30,13 @@ class Ensembler:
         for model in self.models:
             model['model'].compile(**model['train_params'])
 
-    def fit(self):
+    def fit_serial(self):
         tr_x, tr_y, _ = read_cup()
         for model in self.models:
             model['model'].fit(tr_x=tr_x, tr_y=tr_y, disable_tqdm=False, **model['train_params'])
 
     def fit_parallel(self):
-        Parallel(n_jobs=os.cpu_count())(delayed(m['model'].fit) for m in self.models)
+        tr_x, tr_y, _ = read_cup()
+        Parallel(n_jobs=os.cpu_count())(delayed(m['model'].fit)(
+            tr_x=tr_x, tr_y=tr_y, disable_tqdm=False, **m['train_params']
+        ) for m in self.models)
