@@ -1,4 +1,5 @@
 import warnings
+import json
 from tqdm import tqdm
 from layer import Layer
 from optimizers import *
@@ -34,6 +35,7 @@ class Network:
             'init_type': init_type,
         }, **kwargs}
         self.__layers = []
+        self.__train_params = []
         self.__opt = None
         layer_inp_dim = input_dim
         for i in range(len(units_per_layer)):
@@ -74,6 +76,14 @@ class Network:
     def params(self):
         return self.__params
 
+    @property
+    def train_params(self):
+        return self.__train_params
+
+    @property
+    def weights(self):
+        return [layer.weights for layer in self.__layers]
+
     def forward(self, inp=(2, 2, 2)):
         """
         Performs a prediction on the whole NN
@@ -102,20 +112,12 @@ class Network:
         """
         if momentum > 1. or momentum < 0.:
             raise ValueError(f"momentum must be a value between 0 and 1. Got: {momentum}")
-        self.__opt = optimizers[opt](
-            net=self,
-            loss=loss,
-            metr=metr,
-            lr=lr,
-            lr_decay=lr_decay,
-            limit_step=limit_step,
-            decay_rate=decay_rate,
-            decay_steps=decay_steps,
-            staircase=staircase,
-            momentum=momentum,
-            reg_type=reg_type,
-            lambd=lambd
-        )
+        self.__train_params = {'loss': loss, 'metr': metr, 'lr': lr, 'lr_decay': lr_decay, 'limit_step': limit_step,
+                               'decay_rate': decay_rate, 'decay_steps': decay_steps, 'staircase': staircase,
+                               'momentum': momentum, 'reg_type': reg_type, 'lambd': lambd}
+        self.__opt = optimizers[opt](net=self, loss=loss, metr=metr, lr=lr, lr_decay=lr_decay, limit_step=limit_step,
+                                     decay_rate=decay_rate, decay_steps=decay_steps, staircase=staircase,
+                                     momentum=momentum, reg_type=reg_type, lambd=lambd)
 
     def fit(self, tr_x, tr_y, val_x=None, val_y=None, epochs=1, batch_size=1, val_split=0, **kwargs):
         """
@@ -160,6 +162,7 @@ class Network:
         if target_len != self.layers[-1].n_units or n_patterns != n_targets or batch_size > n_patterns:
             raise AttributeError(f"Mismatching shapes")
 
+        self.__train_params = {**self.__train_params, 'epochs': epochs, 'batch_size': batch_size}
         return self.__opt.optimize(tr_x=tr_x, tr_y=tr_y, val_x=val_x, val_y=val_y, epochs=epochs,
                                    batch_size=batch_size, **kwargs)
 
@@ -194,7 +197,8 @@ class Network:
             net_outputs = self.predict(inp, disable_tqdm=disable_tqdm)
         metr_scores = np.zeros(self.layers[-1].n_units)
         loss_scores = np.zeros(self.layers[-1].n_units)
-        for x, y in tqdm.tqdm(zip(net_outputs, targets), total=len(targets), desc="Evaluating model", disable=disable_tqdm):
+        for x, y in tqdm.tqdm(zip(net_outputs, targets), total=len(targets), desc="Evaluating model",
+                              disable=disable_tqdm):
             # metr_scores += metrics[metr].func(predicted=x, target=y)
             # loss_scores += losses[loss].func(predicted=x, target=y)
 
@@ -233,3 +237,8 @@ class Network:
         print("Model's topology:")
         print("Units per layer: ", self.__params['units_per_layer'])
         print("Activation functions: ", self.__params['acts'])
+
+    def save_model(self, filename: str):
+        data = {'model_params': self.__params, 'train_params': self.__train_params, 'weights': self.weights}
+        for k, v in data.items():
+            print(k, ': ', v)
