@@ -77,6 +77,7 @@ if __name__ == '__main__':
 
     for i in range(len(ens_models)):
         ens_models[i]['model'].compile(**ens_models[i]['params'])
+        ens_models[i]['params']['epochs'] = 100
         cross_valid(net=ens_models[i]['model'], dataset="cup", k_folds=5, disable_tqdms=(True, False),
                     interplot=True, verbose=True, **ens_models[i]['params'])
 
