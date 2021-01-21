@@ -1,6 +1,9 @@
 import numpy as np
 import pandas as pd
+import os
+import math
 from sklearn.preprocessing import OneHotEncoder, MinMaxScaler, StandardScaler
+from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
 from collections import OrderedDict
 import random
@@ -18,10 +21,7 @@ def read_monk(name, rescale=False):
     """
     # read the dataset
     col_names = ['class', 'a1', 'a2', 'a3', 'a4', 'a5', 'a6', 'Id']
-    try:
-        monk_dataset = pd.read_csv(f"../datasets/monks/{str(name)}", sep=' ', names=col_names)
-    except FileNotFoundError:
-        monk_dataset = pd.read_csv(f"../../datasets/monks/{str(name)}", sep=' ', names=col_names)
+    monk_dataset = pd.read_csv(f"../datasets/monks/{str(name)}", sep=' ', names=col_names)
     monk_dataset.set_index('Id', inplace=True)
     labels = monk_dataset.pop('class')
 
@@ -42,39 +42,62 @@ def read_monk(name, rescale=False):
     return monk_dataset, labels
 
 
-def read_cup():
+def read_cup(int_ts=False):
     """
     Reads the CUP training and testing sets
     :return: CUP training data, CUP training targets and CUP test data (as numpy ndarray)
     """
     # read the dataset
-    directory = "../datasets/cup/"
-    file = "ML-CUP20-TR.csv"
     col_names = ['id', 'a1', 'a2', 'a3', 'a4', 'a5', 'a6', 'a7', 'a8', 'a9', 'a10', 'target_x', 'target_y']
-    try:
-        cup_tr_data = pd.read_csv(directory + file, sep=',', names=col_names, skiprows=range(7), usecols=range(1, 11))
-    except FileNotFoundError:
-        directory = "../../datasets/cup/"
-        cup_tr_data = pd.read_csv(directory + file, sep=',', names=col_names, skiprows=range(7), usecols=range(1, 11))
+    directory = "../datasets/cup/"
+    int_ts_path = directory + "CUP-INTERNAL-TEST.csv"
+    dev_set_path = directory + "CUP-DEV-SET.csv"
+    file = "ML-CUP20-TR.csv"
 
-    cup_tr_targets = pd.read_csv(directory + file, sep=',', names=col_names, skiprows=range(7), usecols=range(11, 13))
+    if int_ts and not (os.path.exists(int_ts_path) and os.path.exists(dev_set_path)):
+        df = pd.read_csv(directory + file, sep=',', names=col_names, skiprows=range(7), usecols=range(0, 13))
+        df = df.sample(frac=1, axis=0)
+        int_ts_df = df.iloc[: math.floor(len(df) * 0.1), :]
+        dev_set_df = df.iloc[math.floor(len(df) * 0.1) :, :]
+        int_ts_df.to_csv(path_or_buf=int_ts_path, index=False, float_format='%.6f', header=False)
+        dev_set_df.to_csv(path_or_buf=dev_set_path, index=False, float_format='%.6f', header=False)
+
+    if int_ts and os.path.exists(int_ts_path) and os.path.exists(dev_set_path):
+        tr_data = pd.read_csv(dev_set_path, sep=',', names=col_names, skiprows=range(7), usecols=range(1, 11))
+        tr_targets = pd.read_csv(dev_set_path, sep=',', names=col_names, skiprows=range(7), usecols=range(11, 13))
+        int_ts_data = pd.read_csv(int_ts_path,  sep=',', names=col_names, skiprows=range(7), usecols=range(1, 11))
+        int_ts_targets = pd.read_csv(int_ts_path,  sep=',', names=col_names, skiprows=range(7), usecols=range(11, 13))
+        int_ts_data = int_ts_data.to_numpy()
+        int_ts_targets = int_ts_targets.to_numpy()
+    else:
+        tr_data = pd.read_csv(directory + file, sep=',', names=col_names, skiprows=range(7), usecols=range(1, 11))
+        tr_targets = pd.read_csv(directory + file, sep=',', names=col_names, skiprows=range(7), usecols=range(11, 13))
+
     file = "ML-CUP20-TS.csv"
     cup_ts_data = pd.read_csv(directory + file, sep=',', names=col_names[: -2], skiprows=range(7), usecols=range(1, 11))
-    cup_tr_data = cup_tr_data.to_numpy()
-    cup_tr_targets = cup_tr_targets.to_numpy()
+
+    tr_data = tr_data.to_numpy()
+    tr_targets = tr_targets.to_numpy()
     cup_ts_data = cup_ts_data.to_numpy()
 
     # shuffle the training dataset once
-    indexes = list(range(cup_tr_targets.shape[0]))
+    indexes = list(range(tr_targets.shape[0]))
     np.random.shuffle(indexes)
-    cup_tr_data = cup_tr_data[indexes]
-    cup_tr_targets = cup_tr_targets[indexes]
+    tr_data = tr_data[indexes]
+    tr_targets = tr_targets[indexes]
+
+    # detach internal test set if needed
+    if int_ts:
+        if not (os.path.exists(int_ts_path) and os.path.exists(dev_set_path)):
+            tr_data, int_ts_data, tr_targets, int_ts_targets = train_test_split(tr_data, tr_targets, test_size=0.1)
+
+        return tr_data, tr_targets, int_ts_data, int_ts_targets, cup_ts_data
 
     # standardization / normalization
-    # cup_tr_data = StandardScaler().fit_transform(cup_tr_data)
-    # cup_tr_targets = MinMaxScaler().fit_transform(cup_tr_targets)
+    # tr_data = StandardScaler().fit_transform(tr_data)
+    # tr_targets = MinMaxScaler().fit_transform(tr_targets)
 
-    return cup_tr_data, cup_tr_targets, cup_ts_data
+    return tr_data, tr_targets, cup_ts_data
 
 
 def sets_from_folds(x_folds, y_folds, val_fold_index):
@@ -94,18 +117,20 @@ def sets_from_folds(x_folds, y_folds, val_fold_index):
     for j in range(1, len(tr_data_folds)):
         tr_data = np.concatenate((tr_data, tr_data_folds[j]))
         tr_targets = np.concatenate((tr_targets, tr_targets_folds[j]))
+    tr_data = np.array(tr_data, dtype=np.float32)
+    tr_targets = np.array(tr_targets, dtype=np.float32)
+    val_data = np.array(val_data, dtype=np.float32)
+    val_targets = np.array(val_targets, dtype=np.float32)
     return tr_data, tr_targets, val_data, val_targets
 
 
-def randomize_params(base_params, dataset, n_config=2):
-    ds = read_cup() if dataset == "cup" else read_monk(dataset)
-    fb_dim = len(ds[0])
+def randomize_params(base_params, fb_dim, n_config=2):
     n_config -= 1
     rand_params = {}
     for k, v in base_params.items():
         # if the parameter does not have to change
         if k in ('acts', 'init_type', 'decay_rate', 'loss', 'lr_decay', 'metr', 'reg_type', 'staircase',
-                 'units_per_layer'):
+                 'units_per_layer', 'limits', 'epochs'):
             rand_params[k] = (v,)
         else:
             rand_params[k] = [v]
@@ -118,11 +143,18 @@ def randomize_params(base_params, dataset, n_config=2):
                     lower = max(v - 15, 1)
                     upper = min(v + 15, fb_dim)
                     value = random.randint(lower, upper)
+                    for bs in rand_params[k]:
+                        if abs(value - bs) < 5:
+                            value = rand_params[k][0]
                     while value in rand_params[k]:
                         lower = max(v - 15, 1)
                         upper = min(v + 15, fb_dim)
                         value = random.randint(lower, upper)
+                        for bs in rand_params[k]:
+                            if abs(value - bs) < 5:
+                                value = rand_params[k][0]
                     rand_params[k].append(value)
+
                 # elif k == "decay_rate":
                 #     if v is not None:
                 #         lower = max(0., v - 0.2)
@@ -130,33 +162,54 @@ def randomize_params(base_params, dataset, n_config=2):
                 #         rand_params[k].append(random.uniform(lower, upper))
                 #     else:
                 #         rand_params[k] = (None,)
-                elif k in ("epochs", "limit_step", "decay_steps"):
-                    if v is None:
-                        rand_params[k] = (None,)
-                        continue
-                    lower = max(1, v - 100)
-                    upper = v + 100
-                    rand_params[k].append(random.randint(lower, upper))
+
+                elif k in ("limit_step", "decay_steps"):
+                    if base_params['lr_decay'] is not None:
+                        if v is None or (base_params['lr_decay'] == 'linear' and k == 'decay_steps') or \
+                                (base_params['lr_decay'] == 'exponential' and k == 'limit_step'):
+                            rand_params[k] = (None,)
+                            continue
+                        lower = max(1, v - 100)
+                        upper = v + 100
+                        rand_params[k].append(random.randint(lower, upper))
+                    else:
+                        rand_params[k] = (v,)
+
                 elif k in ("lambd", "lr"):
-                    value = max(0., np.random.normal(loc=v, scale=0.0001))
+                    value = max(0., np.random.normal(loc=v, scale=0.001))
+                    for l in rand_params[k]:
+                        if abs(value - l) < 0.0005:
+                            value = rand_params[k][0]
                     while value in rand_params[k]:
-                        value = max(0., np.random.normal(loc=v, scale=0.0001))
-                    rand_params[k].append(value)
-                elif k == "limits":
-                    lower, upper = v[0], v[1]
-                    lower = np.random.normal(loc=lower, scale=0.1)
-                    upper = np.random.normal(loc=upper, scale=0.1)
-                    if lower > upper:
-                        aux = lower,
-                        lower = upper
-                        upper = aux
-                    rand_params[k].append((lower, upper))
-                elif k == "momentum":
-                    value = max(0., np.random.normal(loc=v, scale=0.1))
-                    while value in rand_params[k] or value > 1.:
-                        value = min(1., np.random.normal(loc=v, scale=0.1))
+                        value = max(0., np.random.normal(loc=v, scale=0.001))
+                        for l in rand_params[k]:
+                            if abs(value - l) < 0.0005:
+                                value = rand_params[k][0]
                     rand_params[k].append(value)
 
+                # elif k == "limits":
+                #     lower, upper = v[0], v[1]
+                #     lower = np.random.normal(loc=lower, scale=0.1)
+                #     upper = np.random.normal(loc=upper, scale=0.1)
+                #     if lower > upper:
+                #         aux = lower
+                #         lower = upper
+                #         upper = aux
+                #     rand_params[k].append((lower, upper))
+
+                elif k == "momentum":
+                    value = max(0., np.random.normal(loc=v, scale=0.1))
+                    for m in rand_params[k]:
+                        if abs(value - m) < 0.05:
+                            value = rand_params[k][0]
+                    while value in rand_params[k] or value > 1.:
+                        value = min(1., np.random.normal(loc=v, scale=0.1))
+                        for m in rand_params[k]:
+                            if abs(value - m) < 0.05:
+                                value = rand_params[k][0]
+                    rand_params[k].append(value)
+
+    print(rand_params)
     return rand_params
 
 
@@ -180,7 +233,21 @@ def list_of_combos(param_dict):
         if len(c[expected_keys.index('units_per_layer')]) == len(c[expected_keys.index('acts')]):
             d = {k: c[i] for k, i in zip(expected_keys, range(len(expected_keys)))}
             combos.append(d)
-    return combos
+
+    for c in combos:
+        if c['lr_decay'] == 'linear':
+            c['decay_rate'] = None
+            c['decay_steps'] = None
+            c['staircase'] = False
+        elif c['lr_decay'] == 'exponential':
+            c['limit_step'] = None
+
+    final_combos = []
+    for i in range(len(combos) - 1):
+        if combos[i] != combos[i + 1]:
+            final_combos.append(combos[i])
+
+    return final_combos
 
 
 def get_best_models(dataset, coarse, n_models=1):
