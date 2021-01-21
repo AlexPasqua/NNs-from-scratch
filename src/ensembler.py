@@ -3,13 +3,14 @@ import numpy as np
 from joblib import Parallel, delayed
 import os
 from network import Network
-from utility import read_cup, get_best_models
+from utility import read_cup, get_best_models, plot_curves
+from model_selection import cross_valid
 
 
 class Ensembler:
-    def __init__(self, models_filenames: list, retrain: bool, tr_x, tr_y):
+    def __init__(self, models_filenames: list, retrain: bool):
         self.models = []
-        self.tr_x, self.tr_y, self.test_x = read_cup()
+        self.tr_x, self.tr_y, self.int_ts_x, self.int_ts_y, self.test_x = read_cup(int_ts=True)
 
         for filename in models_filenames:
             with open(filename, 'r') as f:
@@ -44,11 +45,12 @@ class Ensembler:
 
     def fit_parallel(self):
         try:
-            Parallel(n_jobs=os.cpu_count())(delayed(m['model'].fit)(
+            res = Parallel(n_jobs=os.cpu_count())(delayed(m['model'].fit)(
                 tr_x=self.tr_x, tr_y=self.tr_y, disable_tqdm=False, **m['train_params']) for m in self.models)
         except TypeError:
-            Parallel(n_jobs=os.cpu_count())(delayed(m['model'].fit)(
+            res = Parallel(n_jobs=os.cpu_count())(delayed(m['model'].fit)(
                 tr_x=self.tr_x, tr_y=self.tr_y, disable_tqdm=False, **m['model_params']) for m in self.models)
+        return res
 
     def predict(self):
         res = []
@@ -58,13 +60,27 @@ class Ensembler:
 
 
 if __name__ == '__main__':
-    best_models, best_params = get_best_models("cup", coarse=False, n_models=3)
-    dir_name = "../ensembler/"
-    paths = [dir_name + "model" + str(i) + ".json" for i in range(len(best_models))]
+    ens_models = []
+    fn = "alex_local_fine_gs_results_cup.json"
+    best_models, best_params = get_best_models("cup", coarse=False, n_models=2, fn=fn)
     for i in range(len(best_models)):
-        best_models[i].save_model(paths[i])
+        ens_models.append({'model': best_models[i], 'params': best_params[i]})
+    fn = "alex_cloud_fine_gs_results_cup.json"
+    best_models, best_params = get_best_models("cup", coarse=False, n_models=3, fn=fn)
+    for i in range(len(best_models)):
+        ens_models.append({'model': best_models[i], 'params': best_params[i]})
 
-    ens = Ensembler(models_filenames=paths, retrain=False)
-    ens.compile()
-    ens.fit_parallel()
-    predictions = ens.predict()
+    dir_name = "../ensembler/"
+    paths = [dir_name + "model" + str(i) + ".json" for i in range(len(ens_models))]
+    for i in range(len(ens_models)):
+        ens_models[i]['model'].save_model(paths[i])
+
+    for i in range(len(ens_models)):
+        ens_models[i]['model'].compile(**ens_models[i]['params'])
+        cross_valid(net=ens_models[i]['model'], dataset="cup", k_folds=5, disable_tqdms=(True, False),
+                    interplot=True, verbose=True, **ens_models[i]['params'])
+
+    # ens = Ensembler(models_filenames=paths, retrain=False)
+    # ens.compile()
+    # res = ens.fit_parallel()
+    # predictions = ens.predict()

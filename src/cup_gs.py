@@ -29,9 +29,11 @@ if __name__ == '__main__':
     # _, best_params = get_best_models(dataset="cup", coarse=True, n_models=5)
     # best_params = best_params[0]
     # grid_search(data=devset_x, targets=devset_y, ds_name="cup", params=best_params, coarse=False, n_config=4)
-    best_models, best_params = get_best_models(dataset="cup", coarse=False, n_models=5)
+
+    best_models, best_params = get_best_models(dataset="cup", coarse=False, n_models=10)
     for p in best_params:
         print(p)
+
     # best_model, best_params = best_models[0], best_params[0]
     # best_model.compile(opt='sgd', **best_params)
     # tr_error_values, tr_metric_values, val_error_values, val_metric_values = best_model.fit(
