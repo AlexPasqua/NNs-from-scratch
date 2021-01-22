@@ -33,7 +33,8 @@ if __name__ == '__main__':
     # for p in best_params:
     #     print(p)
 
-    best_model, best_params = best_models[2], best_params[2]
+    best_model, best_params = best_models[0], best_params[0]
+    best_params['epochs'] = 400
     best_model.compile(opt='sgd', **best_params)
     tr_error_values, tr_metric_values, val_error_values, val_metric_values = best_model.fit(
         tr_x=devset_x, tr_y=devset_y, disable_tqdm=False, **best_params)
