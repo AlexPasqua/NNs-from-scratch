@@ -269,14 +269,15 @@ def lasso_l1(w, lambd):
 
 
 def lasso_l1_deriv(w, lambd):
-    res = np.zeros(len(w))
-    for i in range(len(w)):
-        if w[i] < 0:
-            res[i] = -lambd
-        elif w[i] > 0:
-            res[i] = lambd
-        else:
-            res[i] = 0
+    res = np.zeros(w.shape)
+    for i in range(w.shape[0]):
+        for j in range(w.shape[1]):
+            if w[i][j] < 0:
+                res[i][j] = -lambd
+            elif w[i][j] > 0:
+                res[i][j] = lambd
+            else:
+                res[i][j] = 0
     return res
 
 
