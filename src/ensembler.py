@@ -51,8 +51,6 @@ class Ensembler:
             except TypeError:
                 model['model'].fit(tr_x=self.tr_x, tr_y=self.tr_y, val_x=self.int_ts_x, val_y=self.int_ts_y,
                                    disable_tqdm=False, **model['model_params'])
-        preds = ens.predict()
-        return preds
 
     def fit_parallel(self):
         for m in self.models:
@@ -71,6 +69,14 @@ class Ensembler:
         res = []
         for i in range(len(self.models)):
             res.append(self.models[i]['model'].predict(inp=self.test_x, disable_tqdm=False))
+        res = np.mean(res, axis=0)
+        return res
+
+    def evaluate(self):
+        res = []
+        for model in self.models:
+            res.append(model['model'].evaluate(inp=self.int_ts_x, targets=self.int_ts_y, metr='euclidean',
+                                               loss='squared', disable_tqdm=False))
         res = np.mean(res, axis=0)
         return res
 
@@ -110,14 +116,18 @@ if __name__ == '__main__':
     # res = np.mean(res, axis=0)
     # plot_curves(tr_loss=res[0], tr_acc=res[1], val_loss=res[2], val_acc=res[3], path="mean_ens.png")
 
+    ens.fit_serial()
+
     # writes models
-    preds = ens.fit_serial()
     dir_name = "../ensembler/"
     paths = [dir_name + "model" + str(i) + ".json" for i in range(len(ens_models))]
     for i in range(len(ens_models)):
         ens_models[i]['model'].save_model(paths[i])
 
-    # preds = ens.predict()
-    with open("../cup_pridictions.csv", "w") as f:
+    evs = ens.evaluate()
+    print(f"Loss: {evs[0]}\tMetr: {evs[1]}")
+
+    preds = ens.predict()
+    with open("../cup_predictions.csv", "w") as f:
         for i in range(len(preds)):
-            print(str(i) + ',' + str(preds[i][0]) + ',' + str(preds[i][1]), file=f)
+            print(str(i + 1) + ',' + str(preds[i][0]) + ',' + str(preds[i][1]), file=f)
