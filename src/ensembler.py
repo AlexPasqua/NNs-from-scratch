@@ -49,8 +49,8 @@ class Ensembler:
             except TypeError:
                 model['model'].fit(tr_x=self.tr_x, tr_y=self.tr_y, val_x=self.int_ts_x, val_y=self.int_ts_y,
                                    disable_tqdm=False, **model['model_params'])
-            preds = ens.predict()
-            return preds
+        preds = ens.predict()
+        return preds
 
     def fit_parallel(self):
         for m in self.models:
