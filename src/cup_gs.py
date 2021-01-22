@@ -34,18 +34,18 @@ if __name__ == '__main__':
     for p in best_params:
         print(p)
 
-    # best_model, best_params = best_models[0], best_params[0]
-    # best_model.compile(opt='sgd', **best_params)
-    # tr_error_values, tr_metric_values, val_error_values, val_metric_values = best_model.fit(
-    #     tr_x=devset_x, tr_y=devset_y, disable_tqdm=False, **best_params)
+    best_model, best_params = best_models[0], best_params[0]
+    best_model.compile(opt='sgd', **best_params)
+    tr_error_values, tr_metric_values, val_error_values, val_metric_values = best_model.fit(
+        tr_x=devset_x, tr_y=devset_y, disable_tqdm=False, **best_params)
 
     # plot graph
-    # plot_curves(
-    #     tr_loss=tr_error_values,
-    #     val_loss=val_error_values,
-    #     tr_acc=tr_metric_values,
-    #     val_acc=val_metric_values
-    # )
+    plot_curves(
+        tr_loss=tr_error_values,
+        val_loss=val_error_values,
+        tr_acc=tr_metric_values,
+        val_acc=val_metric_values
+    )
 
-    # res = best_model.evaluate(inp=int_ts_x, targets=int_ts_y, metr='euclidean', loss='squared', disable_tqdm=False)
-    # print(f"Err: {res[0]}\tMetr: {res[1]}")
+    res = best_model.evaluate(inp=int_ts_x, targets=int_ts_y, metr='euclidean', loss='squared', disable_tqdm=False)
+    print(f"Err: {res[0]}\tMetr: {res[1]}")
