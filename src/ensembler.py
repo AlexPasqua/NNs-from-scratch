@@ -69,6 +69,14 @@ if __name__ == '__main__':
     best_models, best_params = get_best_models("cup", coarse=False, n_models=3, fn=fn)
     for i in range(len(best_models)):
         ens_models.append({'model': best_models[i], 'params': best_params[i]})
+    fn = "gaetano_2_fine_gs_results_cup.json"
+    best_models, best_params = get_best_models("cup", coarse=False, n_models=1, fn=fn)
+    for i in range(len(best_models)):
+        ens_models.append({'model': best_models[i], 'params': best_params[i]})
+    fn = "gaetano_cloud_coarse_gs_results_cup.json"
+    best_models, best_params = get_best_models("cup", coarse=False, n_models=1, fn=fn)
+    for i in range(len(best_models)):
+        ens_models.append({'model': best_models[i], 'params': best_params[i]})
 
     dir_name = "../ensembler/"
     paths = [dir_name + "model" + str(i) + ".json" for i in range(len(ens_models))]
@@ -77,9 +85,12 @@ if __name__ == '__main__':
 
     for i in range(len(ens_models)):
         ens_models[i]['model'].compile(**ens_models[i]['params'])
-        ens_models[i]['params']['epochs'] = 100
-        cross_valid(net=ens_models[i]['model'], dataset="cup", k_folds=5, disable_tqdms=(True, False),
-                    interplot=True, verbose=True, **ens_models[i]['params'])
+        if ens_models[i]['params']['epochs'] > 400:
+            ens_models[i]['params']['epochs'] = 400
+
+    Parallel(n_jobs=os.cpu_count())(delayed(cross_valid)(
+        net=ens_models[i]['model'], dataset="cup", k_folds=5, disable_tqdms=(False, True), interplot=True,
+        verbose=True, path="ens_models" + str(i), **ens_models[i]['params']) for i in range(len(ens_models)))
 
     # ens = Ensembler(models_filenames=paths, retrain=False)
     # ens.compile()

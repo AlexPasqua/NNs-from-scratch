@@ -30,23 +30,23 @@ if __name__ == '__main__':
     # grid_search(data=devset_x, targets=devset_y, ds_name="cup", params=best_params, coarse=False, n_config=4)
 
     best_models, best_params = get_best_models(dataset="cup", coarse=False, n_models=10)
-    # for p in best_params:
-    #     print(p)
+    for p in best_params:
+        print(p)
 
-    best_model, best_params = best_models[0], best_params[0]
-    best_params['epochs'] = 400
-    best_model.compile(opt='sgd', **best_params)
-    tr_error_values, tr_metric_values, val_error_values, val_metric_values = best_model.fit(
-        tr_x=devset_x, tr_y=devset_y, disable_tqdm=False, **best_params)
-
-    # plot graph
-    plot_curves(
-        tr_loss=tr_error_values,
-        val_loss=val_error_values,
-        tr_acc=tr_metric_values,
-        val_acc=val_metric_values,
-        path="gae_cloud.png"
-    )
-
-    res = best_model.evaluate(inp=int_ts_x, targets=int_ts_y, metr='euclidean', loss='squared', disable_tqdm=False)
-    print(f"Err: {res[0]}\tMetr: {res[1]}")
+    # best_model, best_params = best_models[0], best_params[0]
+    # best_params['epochs'] = 400
+    # best_model.compile(opt='sgd', **best_params)
+    # tr_error_values, tr_metric_values, val_error_values, val_metric_values = best_model.fit(
+    #     tr_x=devset_x, tr_y=devset_y, disable_tqdm=False, **best_params)
+    #
+    # # plot graph
+    # plot_curves(
+    #     tr_loss=tr_error_values,
+    #     val_loss=val_error_values,
+    #     tr_acc=tr_metric_values,
+    #     val_acc=val_metric_values,
+    #     path="gae_cloud.png"
+    # )
+    #
+    # res = best_model.evaluate(inp=int_ts_x, targets=int_ts_y, metr='euclidean', loss='squared', disable_tqdm=False)
+    # print(f"Err: {res[0]}\tMetr: {res[1]}")
