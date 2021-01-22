@@ -44,12 +44,16 @@ class Ensembler:
                 model['model'].fit(tr_x=self.tr_x, tr_y=self.tr_y, disable_tqdm=False, **model['model_params'])
 
     def fit_parallel(self):
+        for m in self.models:
+            if m['model_params']['epochs'] > 400:
+                m['model_params']['epochs'] = 400
         try:
             res = Parallel(n_jobs=os.cpu_count())(delayed(m['model'].fit)(
                 tr_x=self.tr_x, tr_y=self.tr_y, disable_tqdm=False, **m['train_params']) for m in self.models)
         except TypeError:
             res = Parallel(n_jobs=os.cpu_count())(delayed(m['model'].fit)(
-                tr_x=self.tr_x, tr_y=self.tr_y, disable_tqdm=False, **m['model_params']) for m in self.models)
+                tr_x=self.tr_x, tr_y=self.tr_y, val_x=self.int_ts_x, val_y=self.int_ts_y,
+                disable_tqdm=False, **m['model_params']) for m in self.models)
         return res
 
     def predict(self):
@@ -85,14 +89,17 @@ if __name__ == '__main__':
 
     for i in range(len(ens_models)):
         ens_models[i]['model'].compile(**ens_models[i]['params'])
-        if ens_models[i]['params']['epochs'] > 400:
-            ens_models[i]['params']['epochs'] = 400
+        if ens_models[i]['params']['epochs'] > 20:
+            ens_models[i]['params']['epochs'] = 20
 
-    Parallel(n_jobs=os.cpu_count())(delayed(cross_valid)(
-        net=ens_models[i]['model'], dataset="cup", k_folds=5, disable_tqdms=(False, True), interplot=True,
-        verbose=True, path="ens_models" + str(i), **ens_models[i]['params']) for i in range(len(ens_models)))
+    # Parallel(n_jobs=os.cpu_count())(delayed(cross_valid)(
+    #     net=ens_models[i]['model'], dataset="cup", k_folds=5, disable_tqdms=(False, True), interplot=True,
+    #     verbose=True, path="ens_models" + str(i), **ens_models[i]['params']) for i in range(len(ens_models)))
 
-    # ens = Ensembler(models_filenames=paths, retrain=False)
-    # ens.compile()
-    # res = ens.fit_parallel()
+    ens = Ensembler(models_filenames=paths, retrain=False)
+    ens.compile()
+    res = ens.fit_parallel()
+    for r in range(len(res)):
+        plot_curves(tr_loss=res[r][0], tr_acc=res[r][1], val_loss=res[r][2], val_acc=res[r][3],
+                    path="ens_model" + str(r) + ".png")
     # predictions = ens.predict()
