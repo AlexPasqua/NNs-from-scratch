@@ -1,3 +1,4 @@
+import csv
 import json
 import numpy as np
 from joblib import Parallel, delayed
@@ -60,6 +61,7 @@ class Ensembler:
         res = []
         for i in range(len(self.models)):
             res.append(self.models[i]['model'].predict(inp=self.test_x, disable_tqdm=False))
+        res = np.mean(res, axis=0)
         return res
 
 
@@ -87,19 +89,20 @@ if __name__ == '__main__':
     for i in range(len(ens_models)):
         ens_models[i]['model'].save_model(paths[i])
 
-    for i in range(len(ens_models)):
-        ens_models[i]['model'].compile(**ens_models[i]['params'])
-        if ens_models[i]['params']['epochs'] > 20:
-            ens_models[i]['params']['epochs'] = 20
-
-    # Parallel(n_jobs=os.cpu_count())(delayed(cross_valid)(
-    #     net=ens_models[i]['model'], dataset="cup", k_folds=5, disable_tqdms=(False, True), interplot=True,
-    #     verbose=True, path="ens_models" + str(i), **ens_models[i]['params']) for i in range(len(ens_models)))
-
     ens = Ensembler(models_filenames=paths, retrain=False)
     ens.compile()
     res = ens.fit_parallel()
     for r in range(len(res)):
         plot_curves(tr_loss=res[r][0], tr_acc=res[r][1], val_loss=res[r][2], val_acc=res[r][3],
                     path="ens_model" + str(r) + ".png")
-    # predictions = ens.predict()
+
+    dir_name = "../ensembler/"
+    paths = [dir_name + "model" + str(i) + ".json" for i in range(len(ens_models))]
+    for i in range(len(ens_models)):
+        ens_models[i]['model'].save_model(paths[i])
+
+    preds = predictions = ens.predict()
+    with open("../cup_pridictions.csv", "w") as f:
+        for i in range(len(preds)):
+            print(str(i) + ',' + str(preds[i][0]) + ',' + str(preds[i][1]), file=f)
+
