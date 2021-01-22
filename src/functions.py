@@ -252,7 +252,7 @@ def exp_lr_decay(base_lr, decay_rate, curr_step, decay_steps, staircase=False, *
                       Default is True
     :return: exponentially decayed learning rate
     """
-    cur_stage = step / decay_steps
+    cur_stage = curr_step / decay_steps
     if staircase:
         cur_stage = np.floor(cur_stage)
     decay = -decay_rate * cur_stage
