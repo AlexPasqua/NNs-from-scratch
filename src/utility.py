@@ -308,7 +308,7 @@ def get_best_models(dataset, coarse, n_models=1, fn=None):
     return models, params
 
 
-def plot_curves(tr_loss, val_loss, tr_acc, val_acc, lr=None, momentum=None, lambd=None, **kwargs):
+def plot_curves(tr_loss, val_loss, tr_acc, val_acc, path, lr=None, momentum=None, lambd=None, **kwargs):
     """ Plot the curves of training loss, training metric, validation loss, validation metric """
     figure, ax = plt.subplots(1, 2, figsize=(12, 4))
     ax[0].plot(range(len(tr_loss)), tr_loss, color='b', linestyle='dashed', label='training error')
@@ -327,4 +327,5 @@ def plot_curves(tr_loss, val_loss, tr_acc, val_acc, lr=None, momentum=None, lamb
     ax[1].set_title(f"eta: {lr} - alpha: {momentum} - lambda: {lambd}")
     ax[1].set_ylim((0., 10.))
     ax[1].grid()
-    plt.show()
+    # plt.show()
+    plt.savefig(path)
