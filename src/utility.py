@@ -250,7 +250,7 @@ def list_of_combos(param_dict):
     return final_combos
 
 
-def get_best_models(dataset, coarse, n_models=1, fn=None):
+def get_best_models(dataset, coarse=False, n_models=1, fn=None):
     file_name = ("coarse_gs_" if coarse else "fine_gs_") + "results_" + dataset + ".json"
     file_name = file_name if fn is None else fn
     with open("../results/" + file_name, 'r') as f:

@@ -20,7 +20,6 @@ class Ensembler:
             self.models.append({
                 'model': Network(**models_data['model_params']),
                 'model_params': models_data['model_params'],
-                'train_params': models_data['train_params']
             })
 
             if not retrain:
@@ -32,37 +31,22 @@ class Ensembler:
 
     def compile(self):
         for model in self.models:
-            try:
-                model['model'].compile(**model['train_params'])
-            except TypeError:
-                model['model'].compile(**model['model_params'])
+            model['model'].compile(**model['model_params'])
 
     def fit_serial(self):
-        # for m in self.models:
-        #     if m['model_params']['epochs'] > 5:
-        #         m['model_params']['epochs'] = 5
-
         for model in self.models:
-            if model['model_params']['epochs'] > 400:
-                model['model_params']['epochs'] = 400
-            try:
-                model['model'].fit(tr_x=self.tr_x, tr_y=self.tr_y, val_x=self.int_ts_x, val_y=self.int_ts_y,
-                                   disable_tqdm=False, **model['train_params'])
-            except TypeError:
-                model['model'].fit(tr_x=self.tr_x, tr_y=self.tr_y, val_x=self.int_ts_x, val_y=self.int_ts_y,
-                                   disable_tqdm=False, **model['model_params'])
+            if model['model_params']['epochs'] > 5:
+                model['model_params']['epochs'] = 5
+            model['model'].fit(tr_x=self.tr_x, tr_y=self.tr_y, val_x=self.int_ts_x, val_y=self.int_ts_y,
+                               disable_tqdm=False, **model['model_params'])
 
     def fit_parallel(self):
         for m in self.models:
             if m['model_params']['epochs'] > 400:
                 m['model_params']['epochs'] = 400
-        try:
-            res = Parallel(n_jobs=os.cpu_count())(delayed(m['model'].fit)(
-                tr_x=self.tr_x, tr_y=self.tr_y, disable_tqdm=False, **m['train_params']) for m in self.models)
-        except TypeError:
-            res = Parallel(n_jobs=os.cpu_count())(delayed(m['model'].fit)(
-                tr_x=self.tr_x, tr_y=self.tr_y, val_x=self.int_ts_x, val_y=self.int_ts_y,
-                disable_tqdm=False, **m['model_params']) for m in self.models)
+        res = Parallel(n_jobs=os.cpu_count())(delayed(m['model'].fit)(
+            tr_x=self.tr_x, tr_y=self.tr_y, val_x=self.int_ts_x, val_y=self.int_ts_y,
+            disable_tqdm=False, **m['model_params']) for m in self.models)
         return res
 
     def predict(self):
@@ -82,23 +66,13 @@ class Ensembler:
 
 
 if __name__ == '__main__':
+    file_names_n_models = {"alex_local_fine_gs_results_cup.json": 2, "alex_cloud_fine_gs_results_cup.json": 3,
+                           "gaetano_2_fine_gs_results_cup.json": 1, "gaetano_cloud_coarse_gs_results_cup.json": 1}
     ens_models = []
-    fn = "alex_local_fine_gs_results_cup.json"
-    best_models, best_params = get_best_models("cup", coarse=False, n_models=2, fn=fn)
-    for i in range(len(best_models)):
-        ens_models.append({'model': best_models[i], 'params': best_params[i]})
-    fn = "alex_cloud_fine_gs_results_cup.json"
-    best_models, best_params = get_best_models("cup", coarse=False, n_models=3, fn=fn)
-    for i in range(len(best_models)):
-        ens_models.append({'model': best_models[i], 'params': best_params[i]})
-    fn = "gaetano_2_fine_gs_results_cup.json"
-    best_models, best_params = get_best_models("cup", coarse=False, n_models=1, fn=fn)
-    for i in range(len(best_models)):
-        ens_models.append({'model': best_models[i], 'params': best_params[i]})
-    fn = "gaetano_cloud_coarse_gs_results_cup.json"
-    best_models, best_params = get_best_models("cup", coarse=False, n_models=1, fn=fn)
-    for i in range(len(best_models)):
-        ens_models.append({'model': best_models[i], 'params': best_params[i]})
+    for fn, n_models in file_names_n_models.items():
+        best_models, best_params = get_best_models("cup", n_models=n_models, fn=fn)
+        for i in range(len(best_models)):
+            ens_models.append({'model': best_models[i], 'params': best_params[i]})
 
     # writes models
     dir_name = "../ensembler/"
@@ -112,9 +86,6 @@ if __name__ == '__main__':
     # for r in range(len(res)):
     #     plot_curves(tr_loss=res[r][0], tr_acc=res[r][1], val_loss=res[r][2], val_acc=res[r][3],
     #                 path="ens_model" + str(r) + ".png")
-
-    # res = np.mean(res, axis=0)
-    # plot_curves(tr_loss=res[0], tr_acc=res[1], val_loss=res[2], val_acc=res[3], path="mean_ens.png")
 
     ens.fit_serial()
 

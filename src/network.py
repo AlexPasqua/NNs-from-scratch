@@ -35,7 +35,6 @@ class Network:
             'init_type': init_type,
         }, **kwargs}
         self.__layers = []
-        self.__train_params = []
         self.__opt = None
         layer_inp_dim = input_dim
         for i in range(len(units_per_layer)):
@@ -77,10 +76,6 @@ class Network:
         return self.__params
 
     @property
-    def train_params(self):
-        return self.__train_params
-
-    @property
     def weights(self):
         return [layer.weights.tolist() for layer in self.__layers]
 
@@ -117,7 +112,7 @@ class Network:
         """
         if momentum > 1. or momentum < 0.:
             raise ValueError(f"momentum must be a value between 0 and 1. Got: {momentum}")
-        self.__train_params = {'loss': loss, 'metr': metr, 'lr': lr, 'lr_decay': lr_decay, 'limit_step': limit_step,
+        self.__params = {'loss': loss, 'metr': metr, 'lr': lr, 'lr_decay': lr_decay, 'limit_step': limit_step,
                                'decay_rate': decay_rate, 'decay_steps': decay_steps, 'staircase': staircase,
                                'momentum': momentum, 'reg_type': reg_type, 'lambd': lambd}
         self.__opt = optimizers[opt](net=self, loss=loss, metr=metr, lr=lr, lr_decay=lr_decay, limit_step=limit_step,
@@ -167,7 +162,7 @@ class Network:
         if target_len != self.layers[-1].n_units or n_patterns != n_targets or batch_size > n_patterns:
             raise AttributeError(f"Mismatching shapes")
 
-        self.__train_params = {**self.__train_params, 'epochs': epochs, 'batch_size': batch_size}
+        self.__params = {**self.__params, 'epochs': epochs, 'batch_size': batch_size}
         return self.__opt.optimize(tr_x=tr_x, tr_y=tr_y, val_x=val_x, val_y=val_y, epochs=epochs,
                                    batch_size=batch_size, **kwargs)
 
@@ -244,6 +239,6 @@ class Network:
         print("Activation functions: ", self.__params['acts'])
 
     def save_model(self, filename: str):
-        data = {'model_params': self.__params, 'train_params': self.__train_params, 'weights': self.weights}
+        data = {'model_params': self.__params, 'weights': self.weights}
         with open(filename, 'w') as f:
             json.dump(data, f, indent='\t')
