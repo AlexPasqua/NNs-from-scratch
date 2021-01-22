@@ -106,8 +106,8 @@ if __name__ == '__main__':
     for i in range(len(ens_models)):
         ens_models[i]['model'].save_model(paths[i])
 
-    preds = predictions = ens.predict()
+    preds = ens.predict()
     with open("../cup_pridictions.csv", "w") as f:
-        for i in range(len(np.shape(preds)[1])):
+        for i in range(np.shape(preds)[1]):
             print(str(i) + ',' + str(preds[0][i][0]) + ',' + str(preds[0][i][1]), file=f)
 

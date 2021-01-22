@@ -181,7 +181,7 @@ class Network:
         inp = inp[np.newaxis, :] if len(inp.shape) < 2 else inp
         predictions = []
         for pattern in tqdm.tqdm(inp, desc="Predicting patterns", disable=disable_tqdm):
-            predictions.append(self.forward(pattern))
+            predictions.append(self.forward(inp=pattern))
         return np.array(predictions)
 
     def evaluate(self, targets, metr, loss, net_outputs=None, inp=None, disable_tqdm=True):
