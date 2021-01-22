@@ -38,11 +38,19 @@ class Ensembler:
                 model['model'].compile(**model['model_params'])
 
     def fit_serial(self):
+        for m in self.models:
+            if m['model_params']['epochs'] > 400:
+                m['model_params']['epochs'] = 400
+
         for model in self.models:
             try:
-                model['model'].fit(tr_x=self.tr_x, tr_y=self.tr_y, disable_tqdm=False, **model['train_params'])
+                model['model'].fit(tr_x=self.tr_x, tr_y=self.tr_y, val_x=self.int_ts_x, val_y=self.int_ts_y,
+                                   disable_tqdm=False, **model['train_params'])
             except TypeError:
-                model['model'].fit(tr_x=self.tr_x, tr_y=self.tr_y, disable_tqdm=False, **model['model_params'])
+                model['model'].fit(tr_x=self.tr_x, tr_y=self.tr_y, val_x=self.int_ts_x, val_y=self.int_ts_y,
+                                   disable_tqdm=False, **model['model_params'])
+            preds = ens.predict()
+            return preds
 
     def fit_parallel(self):
         for m in self.models:
@@ -92,22 +100,22 @@ if __name__ == '__main__':
 
     ens = Ensembler(models_filenames=paths, retrain=False)
     ens.compile()
-    res = ens.fit_parallel()
-    for r in range(len(res)):
-        plot_curves(tr_loss=res[r][0], tr_acc=res[r][1], val_loss=res[r][2], val_acc=res[r][3],
-                    path="ens_model" + str(r) + ".png")
+    # res = ens.fit_parallel()
+    # for r in range(len(res)):
+    #     plot_curves(tr_loss=res[r][0], tr_acc=res[r][1], val_loss=res[r][2], val_acc=res[r][3],
+    #                 path="ens_model" + str(r) + ".png")
 
     # res = np.mean(res, axis=0)
     # plot_curves(tr_loss=res[0], tr_acc=res[1], val_loss=res[2], val_acc=res[3], path="mean_ens.png")
 
     # writes models
+    preds = ens.fit_serial()
     dir_name = "../ensembler/"
     paths = [dir_name + "model" + str(i) + ".json" for i in range(len(ens_models))]
     for i in range(len(ens_models)):
         ens_models[i]['model'].save_model(paths[i])
 
-    preds = ens.predict()
+    # preds = ens.predict()
     with open("../cup_pridictions.csv", "w") as f:
         for i in range(np.shape(preds)[1]):
             print(str(i) + ',' + str(preds[0][i][0]) + ',' + str(preds[0][i][1]), file=f)
-
