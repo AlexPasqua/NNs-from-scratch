@@ -46,8 +46,8 @@ class Ensembler:
 
     def fit_parallel(self):
         for m in self.models:
-            if m['model_params']['epochs'] > 5:
-                m['model_params']['epochs'] = 5
+            if m['model_params']['epochs'] > 400:
+                m['model_params']['epochs'] = 400
         try:
             res = Parallel(n_jobs=os.cpu_count())(delayed(m['model'].fit)(
                 tr_x=self.tr_x, tr_y=self.tr_y, disable_tqdm=False, **m['train_params']) for m in self.models)
