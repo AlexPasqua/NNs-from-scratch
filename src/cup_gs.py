@@ -6,32 +6,30 @@ if __name__ == '__main__':
     devset_x, devset_y, int_ts_x, int_ts_y, ts_data = read_cup(int_ts=True)
 
     # grid search
-    gs_params = {'units_per_layer': ((20, 20, 2), (8, 8, 8, 8, 8, 2)),
-                 'acts': (('leaky_relu', 'identity'), ('tanh', 'identity'),
-                          ('leaky_relu', 'leaky_relu', 'identity'),
-                          ('tanh', 'tanh', 'identity'), ('tanh', 'tanh', 'tanh', 'tanh', 'tanh', 'identity'),
-                          ('leaky_relu', 'leaky_relu', 'leaky_relu', 'leaky_relu', 'leaky_relu', 'identity')),
+    gs_params = {'units_per_layer': ((30, 30, 10, 2),),
+                 'acts': (('leaky_relu', 'leaky_relu', 'leaky_relu', 'identity'),
+                          ('tanh', 'tanh', 'tanh', 'identity')),
                  'init_type': ('uniform',),
                  'limits': ((-0.001, 0.001),),
-                 'momentum': (0.6,),
-                 'batch_size': (1, 100, 'full'),
-                 'lr': (0.01, 0.001,),
+                 'momentum': (0.0, 0.6, 0.8),
+                 'batch_size': ('full', 20, 150),
+                 'lr': (0.01, 0.002, 0.0002),
                  'lr_decay': (None, 'linear', 'exponential'),
-                 'limit_step': (500,),
+                 'limit_step': (400,),
                  'decay_rate': (0.95,),
-                 'decay_steps': (500,),
+                 'decay_steps': (400,),
                  'staircase': (True, False),
                  'loss': ('squared',),
                  'metr': ('euclidean',),
-                 'epochs': (150, 700)}
-    # grid_search(data=devset_x, targets=devset_y, ds_name="cup", params=gs_params, coarse=True)
+                 'epochs': (100, 150, 200, 400)}
+    grid_search(dataset="cup", params=gs_params, coarse=True)
     # _, best_params = get_best_models(dataset="cup", coarse=True, n_models=5)
     # best_params = best_params[0]
     # grid_search(data=devset_x, targets=devset_y, ds_name="cup", params=best_params, coarse=False, n_config=4)
 
-    best_models, best_params = get_best_models(dataset="cup", coarse=False, n_models=10)
-    for p in best_params:
-        print(p)
+    # best_models, best_params = get_best_models(dataset="cup", coarse=False, n_models=10)
+    # for p in best_params:
+    #     print(p)
 
     # best_model, best_params = best_models[0], best_params[0]
     # best_params['epochs'] = 400

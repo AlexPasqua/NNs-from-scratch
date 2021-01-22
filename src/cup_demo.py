@@ -35,11 +35,11 @@ def holdout_validation(pnum, cup_tr_data, cup_tr_targets, res):
 
 if __name__ == '__main__':
     # read dataset
-    cup_tr_data, cup_tr_targets, cup_ts_data = read_cup()
+    tr_x, tr_y, int_ts_x, int_ts_y, cup_ts_data = read_cup(int_ts=True)
 
     # # create model
     # model = Network(
-    #     input_dim=len(cup_tr_data[0]),
+    #     input_dim=len(tr_x[0]),
     #     units_per_layer=(10, 10, 2),
     #     acts=('leaky_relu', 'leaky_relu', 'identity'),
     #     init_type='uniform',
@@ -49,7 +49,7 @@ if __name__ == '__main__':
     # with Manager() as manager:
     #     res = manager.dict()
     #     processes = []
-    #     kwargs = {'pnum': 0, 'cup_tr_data': cup_tr_data, 'cup_tr_targets': cup_tr_targets, 'res': res}
+    #     kwargs = {'pnum': 0, 'tr_x': tr_x, 'tr_y': tr_y, 'res': res}
     #     for i in range(os.cpu_count() - 1):
     #         print('registering process %d' % i)
     #         kwargs['pnum'] = i
@@ -74,31 +74,32 @@ if __name__ == '__main__':
     #             batch_size=30, k_folds=5, disable_tqdms=(True, False), verbose=True)
 
     # grid search
-    gs_params = {'units_per_layer': ((10, 2),),
-                 'acts': (('leaky_relu', 'identity'),),
+    gs_params = {'units_per_layer': ((30, 30, 10, 2),),
+                 'acts': (('leaky_relu', 'leaky_relu', 'leaky_relu', 'identity'),
+                          ('tanh', 'tanh', 'tanh', 'identity')),
                  'init_type': ('uniform',),
-                 'limits': ((-0.5, 0.5), (-0.001, 0.001)),
-                 'momentum': (0.0, 0.6,),
-                 'batch_size': ('full',),
-                 'lr': (0.002,),
+                 'limits': ((-0.001, 0.001),),
+                 'momentum': (0.0, 0.6, 0.8),
+                 'batch_size': ('full', 20),
+                 'lr': (0.01, 0.002, 0.0002),
                  'loss': ('squared',),
                  'metr': ('euclidean',),
-                 'epochs': (20,)}
+                 'epochs': (100, 150, 200, 400)}
     grid_search(dataset="cup", params=gs_params, coarse=True)
     _, best_params = get_best_models("cup", coarse=True, n_models=1)
-    best_params = best_params[0]
-    grid_search(dataset="cup", params=best_params, coarse=False, n_config=1)
-    best_model, best_params = get_best_models("cup", coarse=False, n_models=1)
-    best_model = best_model[0]
-    best_params = best_params[0]
-    best_model.compile(opt='sgd', **best_params)
-    tr_error_values, tr_metric_values, val_error_values, val_metric_values = best_model.fit(
-        tr_x=cup_tr_data, tr_y=cup_tr_targets, disable_tqdm=False, **best_params)
+    # best_params = best_params[0]
+    # grid_search(dataset="cup", params=best_params, coarse=False, n_config=1)
+    # best_model, best_params = get_best_models("cup", coarse=False, n_models=1)
+    # best_model = best_model[0]
+    # best_params = best_params[0]
+    # best_model.compile(opt='sgd', **best_params)
+    # tr_error_values, tr_metric_values, val_error_values, val_metric_values = best_model.fit(
+    #     tr_x=tr_x, tr_y=tr_y, disable_tqdm=False, **best_params)
 
     # plot graph
-    plot_curves(
-        tr_loss=tr_error_values,
-        val_loss=val_error_values,
-        tr_acc=tr_metric_values,
-        val_acc=val_metric_values
-    )
+    # plot_curves(
+    #     tr_loss=tr_error_values,
+    #     val_loss=val_error_values,
+    #     tr_acc=tr_metric_values,
+    #     val_acc=val_metric_values
+    # )

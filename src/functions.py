@@ -233,7 +233,7 @@ def linear_lr_decay(curr_lr, base_lr, final_lr, curr_step, limit_step, **kwargs)
     return final_lr
 
 
-def exp_lr_decay(base_lr, decay_rate, step, decay_steps, staircase=False, **kwargs):
+def exp_lr_decay(base_lr, decay_rate, curr_step, decay_steps, staircase=False, **kwargs):
     """
     The exp_lr_decay, decays exponentially the learning rate by `decay_rate` every `decay_steps`,
     starting from a `base_lr`: learning_rate = base_lr * exp(-decay_rate * cur_stage)

@@ -44,7 +44,7 @@ class Optimizer(ABC):
     def lr_params(self):
         return {'lr': self.lr, 'base_lr': self.base_lr, 'final_lr': self.final_lr, 'lr_decay': self.lr_decay,
                 'limit_step': self.limit_step, 'decay_rate': self.decay_rate, 'decay_steps': self.decay_steps,
-                'staircase': self.staircase}
+                'staircase': self.staircase, 'curr_lr': self.lr}
 
     @property
     def net(self):
@@ -147,7 +147,7 @@ class StochasticGradientDescent(Optimizer, ABC):
                 # learning rate decays
                 if self.lr_decay is not None:
                     step += 1
-                    self.lr = lr_decays[self.lr_decay].func(step=step, **self.lr_params)
+                    self.lr = lr_decays[self.lr_decay].func(curr_step=step, **self.lr_params)
 
                 # saves learning rate values #TODO: DEBUG | remove later |
                 # lr_plots.append(self.lr)

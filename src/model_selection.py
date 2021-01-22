@@ -9,7 +9,7 @@ from utility import plot_curves, sets_from_folds, list_of_combos, read_monk, rea
 from network import Network
 
 
-def cross_valid(net, dataset, loss, metr, lr, path, lr_decay=None, limit_step=None, decay_rate=None, decay_steps=None,
+def cross_valid(net, dataset, loss, metr, lr, path=None, lr_decay=None, limit_step=None, decay_rate=None, decay_steps=None,
                 staircase=True, opt='sgd', momentum=0., epochs=1, batch_size=1, k_folds=5, reg_type='l2', lambd=0,
                 disable_tqdms=(True, True), interplot=True, verbose=False, **kwargs):
     # read the dataset
@@ -45,6 +45,7 @@ def cross_valid(net, dataset, loss, metr, lr, path, lr_decay=None, limit_step=No
                                  batch_size=batch_size, disable_tqdm=disable_tqdms[1])
         except Exception as e:
             print(f"{e.__class__.__name__} occurred. Training suppressed.")
+            print(e, '\n')
             return
 
         # metrics for the graph
