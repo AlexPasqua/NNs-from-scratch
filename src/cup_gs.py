@@ -21,7 +21,7 @@ if __name__ == '__main__':
                  'staircase': (True, False),
                  'loss': ('squared',),
                  'metr': ('euclidean',),
-                 'epochs': (100, 150, 200, 400)}
+                 'epochs': (100, 200, 400)}
     grid_search(dataset="cup", params=gs_params, coarse=True)
     # _, best_params = get_best_models(dataset="cup", coarse=True, n_models=5)
     # best_params = best_params[0]
