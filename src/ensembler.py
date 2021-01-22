@@ -46,8 +46,8 @@ class Ensembler:
 
     def fit_parallel(self):
         for m in self.models:
-            if m['model_params']['epochs'] > 400:
-                m['model_params']['epochs'] = 400
+            if m['model_params']['epochs'] > 5:
+                m['model_params']['epochs'] = 5
         try:
             res = Parallel(n_jobs=os.cpu_count())(delayed(m['model'].fit)(
                 tr_x=self.tr_x, tr_y=self.tr_y, disable_tqdm=False, **m['train_params']) for m in self.models)
@@ -84,6 +84,7 @@ if __name__ == '__main__':
     for i in range(len(best_models)):
         ens_models.append({'model': best_models[i], 'params': best_params[i]})
 
+    # writes models
     dir_name = "../ensembler/"
     paths = [dir_name + "model" + str(i) + ".json" for i in range(len(ens_models))]
     for i in range(len(ens_models)):
@@ -96,6 +97,10 @@ if __name__ == '__main__':
         plot_curves(tr_loss=res[r][0], tr_acc=res[r][1], val_loss=res[r][2], val_acc=res[r][3],
                     path="ens_model" + str(r) + ".png")
 
+    res = np.mean(res, axis=0)
+    plot_curves(tr_loss=res[0], tr_acc=res[1], val_loss=res[2], val_acc=res[3], path="mean_ens.png")
+
+    # writes models
     dir_name = "../ensembler/"
     paths = [dir_name + "model" + str(i) + ".json" for i in range(len(ens_models))]
     for i in range(len(ens_models)):
