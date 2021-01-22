@@ -97,8 +97,8 @@ if __name__ == '__main__':
         plot_curves(tr_loss=res[r][0], tr_acc=res[r][1], val_loss=res[r][2], val_acc=res[r][3],
                     path="ens_model" + str(r) + ".png")
 
-    res = np.mean(res, axis=0)
-    plot_curves(tr_loss=res[0], tr_acc=res[1], val_loss=res[2], val_acc=res[3], path="mean_ens.png")
+    # res = np.mean(res, axis=0)
+    # plot_curves(tr_loss=res[0], tr_acc=res[1], val_loss=res[2], val_acc=res[3], path="mean_ens.png")
 
     # writes models
     dir_name = "../ensembler/"
