@@ -6,6 +6,1596 @@
 				"leaky_relu",
 				"identity"
 			],
+			"batch_size": 20,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": null,
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": true,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": null,
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": null,
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l1",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": null,
+			"decay_steps": null,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": "linear",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l1",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": null,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": "exponential",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": true,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": null,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": "exponential",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": null,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": "exponential",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l1",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": null,
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": true,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": null,
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": null,
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l1",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": null,
+			"decay_steps": null,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": "linear",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l1",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": null,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": "exponential",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": true,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": null,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": "exponential",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": null,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": "exponential",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l1",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": null,
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": true,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": null,
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": null,
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l1",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": null,
+			"decay_steps": null,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": "linear",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l1",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": null,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": "exponential",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": true,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": null,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": "exponential",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": null,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": "exponential",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l1",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": null,
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": true,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": null,
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": null,
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l1",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": null,
+			"decay_steps": null,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": "linear",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l1",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": null,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": "exponential",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": true,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": null,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": "exponential",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": null,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": "exponential",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l1",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": null,
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": true,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": null,
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": null,
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l1",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": null,
+			"decay_steps": null,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": "linear",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l1",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": null,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": "exponential",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": true,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": null,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": "exponential",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": null,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": "exponential",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l1",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": null,
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": true,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": null,
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": null,
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l1",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": null,
+			"decay_steps": null,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": "linear",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l1",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": null,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": "exponential",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": true,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": null,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": "exponential",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": null,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": "exponential",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l1",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": null,
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": true,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": null,
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": null,
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l1",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": null,
+			"decay_steps": null,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": "linear",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l1",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": null,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": "exponential",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": true,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": null,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": "exponential",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": null,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": "exponential",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l1",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": null,
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": true,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": null,
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": null,
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l1",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": null,
+			"decay_steps": null,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": "linear",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l1",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
 			"batch_size": 200,
 			"decay_rate": 0.95,
 			"decay_steps": 500,
@@ -51,9 +1641,9 @@
 			"lr": 0.005,
 			"lr_decay": "exponential",
 			"metr": "euclidean",
-			"momentum": 0.7709349296879282,
+			"momentum": 0.6,
 			"reg_type": "l2",
-			"staircase": true,
+			"staircase": false,
 			"units_per_layer": [
 				20,
 				20,
@@ -78,7 +1668,157 @@
 				0.001
 			],
 			"loss": "squared",
-			"lr": 0.005655844946607864,
+			"lr": 0.005,
+			"lr_decay": "exponential",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l1",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": null,
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": true,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": null,
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": null,
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l1",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": null,
+			"decay_steps": null,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": "linear",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l1",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": null,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
 			"lr_decay": "exponential",
 			"metr": "euclidean",
 			"momentum": 0.6,
@@ -92,6 +1832,4769 @@
 		},
 		{
 			"acts": [
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": null,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": "exponential",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": null,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": "exponential",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l1",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": null,
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": true,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": null,
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": null,
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l1",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": null,
+			"decay_steps": null,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": "linear",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l1",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": null,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": "exponential",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": true,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": null,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": "exponential",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": null,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": "exponential",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l1",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": null,
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": true,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": null,
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": null,
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l1",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": null,
+			"decay_steps": null,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": "linear",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l1",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": null,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": "exponential",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": true,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": null,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": "exponential",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": null,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": "exponential",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l1",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": null,
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": true,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": null,
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": null,
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l1",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": null,
+			"decay_steps": null,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": "linear",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l1",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": null,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": "exponential",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": true,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": null,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": "exponential",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": null,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": "exponential",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l1",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": null,
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": true,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": null,
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": null,
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l1",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": null,
+			"decay_steps": null,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": "linear",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l1",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": null,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": "exponential",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": true,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": null,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": "exponential",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": null,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": "exponential",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l1",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": null,
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": true,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": null,
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": null,
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l1",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": null,
+			"decay_steps": null,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": "linear",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l1",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": null,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": "exponential",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": true,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": null,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": "exponential",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": null,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": "exponential",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l1",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": null,
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": true,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": null,
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": null,
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l1",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": null,
+			"decay_steps": null,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": "linear",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l1",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": null,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": "exponential",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": true,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": null,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": "exponential",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": null,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": "exponential",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l1",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": null,
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": true,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": null,
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": null,
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l1",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": null,
+			"decay_steps": null,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": "linear",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l1",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": null,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": "exponential",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": true,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": null,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": "exponential",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": null,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": "exponential",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l1",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": null,
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": true,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": null,
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": null,
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l1",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": null,
+			"decay_steps": null,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": "linear",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l1",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": null,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": "exponential",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": true,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": null,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": "exponential",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": null,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": "exponential",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l1",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": null,
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": true,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": null,
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": null,
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l1",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": null,
+			"decay_steps": null,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": "linear",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l1",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": null,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": "exponential",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": true,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": null,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": "exponential",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": null,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": "exponential",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l1",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": null,
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": true,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": null,
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": null,
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l1",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": null,
+			"decay_steps": null,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": "linear",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l1",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": null,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": "exponential",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": true,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": null,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": "exponential",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": null,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": "exponential",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l1",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": null,
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": true,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": null,
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": null,
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l1",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": null,
+			"decay_steps": null,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": "linear",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l1",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": null,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": "exponential",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": true,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": null,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": "exponential",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": null,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": "exponential",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l1",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": null,
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": true,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": null,
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": null,
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l1",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": null,
+			"decay_steps": null,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": "linear",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l1",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": null,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": "exponential",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": true,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": null,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": "exponential",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": null,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": "exponential",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l1",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": null,
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": true,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": null,
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": null,
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l1",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": null,
+			"decay_steps": null,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": "linear",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l1",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": null,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": "exponential",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": true,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": null,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": "exponential",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": null,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": "exponential",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l1",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": null,
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": true,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": null,
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": null,
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l1",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": null,
+			"decay_steps": null,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": "linear",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l1",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": null,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": "exponential",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": true,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": null,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": "exponential",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": null,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": "exponential",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l1",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": null,
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": true,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": null,
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": null,
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l1",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": null,
+			"decay_steps": null,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": "linear",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l1",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": null,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": "exponential",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": true,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": null,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": "exponential",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"tanh",
+				"tanh",
+				"tanh",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": null,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": "exponential",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l1",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": null,
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": true,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": null,
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": null,
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l1",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": null,
+			"decay_steps": null,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": "linear",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l1",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": null,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": "exponential",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": true,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": null,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": "exponential",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": null,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": "exponential",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l1",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": null,
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": true,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": null,
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": null,
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l1",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": null,
+			"decay_steps": null,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": "linear",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l1",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": null,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": "exponential",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": true,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": null,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": "exponential",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": null,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": "exponential",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l1",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": null,
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": true,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": null,
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": null,
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l1",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": null,
+			"decay_steps": null,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": "linear",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l1",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": null,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": "exponential",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": true,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": null,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": "exponential",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": null,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": "exponential",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l1",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": null,
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": true,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": null,
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l1",
+			"staircase": true,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": null,
+			"decay_steps": null,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": "linear",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": null,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": "exponential",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": true,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": null,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": "exponential",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 20,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": null,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": "exponential",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l1",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": null,
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": true,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": null,
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": null,
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l1",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": null,
+			"decay_steps": null,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": "linear",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l1",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": null,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": "exponential",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": true,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": null,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": "exponential",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": null,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": "exponential",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l1",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": null,
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": true,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": null,
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": null,
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l1",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": null,
+			"decay_steps": null,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": "linear",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l1",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": null,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": "exponential",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": true,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": null,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": "exponential",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 0.0001,
+			"limit_step": null,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.005,
+			"lr_decay": "exponential",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l1",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": null,
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": true,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": null,
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l2",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": 0.95,
+			"decay_steps": 500,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": null,
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l1",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
+				"leaky_relu",
+				"leaky_relu",
+				"identity"
+			],
+			"batch_size": 200,
+			"decay_rate": null,
+			"decay_steps": null,
+			"epochs": 800,
+			"init_type": "uniform",
+			"lambd": 1e-05,
+			"limit_step": 500,
+			"limits": [
+				-0.001,
+				0.001
+			],
+			"loss": "squared",
+			"lr": 0.001,
+			"lr_decay": "linear",
+			"metr": "euclidean",
+			"momentum": 0.6,
+			"reg_type": "l1",
+			"staircase": false,
+			"units_per_layer": [
+				20,
+				20,
+				10,
+				2
+			]
+		},
+		{
+			"acts": [
+				"leaky_relu",
 				"leaky_relu",
 				"leaky_relu",
 				"identity"
@@ -108,20 +6611,22 @@
 				0.001
 			],
 			"loss": "squared",
-			"lr": 0.005655844946607864,
+			"lr": 0.001,
 			"lr_decay": "exponential",
 			"metr": "euclidean",
-			"momentum": 0.7709349296879282,
+			"momentum": 0.6,
 			"reg_type": "l2",
 			"staircase": true,
 			"units_per_layer": [
 				20,
 				20,
+				10,
 				2
 			]
 		},
 		{
 			"acts": [
+				"leaky_relu",
 				"leaky_relu",
 				"leaky_relu",
 				"identity"
@@ -131,27 +6636,29 @@
 			"decay_steps": 500,
 			"epochs": 800,
 			"init_type": "uniform",
-			"lambd": 0.0007123149261291496,
+			"lambd": 1e-05,
 			"limit_step": null,
 			"limits": [
 				-0.001,
 				0.001
 			],
 			"loss": "squared",
-			"lr": 0.005,
+			"lr": 0.001,
 			"lr_decay": "exponential",
 			"metr": "euclidean",
 			"momentum": 0.6,
 			"reg_type": "l2",
-			"staircase": true,
+			"staircase": false,
 			"units_per_layer": [
 				20,
 				20,
+				10,
 				2
 			]
 		},
 		{
 			"acts": [
+				"leaky_relu",
 				"leaky_relu",
 				"leaky_relu",
 				"identity"
@@ -161,27 +6668,29 @@
 			"decay_steps": 500,
 			"epochs": 800,
 			"init_type": "uniform",
-			"lambd": 0.0007123149261291496,
+			"lambd": 1e-05,
 			"limit_step": null,
 			"limits": [
 				-0.001,
 				0.001
 			],
 			"loss": "squared",
-			"lr": 0.005,
+			"lr": 0.001,
 			"lr_decay": "exponential",
 			"metr": "euclidean",
-			"momentum": 0.7709349296879282,
-			"reg_type": "l2",
-			"staircase": true,
+			"momentum": 0.6,
+			"reg_type": "l1",
+			"staircase": false,
 			"units_per_layer": [
 				20,
 				20,
+				10,
 				2
 			]
 		},
 		{
 			"acts": [
+				"leaky_relu",
 				"leaky_relu",
 				"leaky_relu",
 				"identity"
@@ -191,15 +6700,15 @@
 			"decay_steps": 500,
 			"epochs": 800,
 			"init_type": "uniform",
-			"lambd": 0.0007123149261291496,
-			"limit_step": null,
+			"lambd": 1e-05,
+			"limit_step": 500,
 			"limits": [
 				-0.001,
 				0.001
 			],
 			"loss": "squared",
-			"lr": 0.005655844946607864,
-			"lr_decay": "exponential",
+			"lr": 0.005,
+			"lr_decay": null,
 			"metr": "euclidean",
 			"momentum": 0.6,
 			"reg_type": "l2",
@@ -207,11 +6716,13 @@
 			"units_per_layer": [
 				20,
 				20,
+				10,
 				2
 			]
 		},
 		{
 			"acts": [
+				"leaky_relu",
 				"leaky_relu",
 				"leaky_relu",
 				"identity"
@@ -221,52 +6732,23 @@
 			"decay_steps": 500,
 			"epochs": 800,
 			"init_type": "uniform",
-			"lambd": 0.0007123149261291496,
-			"limit_step": null,
-			"limits": [
-				-0.001,
-				0.001
-			],
-			"loss": "squared",
-			"lr": 0.005655844946607864,
-			"lr_decay": "exponential",
-			"metr": "euclidean",
-			"momentum": 0.7709349296879282,
-			"reg_type": "l2",
-			"staircase": true,
-			"units_per_layer": [
-				20,
-				20,
-				2
-			]
-		},
-		{
-			"acts": [
-				"leaky_relu",
-				"leaky_relu",
-				"identity"
-			],
-			"batch_size": 200,
-			"decay_rate": 0.95,
-			"decay_steps": 576,
-			"epochs": 800,
-			"init_type": "uniform",
 			"lambd": 1e-05,
-			"limit_step": null,
+			"limit_step": 500,
 			"limits": [
 				-0.001,
 				0.001
 			],
 			"loss": "squared",
 			"lr": 0.005,
-			"lr_decay": "exponential",
+			"lr_decay": null,
 			"metr": "euclidean",
 			"momentum": 0.6,
 			"reg_type": "l2",
-			"staircase": true,
+			"staircase": false,
 			"units_per_layer": [
 				20,
 				20,
+				10,
 				2
 			]
 		},
@@ -274,59 +6756,31 @@
 			"acts": [
 				"leaky_relu",
 				"leaky_relu",
+				"leaky_relu",
 				"identity"
 			],
 			"batch_size": 200,
 			"decay_rate": 0.95,
-			"decay_steps": 576,
+			"decay_steps": 500,
 			"epochs": 800,
 			"init_type": "uniform",
 			"lambd": 1e-05,
-			"limit_step": null,
+			"limit_step": 500,
 			"limits": [
 				-0.001,
 				0.001
 			],
 			"loss": "squared",
 			"lr": 0.005,
-			"lr_decay": "exponential",
-			"metr": "euclidean",
-			"momentum": 0.7709349296879282,
-			"reg_type": "l2",
-			"staircase": true,
-			"units_per_layer": [
-				20,
-				20,
-				2
-			]
-		},
-		{
-			"acts": [
-				"leaky_relu",
-				"leaky_relu",
-				"identity"
-			],
-			"batch_size": 200,
-			"decay_rate": 0.95,
-			"decay_steps": 576,
-			"epochs": 800,
-			"init_type": "uniform",
-			"lambd": 1e-05,
-			"limit_step": null,
-			"limits": [
-				-0.001,
-				0.001
-			],
-			"loss": "squared",
-			"lr": 0.005655844946607864,
-			"lr_decay": "exponential",
+			"lr_decay": null,
 			"metr": "euclidean",
 			"momentum": 0.6,
-			"reg_type": "l2",
-			"staircase": true,
+			"reg_type": "l1",
+			"staircase": false,
 			"units_per_layer": [
 				20,
 				20,
+				10,
 				2
 			]
 		},
@@ -334,159 +6788,42 @@
 			"acts": [
 				"leaky_relu",
 				"leaky_relu",
+				"leaky_relu",
 				"identity"
 			],
 			"batch_size": 200,
-			"decay_rate": 0.95,
-			"decay_steps": 576,
+			"decay_rate": null,
+			"decay_steps": null,
 			"epochs": 800,
 			"init_type": "uniform",
 			"lambd": 1e-05,
-			"limit_step": null,
-			"limits": [
-				-0.001,
-				0.001
-			],
-			"loss": "squared",
-			"lr": 0.005655844946607864,
-			"lr_decay": "exponential",
-			"metr": "euclidean",
-			"momentum": 0.7709349296879282,
-			"reg_type": "l2",
-			"staircase": true,
-			"units_per_layer": [
-				20,
-				20,
-				2
-			]
-		},
-		{
-			"acts": [
-				"leaky_relu",
-				"leaky_relu",
-				"identity"
-			],
-			"batch_size": 200,
-			"decay_rate": 0.95,
-			"decay_steps": 576,
-			"epochs": 800,
-			"init_type": "uniform",
-			"lambd": 0.0007123149261291496,
-			"limit_step": null,
+			"limit_step": 500,
 			"limits": [
 				-0.001,
 				0.001
 			],
 			"loss": "squared",
 			"lr": 0.005,
-			"lr_decay": "exponential",
+			"lr_decay": "linear",
 			"metr": "euclidean",
 			"momentum": 0.6,
-			"reg_type": "l2",
-			"staircase": true,
+			"reg_type": "l1",
+			"staircase": false,
 			"units_per_layer": [
 				20,
 				20,
+				10,
 				2
 			]
 		},
 		{
 			"acts": [
+				"leaky_relu",
 				"leaky_relu",
 				"leaky_relu",
 				"identity"
 			],
 			"batch_size": 200,
-			"decay_rate": 0.95,
-			"decay_steps": 576,
-			"epochs": 800,
-			"init_type": "uniform",
-			"lambd": 0.0007123149261291496,
-			"limit_step": null,
-			"limits": [
-				-0.001,
-				0.001
-			],
-			"loss": "squared",
-			"lr": 0.005,
-			"lr_decay": "exponential",
-			"metr": "euclidean",
-			"momentum": 0.7709349296879282,
-			"reg_type": "l2",
-			"staircase": true,
-			"units_per_layer": [
-				20,
-				20,
-				2
-			]
-		},
-		{
-			"acts": [
-				"leaky_relu",
-				"leaky_relu",
-				"identity"
-			],
-			"batch_size": 200,
-			"decay_rate": 0.95,
-			"decay_steps": 576,
-			"epochs": 800,
-			"init_type": "uniform",
-			"lambd": 0.0007123149261291496,
-			"limit_step": null,
-			"limits": [
-				-0.001,
-				0.001
-			],
-			"loss": "squared",
-			"lr": 0.005655844946607864,
-			"lr_decay": "exponential",
-			"metr": "euclidean",
-			"momentum": 0.6,
-			"reg_type": "l2",
-			"staircase": true,
-			"units_per_layer": [
-				20,
-				20,
-				2
-			]
-		},
-		{
-			"acts": [
-				"leaky_relu",
-				"leaky_relu",
-				"identity"
-			],
-			"batch_size": 200,
-			"decay_rate": 0.95,
-			"decay_steps": 576,
-			"epochs": 800,
-			"init_type": "uniform",
-			"lambd": 0.0007123149261291496,
-			"limit_step": null,
-			"limits": [
-				-0.001,
-				0.001
-			],
-			"loss": "squared",
-			"lr": 0.005655844946607864,
-			"lr_decay": "exponential",
-			"metr": "euclidean",
-			"momentum": 0.7709349296879282,
-			"reg_type": "l2",
-			"staircase": true,
-			"units_per_layer": [
-				20,
-				20,
-				2
-			]
-		},
-		{
-			"acts": [
-				"leaky_relu",
-				"leaky_relu",
-				"identity"
-			],
-			"batch_size": 212,
 			"decay_rate": 0.95,
 			"decay_steps": 500,
 			"epochs": 800,
@@ -507,6 +6844,7 @@
 			"units_per_layer": [
 				20,
 				20,
+				10,
 				2
 			]
 		},
@@ -514,9 +6852,10 @@
 			"acts": [
 				"leaky_relu",
 				"leaky_relu",
+				"leaky_relu",
 				"identity"
 			],
-			"batch_size": 212,
+			"batch_size": 200,
 			"decay_rate": 0.95,
 			"decay_steps": 500,
 			"epochs": 800,
@@ -531,592 +6870,874 @@
 			"lr": 0.005,
 			"lr_decay": "exponential",
 			"metr": "euclidean",
-			"momentum": 0.7709349296879282,
-			"reg_type": "l2",
-			"staircase": true,
-			"units_per_layer": [
-				20,
-				20,
-				2
-			]
-		},
-		{
-			"acts": [
-				"leaky_relu",
-				"leaky_relu",
-				"identity"
-			],
-			"batch_size": 212,
-			"decay_rate": 0.95,
-			"decay_steps": 500,
-			"epochs": 800,
-			"init_type": "uniform",
-			"lambd": 1e-05,
-			"limit_step": null,
-			"limits": [
-				-0.001,
-				0.001
-			],
-			"loss": "squared",
-			"lr": 0.005655844946607864,
-			"lr_decay": "exponential",
-			"metr": "euclidean",
 			"momentum": 0.6,
 			"reg_type": "l2",
-			"staircase": true,
+			"staircase": false,
 			"units_per_layer": [
 				20,
 				20,
-				2
-			]
-		},
-		{
-			"acts": [
-				"leaky_relu",
-				"leaky_relu",
-				"identity"
-			],
-			"batch_size": 212,
-			"decay_rate": 0.95,
-			"decay_steps": 500,
-			"epochs": 800,
-			"init_type": "uniform",
-			"lambd": 1e-05,
-			"limit_step": null,
-			"limits": [
-				-0.001,
-				0.001
-			],
-			"loss": "squared",
-			"lr": 0.005655844946607864,
-			"lr_decay": "exponential",
-			"metr": "euclidean",
-			"momentum": 0.7709349296879282,
-			"reg_type": "l2",
-			"staircase": true,
-			"units_per_layer": [
-				20,
-				20,
-				2
-			]
-		},
-		{
-			"acts": [
-				"leaky_relu",
-				"leaky_relu",
-				"identity"
-			],
-			"batch_size": 212,
-			"decay_rate": 0.95,
-			"decay_steps": 500,
-			"epochs": 800,
-			"init_type": "uniform",
-			"lambd": 0.0007123149261291496,
-			"limit_step": null,
-			"limits": [
-				-0.001,
-				0.001
-			],
-			"loss": "squared",
-			"lr": 0.005,
-			"lr_decay": "exponential",
-			"metr": "euclidean",
-			"momentum": 0.6,
-			"reg_type": "l2",
-			"staircase": true,
-			"units_per_layer": [
-				20,
-				20,
-				2
-			]
-		},
-		{
-			"acts": [
-				"leaky_relu",
-				"leaky_relu",
-				"identity"
-			],
-			"batch_size": 212,
-			"decay_rate": 0.95,
-			"decay_steps": 500,
-			"epochs": 800,
-			"init_type": "uniform",
-			"lambd": 0.0007123149261291496,
-			"limit_step": null,
-			"limits": [
-				-0.001,
-				0.001
-			],
-			"loss": "squared",
-			"lr": 0.005,
-			"lr_decay": "exponential",
-			"metr": "euclidean",
-			"momentum": 0.7709349296879282,
-			"reg_type": "l2",
-			"staircase": true,
-			"units_per_layer": [
-				20,
-				20,
-				2
-			]
-		},
-		{
-			"acts": [
-				"leaky_relu",
-				"leaky_relu",
-				"identity"
-			],
-			"batch_size": 212,
-			"decay_rate": 0.95,
-			"decay_steps": 500,
-			"epochs": 800,
-			"init_type": "uniform",
-			"lambd": 0.0007123149261291496,
-			"limit_step": null,
-			"limits": [
-				-0.001,
-				0.001
-			],
-			"loss": "squared",
-			"lr": 0.005655844946607864,
-			"lr_decay": "exponential",
-			"metr": "euclidean",
-			"momentum": 0.6,
-			"reg_type": "l2",
-			"staircase": true,
-			"units_per_layer": [
-				20,
-				20,
-				2
-			]
-		},
-		{
-			"acts": [
-				"leaky_relu",
-				"leaky_relu",
-				"identity"
-			],
-			"batch_size": 212,
-			"decay_rate": 0.95,
-			"decay_steps": 500,
-			"epochs": 800,
-			"init_type": "uniform",
-			"lambd": 0.0007123149261291496,
-			"limit_step": null,
-			"limits": [
-				-0.001,
-				0.001
-			],
-			"loss": "squared",
-			"lr": 0.005655844946607864,
-			"lr_decay": "exponential",
-			"metr": "euclidean",
-			"momentum": 0.7709349296879282,
-			"reg_type": "l2",
-			"staircase": true,
-			"units_per_layer": [
-				20,
-				20,
-				2
-			]
-		},
-		{
-			"acts": [
-				"leaky_relu",
-				"leaky_relu",
-				"identity"
-			],
-			"batch_size": 212,
-			"decay_rate": 0.95,
-			"decay_steps": 576,
-			"epochs": 800,
-			"init_type": "uniform",
-			"lambd": 1e-05,
-			"limit_step": null,
-			"limits": [
-				-0.001,
-				0.001
-			],
-			"loss": "squared",
-			"lr": 0.005,
-			"lr_decay": "exponential",
-			"metr": "euclidean",
-			"momentum": 0.6,
-			"reg_type": "l2",
-			"staircase": true,
-			"units_per_layer": [
-				20,
-				20,
-				2
-			]
-		},
-		{
-			"acts": [
-				"leaky_relu",
-				"leaky_relu",
-				"identity"
-			],
-			"batch_size": 212,
-			"decay_rate": 0.95,
-			"decay_steps": 576,
-			"epochs": 800,
-			"init_type": "uniform",
-			"lambd": 1e-05,
-			"limit_step": null,
-			"limits": [
-				-0.001,
-				0.001
-			],
-			"loss": "squared",
-			"lr": 0.005,
-			"lr_decay": "exponential",
-			"metr": "euclidean",
-			"momentum": 0.7709349296879282,
-			"reg_type": "l2",
-			"staircase": true,
-			"units_per_layer": [
-				20,
-				20,
-				2
-			]
-		},
-		{
-			"acts": [
-				"leaky_relu",
-				"leaky_relu",
-				"identity"
-			],
-			"batch_size": 212,
-			"decay_rate": 0.95,
-			"decay_steps": 576,
-			"epochs": 800,
-			"init_type": "uniform",
-			"lambd": 1e-05,
-			"limit_step": null,
-			"limits": [
-				-0.001,
-				0.001
-			],
-			"loss": "squared",
-			"lr": 0.005655844946607864,
-			"lr_decay": "exponential",
-			"metr": "euclidean",
-			"momentum": 0.6,
-			"reg_type": "l2",
-			"staircase": true,
-			"units_per_layer": [
-				20,
-				20,
-				2
-			]
-		},
-		{
-			"acts": [
-				"leaky_relu",
-				"leaky_relu",
-				"identity"
-			],
-			"batch_size": 212,
-			"decay_rate": 0.95,
-			"decay_steps": 576,
-			"epochs": 800,
-			"init_type": "uniform",
-			"lambd": 1e-05,
-			"limit_step": null,
-			"limits": [
-				-0.001,
-				0.001
-			],
-			"loss": "squared",
-			"lr": 0.005655844946607864,
-			"lr_decay": "exponential",
-			"metr": "euclidean",
-			"momentum": 0.7709349296879282,
-			"reg_type": "l2",
-			"staircase": true,
-			"units_per_layer": [
-				20,
-				20,
-				2
-			]
-		},
-		{
-			"acts": [
-				"leaky_relu",
-				"leaky_relu",
-				"identity"
-			],
-			"batch_size": 212,
-			"decay_rate": 0.95,
-			"decay_steps": 576,
-			"epochs": 800,
-			"init_type": "uniform",
-			"lambd": 0.0007123149261291496,
-			"limit_step": null,
-			"limits": [
-				-0.001,
-				0.001
-			],
-			"loss": "squared",
-			"lr": 0.005,
-			"lr_decay": "exponential",
-			"metr": "euclidean",
-			"momentum": 0.6,
-			"reg_type": "l2",
-			"staircase": true,
-			"units_per_layer": [
-				20,
-				20,
-				2
-			]
-		},
-		{
-			"acts": [
-				"leaky_relu",
-				"leaky_relu",
-				"identity"
-			],
-			"batch_size": 212,
-			"decay_rate": 0.95,
-			"decay_steps": 576,
-			"epochs": 800,
-			"init_type": "uniform",
-			"lambd": 0.0007123149261291496,
-			"limit_step": null,
-			"limits": [
-				-0.001,
-				0.001
-			],
-			"loss": "squared",
-			"lr": 0.005,
-			"lr_decay": "exponential",
-			"metr": "euclidean",
-			"momentum": 0.7709349296879282,
-			"reg_type": "l2",
-			"staircase": true,
-			"units_per_layer": [
-				20,
-				20,
-				2
-			]
-		},
-		{
-			"acts": [
-				"leaky_relu",
-				"leaky_relu",
-				"identity"
-			],
-			"batch_size": 212,
-			"decay_rate": 0.95,
-			"decay_steps": 576,
-			"epochs": 800,
-			"init_type": "uniform",
-			"lambd": 0.0007123149261291496,
-			"limit_step": null,
-			"limits": [
-				-0.001,
-				0.001
-			],
-			"loss": "squared",
-			"lr": 0.005655844946607864,
-			"lr_decay": "exponential",
-			"metr": "euclidean",
-			"momentum": 0.6,
-			"reg_type": "l2",
-			"staircase": true,
-			"units_per_layer": [
-				20,
-				20,
+				10,
 				2
 			]
 		}
 	],
 	"results": [
 		[
-			4.6734573662772565,
-			0.23140838336451156,
-			3.4625491228321095,
-			0.08731868647315633
+			4.049803042578209,
+			0.39194293399022234,
+			3.165303222189712,
+			0.20579274551129836
 		],
 		[
-			4.358180313157285,
-			0.14739236767582128,
-			3.2785388687204575,
-			0.08973782017469104
+			4.079211003860035,
+			0.3810693487327829,
+			3.160474065212013,
+			0.15559592486911145
 		],
 		[
-			4.586224285953355,
-			0.2544618714669784,
-			3.4028466270027273,
-			0.09658711495468059
+			612.1493938571045,
+			13.977229732975632,
+			46.64083790390341,
+			0.6570093388734511
 		],
 		[
-			4.041625423236893,
-			0.20178005023641885,
-			3.170342216100595,
-			0.06680562438158583
+			614.2320670955436,
+			16.534545503935167,
+			46.72667413798962,
+			0.7874449514151161
 		],
 		[
-			251.86594988111278,
-			5.680284574064011,
-			28.20252219774314,
-			0.4112430385463526
+			4.203308677662137,
+			0.4075279980230223,
+			3.2032885167540983,
+			0.2763419531969099
 		],
 		[
-			161.02386193983736,
-			6.65499235114038,
-			22.052233669214502,
-			0.6193073076236566
+			4.308168094380512,
+			0.4613411933436651,
+			3.2480857199480857,
+			0.20454851391325835
 		],
 		[
-			231.58044275515076,
-			10.582587994608389,
-			26.89580864871754,
-			0.7664970410834766
+			485.3748620369298,
+			21.4034925128011,
+			40.872267162676124,
+			1.1963063000283793
 		],
 		[
-			136.69593433212646,
-			10.436550045252162,
-			20.296255389907845,
-			0.7583270526769761
+			509.026196212765,
+			15.583185616224034,
+			42.015991282940014,
+			0.8147577636189304
 		],
 		[
-			4.490372510775318,
-			0.2826291640778379,
-			3.3370134674044296,
-			0.12558906166345266
+			3.856756711360945,
+			0.29678147788586745,
+			3.0233389599342404,
+			0.10041148430006964
 		],
 		[
-			4.279734821809228,
-			0.34418784651355167,
-			3.2478465747853114,
-			0.16788771654516732
+			3.9710545733768376,
+			0.22837181393953707,
+			3.083984018601947,
+			0.10202646023783621
 		],
 		[
-			4.476183472964533,
-			0.20675138688863606,
-			3.3386455258993237,
-			0.10659057314733314
+			305.65475407539054,
+			22.592381505297656,
+			31.811593660191058,
+			1.3952099280535246
 		],
 		[
-			3.8930200578489775,
-			0.27231115176199955,
-			3.0747134372337426,
-			0.12960318104916413
+			319.8694081458123,
+			13.653469785725397,
+			32.65691236294121,
+			0.849893313136079
 		],
 		[
-			113.08798669868698,
-			2.877569833981302,
-			18.682597756021032,
-			0.30944859776992584
+			5.428009380564868,
+			0.9291878588687643,
+			3.47823217309722,
+			0.32359806770041705
 		],
 		[
-			71.43447155557581,
-			1.1611492439800304,
-			15.070858809877198,
-			0.21327922561887006
+			5.233734720516613,
+			0.364600332729743,
+			3.426547271573598,
+			0.12307099273277396
 		],
 		[
-			101.6456747951851,
-			1.780046589634659,
-			17.73722311501949,
-			0.27439973266243645
+			187.0176927869026,
+			6.055712496059554,
+			24.016883687962505,
+			0.41606486822089384
 		],
 		[
-			68.96604868686367,
-			3.523464627930522,
-			14.962467963111209,
-			0.5261025381210596
+			218.77623500919543,
+			31.66387065736235,
+			26.195502616834695,
+			1.889969949239714
 		],
 		[
-			4.511556374647944,
-			0.17029748714381307,
-			3.4107423707147513,
-			0.06922197492816949
+			4.483778511810632,
+			0.4000218860338157,
+			3.3415468179439727,
+			0.2009384526394942
 		],
 		[
-			4.484519784663769,
-			0.2165454966412236,
-			3.3468953000154706,
-			0.10798914247769907
+			4.5054330887725245,
+			0.25087017114394855,
+			3.3797478769009404,
+			0.13765765179447495
 		],
 		[
-			4.5539256619103785,
-			0.1410743640873341,
-			3.3836881787141535,
-			0.04748768871879481
+			73.8166563230238,
+			1.4537623749299025,
+			15.77781651031188,
+			0.22533807140275294
 		],
 		[
-			4.155391707842646,
-			0.352579280160168,
-			3.203610891983211,
-			0.1840304203659382
+			105.43829337469165,
+			3.6045477936169874,
+			18.848062486682167,
+			0.4082401149199444
 		],
 		[
-			242.35116992050308,
-			19.57573845995202,
-			27.467193052356926,
-			1.4325913247402278
+			3.921687393493696,
+			0.3757541669042754,
+			3.077591596900022,
+			0.1725418496186967
 		],
 		[
-			149.41729108235245,
-			11.311242426710825,
-			21.19499377082432,
-			0.7670378633919734
+			4.121747142443535,
+			0.13502322049901405,
+			3.1853148401676097,
+			0.06754994825074186
 		],
 		[
-			216.94845841566513,
-			13.789333651653633,
-			25.772888219155696,
-			1.0691703124481704
+			23.71061103843956,
+			0.892862139043826,
+			8.783030962700986,
+			0.1782762407612869
 		],
 		[
-			143.20639677289796,
-			10.583053177966903,
-			20.776004175406875,
-			0.7998578373988738
+			32.90637805745361,
+			0.9498246052832114,
+			10.458549400453823,
+			0.17941155027374453
 		],
 		[
-			4.517948951833952,
-			0.2243791754188471,
-			3.3682344751177817,
-			0.08879531013031736
+			4.417926028852423,
+			0.29501204674171116,
+			3.316984466442636,
+			0.14938653852221062
 		],
 		[
-			4.176489381489643,
-			0.10687179110955415,
-			3.211252263091216,
-			0.0490478553267949
+			4.689356122179376,
+			0.5771078151327251,
+			3.4709035601641665,
+			0.259168654839816
 		],
 		[
-			4.277764151573012,
-			0.34930876765279695,
-			3.2327002615269755,
-			0.14932381936519196
+			6.072649532252534,
+			0.3058514699270053,
+			4.158213122714052,
+			0.15926923993281852
 		],
 		[
-			4.154512182901092,
-			0.3367579254425474,
-			3.2054676856933013,
-			0.13921136854144317
+			18.641853185058814,
+			1.7420292738245275,
+			7.726100533545394,
+			0.3412403511287267
 		],
 		[
-			118.96395685684612,
-			2.7047294880528696,
-			19.095250997203056,
-			0.35433601978964113
+			4.204313018523482,
+			0.15383946083227956,
+			3.1555391901756202,
+			0.05448134653499562
 		],
 		[
-			74.85287988165305,
-			1.6051944523218369,
-			15.429778266533768,
-			0.35553922134252697
+			4.327346656719817,
+			0.580779796540669,
+			3.270029619961722,
+			0.3181226320964504
 		],
 		[
-			105.60578602482462,
-			4.5691003168091635,
-			18.043525525045006,
-			0.5064148737251921
-		]
+			4.568042535249309,
+			0.246050534149319,
+			3.425097282579725,
+			0.1412970122163807
+		],
+		[
+			5.161632227572543,
+			0.5790930445418114,
+			3.7149543195251327,
+			0.22081356703463956
+		],
+		[
+			3.7398974672706577,
+			0.2129844093280577,
+			3.028169531363047,
+			0.09019085871620619
+		],
+		[
+			3.6461215235760585,
+			0.2523042379737031,
+			2.992370381129871,
+			0.12701368739311955
+		],
+		[
+			540.884264135512,
+			16.615237359039316,
+			43.476676982629556,
+			0.8399770818504829
+		],
+		[
+			551.6354684183724,
+			16.84257963525815,
+			43.96918722035665,
+			0.8375678829535542
+		],
+		[
+			4.044496086214076,
+			0.3405842053960141,
+			2.981627950898694,
+			0.11597761196279596
+		],
+		[
+			3.844866144386242,
+			0.2785709841716093,
+			2.8993846384462194,
+			0.09177377762794012
+		],
+		[
+			448.08978867956705,
+			11.13079992258364,
+			39.020791597638556,
+			0.6626368549112102
+		],
+		[
+			451.5518183886276,
+			13.507034369634985,
+			39.19506800397276,
+			0.7553863763330051
+		],
+		[
+			3.9103926768690966,
+			0.3397546112641778,
+			2.958952175533051,
+			0.1071091653995755
+		],
+		[
+			3.83732698016437,
+			0.1935938357760558,
+			2.927568825816807,
+			0.06899188978849856
+		],
+		[
+			181.81870835831006,
+			5.95933466867307,
+			23.48865023763728,
+			0.5841126509214024
+		],
+		[
+			195.33498338920703,
+			7.32961828477884,
+			24.48115166614908,
+			0.6494809489512375
+		],
+		[
+			5.366517530116331,
+			0.4517115614372462,
+			3.4385387632672093,
+			0.14587266248123346
+		],
+		[
+			5.094495660751453,
+			0.5786290133177499,
+			3.3613363151889764,
+			0.17942910274375828
+		],
+		[
+			147.22657588754413,
+			2.3954824091343747,
+			21.029999236684496,
+			0.3381878496634557
+		],
+		[
+			150.4492671128516,
+			4.011776518062409,
+			21.24247388671515,
+			0.4329355459907477
+		],
+		[
+			3.9971063894883097,
+			0.28596486008532257,
+			3.184330789969286,
+			0.11951165730550058
+		],
+		[
+			4.049817722904684,
+			0.4095696488926509,
+			3.2133816254583856,
+			0.18584446191822848
+		],
+		[
+			106.2161166325287,
+			3.6385225872506948,
+			17.862144685058624,
+			0.325918812921806
+		],
+		[
+			127.45474309567385,
+			4.314762136001287,
+			19.618928349262458,
+			0.4035070632497181
+		],
+		[
+			3.703748603375761,
+			0.24891715020045194,
+			2.9210231241928604,
+			0.08044368664290794
+		],
+		[
+			3.6595923790344522,
+			0.18792328120571478,
+			2.8814764496235554,
+			0.08772632474716897
+		],
+		[
+			53.855924088704135,
+			1.5904492821448908,
+			12.806674016265152,
+			0.24727350335626094
+		],
+		[
+			65.06786769950739,
+			2.2528091382626796,
+			14.084167080732822,
+			0.2968349522492248
+		],
+		[
+			3.7185932750665307,
+			0.3355328496391586,
+			2.9762530364287723,
+			0.1569699192270213
+		],
+		[
+			3.6580216742595995,
+			0.2867447629180617,
+			2.955532380219581,
+			0.1048498711015801
+		],
+		[
+			9.797403176226586,
+			0.7943698143674701,
+			5.3767800200723075,
+			0.21272151787603502
+		],
+		[
+			19.71389817570313,
+			2.1431814432497274,
+			7.757240973645402,
+			0.43319600207967657
+		],
+		[
+			3.772165213017529,
+			0.3084203183908921,
+			2.9103099903532628,
+			0.1145222207168284
+		],
+		[
+			3.811060719666037,
+			0.32598720816354537,
+			2.9217183802279347,
+			0.08330194421478311
+		],
+		[
+			4.31702164883624,
+			0.2246802029738632,
+			3.482228379800526,
+			0.11004764619431476
+		],
+		[
+			4.738135258192709,
+			0.32606675435500354,
+			3.688310073075713,
+			0.15404611070389473
+		],
+		[
+			3.911247875689926,
+			0.37080002526247013,
+			3.086820755049392,
+			0.16978855927158817
+		],
+		[
+			3.8063821494964634,
+			0.3021556813858262,
+			3.054948873927367,
+			0.11197067439622586
+		],
+		null,
+		null,
+		null,
+		[
+			472.3877530549974,
+			7.818378854983994,
+			40.2387993525411,
+			0.5063474966089283
+		],
+		[
+			487.6346125894591,
+			14.130634155049497,
+			40.98000013994485,
+			0.7884003930156697
+		],
+		null,
+		null,
+		[
+			5.087442721390685,
+			0.7574795958503968,
+			3.3275666826482215,
+			0.20166990777039484
+		],
+		[
+			4.714516434883587,
+			0.529696006663816,
+			3.238103415104652,
+			0.17202582227112287
+		],
+		null,
+		null,
+		null,
+		null,
+		[
+			384.0634865061408,
+			13.255576465907653,
+			35.6346422004973,
+			0.7573162329316687
+		],
+		[
+			387.2094054411961,
+			13.382770547704784,
+			35.79592464316697,
+			0.8203401308669289
+		],
+		null,
+		null,
+		[
+			4.600861625295916,
+			0.31968942954709717,
+			3.145838751911896,
+			0.07634239000353565
+		],
+		[
+			4.681376580538226,
+			0.40352988100219855,
+			3.207436394594965,
+			0.11143118739200342
+		],
+		null,
+		null,
+		null,
+		null,
+		[
+			160.9289131548603,
+			5.381867484207039,
+			21.82616123696382,
+			0.5190044116807346
+		],
+		[
+			171.04542566600443,
+			5.8672894786930385,
+			22.480840482689683,
+			0.500041029572294
+		],
+		null,
+		null,
+		[
+			6.251500495228573,
+			0.37449651772201614,
+			3.6543174072640925,
+			0.16869823949604973
+		],
+		[
+			6.405801598994836,
+			0.27184534845430985,
+			3.7358210938882257,
+			0.12402361407103595
+		],
+		null,
+		null,
+		null,
+		null,
+		[
+			131.39388886727878,
+			4.09189764946754,
+			20.028072649055908,
+			0.40423440009874817
+		],
+		[
+			131.8555615043379,
+			6.535730270873308,
+			20.128272729594492,
+			0.4481064009479025
+		],
+		null,
+		null,
+		[
+			4.391222142017356,
+			0.19813502429467472,
+			3.387827294483311,
+			0.145234734449021
+		],
+		[
+			4.4509034182846685,
+			0.4322210382420347,
+			3.3917410333561158,
+			0.1743689441504118
+		],
+		null,
+		null,
+		null,
+		null,
+		[
+			112.53564156788858,
+			4.272584193168365,
+			18.370954623242078,
+			0.40863697485599526
+		],
+		[
+			130.58513510071688,
+			4.4125563085843265,
+			19.642158797415075,
+			0.4147073032966472
+		],
+		null,
+		null,
+		[
+			3.8453096837664043,
+			0.31011729248578473,
+			2.962323718069993,
+			0.11009408905966542
+		],
+		[
+			3.9665098896660487,
+			0.2461093368648741,
+			3.02896868954151,
+			0.10433624284732664
+		],
+		null,
+		null,
+		null,
+		null,
+		[
+			57.17836618569449,
+			1.7107375473897302,
+			13.310700854378785,
+			0.1658180186821968
+		],
+		[
+			68.29598287819817,
+			2.579363586889916,
+			14.558164550312242,
+			0.3130011739708854
+		],
+		null,
+		null,
+		[
+			3.8299271600416303,
+			0.3087380501302125,
+			3.008954401708961,
+			0.13654711353763613
+		],
+		[
+			3.785758780080807,
+			0.2586926482212145,
+			3.0232470138518317,
+			0.11768541391094055
+		],
+		null,
+		null,
+		null,
+		null,
+		[
+			19.842810300089617,
+			2.3566556745344127,
+			7.793772159581808,
+			0.449820431020886
+		],
+		[
+			25.686891287760044,
+			1.2793591116653287,
+			8.83630100188842,
+			0.22020007477929404
+		],
+		null,
+		null,
+		[
+			4.2086644721700495,
+			0.2706749303430548,
+			3.0545367089579747,
+			0.10409531353633997
+		],
+		[
+			4.110563619759462,
+			0.25931044505499146,
+			3.008652786165227,
+			0.11006176534530941
+		],
+		null,
+		null,
+		null,
+		null,
+		[
+			4.53350782688069,
+			0.22082883420721197,
+			3.6030126253071693,
+			0.09942885771464816
+		],
+		[
+			5.335798777263329,
+			0.3951810169046971,
+			3.9618295063318536,
+			0.20653463426904084
+		],
+		null,
+		null,
+		[
+			4.116606498330794,
+			0.34944343001775874,
+			3.1499199574793963,
+			0.12248883895646955
+		],
+		[
+			4.005278204464679,
+			0.18406198311551183,
+			3.0962522634936382,
+			0.12911977767420432
+		],
+		null,
+		null,
+		null,
+		null,
+		[
+			504.0196615888293,
+			205.1175364448512,
+			40.61545449001204,
+			11.53188891087929
+		],
+		[
+			593.94219104763,
+			27.05265389530746,
+			45.84351854431534,
+			1.2691055495647385
+		],
+		null,
+		null,
+		[
+			51.5085690298385,
+			38.717045190509154,
+			11.449808323268837,
+			6.729881423247901
+		],
+		[
+			53.92421366567629,
+			40.50428968637292,
+			11.688093553748756,
+			6.920674267201645
+		],
+		null,
+		null,
+		null,
+		null,
+		[
+			480.75046963518935,
+			14.720063541097703,
+			40.64994546677426,
+			0.701499388039259
+		],
+		[
+			490.51930133936037,
+			14.366757563600494,
+			41.122189556919565,
+			0.7687940167699422
+		],
+		null,
+		null,
+		[
+			4.353207355977378,
+			0.27464623757856205,
+			3.1291910237634317,
+			0.11894563873461496
+		],
+		[
+			4.381454475363715,
+			0.4011757117002031,
+			3.162846736027089,
+			0.1260525864681234
+		],
+		null,
+		null,
+		null,
+		null,
+		[
+			325.7506938963006,
+			12.868385156596348,
+			32.64802026445023,
+			0.8844422676040465
+		],
+		[
+			328.04483397035153,
+			5.639769593885831,
+			32.77036979607833,
+			0.4192984633453944
+		],
+		null,
+		null,
+		[
+			36.59054483798623,
+			38.01499721561818,
+			8.865218529913836,
+			6.561925628491306
+		],
+		null,
+		null,
+		null,
+		null,
+		null,
+		[
+			207.12172478798774,
+			6.279743814157521,
+			24.83636785430195,
+			0.5969914550356477
+		],
+		[
+			206.9912724135733,
+			8.636854658684127,
+			24.832335779893093,
+			0.7250884368380076
+		],
+		null,
+		null,
+		[
+			4.414865817833726,
+			0.37328344842813643,
+			3.2976702585163467,
+			0.17004679355465804
+		],
+		[
+			4.399136727139177,
+			0.35179059532092344,
+			3.297162659995678,
+			0.1611266175937066
+		],
+		null,
+		null,
+		null,
+		null,
+		[
+			78.49780653257821,
+			2.9196903798158864,
+			16.095267263247564,
+			0.4387538765171472
+		],
+		[
+			101.54914632844884,
+			3.0884977130682754,
+			18.20808481564939,
+			0.370876058212955
+		],
+		null,
+		null,
+		[
+			85.10630884849684,
+			3.406891038770662,
+			17.12581066787025,
+			0.35262524369626996
+		],
+		[
+			85.812708309616,
+			3.582355579130597,
+			17.17269861209555,
+			0.37281115467213677
+		],
+		null,
+		null,
+		null,
+		null,
+		[
+			100.05083017741403,
+			2.846016412411759,
+			18.1266897129318,
+			0.28532100748731515
+		],
+		[
+			81.14586922562818,
+			33.38095193423635,
+			15.844655098016029,
+			3.512550451818094
+		],
+		null,
+		null,
+		[
+			4.433881618601081,
+			0.1678786330766089,
+			3.3226690718815526,
+			0.08373950257919492
+		],
+		[
+			4.247927583513428,
+			0.19912642877642742,
+			3.229550620945401,
+			0.10976158474744273
+		],
+		null,
+		null,
+		null,
+		null,
+		[
+			19.638421124866063,
+			0.9172466254642437,
+			7.9019861541347085,
+			0.19195064965048944
+		],
+		[
+			20.110379091294973,
+			0.9456301466885249,
+			7.988181742672897,
+			0.2004294122940222
+		],
+		null,
+		null,
+		[
+			55.885100709727524,
+			36.563378700113205,
+			12.501835858974689,
+			5.935753601788644
+		],
+		[
+			69.46810097431387,
+			32.25851048218949,
+			14.486599901662416,
+			5.457005902654531
+		],
+		null,
+		null,
+		null,
+		null,
+		[
+			85.09718319438198,
+			3.1050262711607757,
+			17.15649484374354,
+			0.3480752404757922
+		],
+		[
+			85.19087590492012,
+			3.059790580785306,
+			17.166075729314844,
+			0.34447420347357327
+		],
+		null
 	]
 }
