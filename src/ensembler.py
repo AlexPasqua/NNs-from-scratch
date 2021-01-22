@@ -38,11 +38,13 @@ class Ensembler:
                 model['model'].compile(**model['model_params'])
 
     def fit_serial(self):
-        for m in self.models:
-            if m['model_params']['epochs'] > 400:
-                m['model_params']['epochs'] = 400
+        # for m in self.models:
+        #     if m['model_params']['epochs'] > 5:
+        #         m['model_params']['epochs'] = 5
 
         for model in self.models:
+            if model['model_params']['epochs'] > 400:
+                model['model_params']['epochs'] = 400
             try:
                 model['model'].fit(tr_x=self.tr_x, tr_y=self.tr_y, val_x=self.int_ts_x, val_y=self.int_ts_y,
                                    disable_tqdm=False, **model['train_params'])
@@ -69,7 +71,7 @@ class Ensembler:
         res = []
         for i in range(len(self.models)):
             res.append(self.models[i]['model'].predict(inp=self.test_x, disable_tqdm=False))
-        # res = np.mean(res, axis=0)
+        res = np.mean(res, axis=0)
         return res
 
 
@@ -117,5 +119,5 @@ if __name__ == '__main__':
 
     # preds = ens.predict()
     with open("../cup_pridictions.csv", "w") as f:
-        for i in range(np.shape(preds)[1]):
-            print(str(i) + ',' + str(preds[0][i][0]) + ',' + str(preds[0][i][1]), file=f)
+        for i in range(len(preds)):
+            print(str(i) + ',' + str(preds[i][0]) + ',' + str(preds[i][1]), file=f)
