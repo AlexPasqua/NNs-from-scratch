@@ -220,7 +220,6 @@ def exp_lr_decay(base_lr, decay_rate, curr_step, decay_steps, staircase=False, *
 
     :param base_lr: The learning rate at the first step
     :param decay_rate: The amount to decay the learning rate at each new stage
-    :param step: corresponds to the epoch num
     :param decay_steps: The length of each stage, in steps
     :param staircase: If True, only adjusts the learning rate at the stage transitions,
                       producing a step-like decay schedule.

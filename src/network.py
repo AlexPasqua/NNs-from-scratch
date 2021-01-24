@@ -105,7 +105,10 @@ class Network:
         :param metr: (str) the type of metric to track (accuracy etc)
         :param lr: (float) learning rate value
         :param lr_decay: type of decay for the learning rate
-        :param limit_step: number of steps of weights update to perform before stopping decaying the learning rate
+        :param limit_step: num of steps of weights update to perform before stop decaying the lr (linear decay's param)
+        :param decay_rate: The amount to decay the lr at each new stage (exponential decay's param)
+        :param decay_steps: The length of each stage, in steps (exponential decay's param)
+        :param staircase: (boolean) if True decays the lr in a staircase fashion (exponential decay's param)
         :param momentum: (float) momentum parameter
         :param lambd: (float) regularization parameter
         :param reg_type: (string) regularization type
@@ -128,8 +131,8 @@ class Network:
         :param tr_y: (numpy ndarray) targets for each input training pattern
         :param val_x: (numpy ndarray) input validation set
         :param val_y: (numpy ndarray) targets for each input validation pattern
-        :param batch_size: (integer) the size of the batch
         :param epochs: (integer) number of epochs
+        :param batch_size: (integer) the size of the batch
         :param val_split: percentage of training data to use as validation data (alternative to val_x and val_y)
         """
         # transform sets to numpy array (if they're not already)
@@ -170,7 +173,7 @@ class Network:
 
     def predict(self, inp, disable_tqdm=True):
         """
-        Computs the outputs for a batch of patterns (like a wrapper to call 'forward()' in a cycle)
+        Computes the outputs for a batch of patterns (like a wrapper to call 'forward()' in a cycle)
         :param inp: batch of input patterns
         :return: array of net's outputs
         """
@@ -241,6 +244,7 @@ class Network:
         print("Activation functions: ", self.__params['acts'])
 
     def save_model(self, filename: str):
+        """ Saves the model's parameters and weights in a json file"""
         data = {'model_params': self.__params, 'weights': self.weights}
         with open(filename, 'w') as f:
             json.dump(data, f, indent='\t')
