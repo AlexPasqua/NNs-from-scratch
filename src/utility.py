@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import os
 import math
-from sklearn.preprocessing import OneHotEncoder, MinMaxScaler, StandardScaler
+from sklearn.preprocessing import OneHotEncoder
 from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
 from collections import OrderedDict
@@ -14,9 +14,9 @@ from network import Network
 
 def read_monk(name, rescale=False):
     """
-    Reads the monks dataset
+    Reads the monks datasets
     :param name: name of the dataset
-    :param rescale: Whether or not to rescale the targets to [-1, +1]
+    :param rescale: whether or not to rescale the targets to [-1, +1]
     :return: monk dataset and labels (as numpy ndarrays)
     """
     # read the dataset
@@ -44,7 +44,7 @@ def read_monk(name, rescale=False):
 
 def read_cup(int_ts=False):
     """
-    Reads the CUP training and testing sets
+    Reads the CUP training and test set
     :return: CUP training data, CUP training targets and CUP test data (as numpy ndarray)
     """
     # read the dataset
@@ -93,10 +93,6 @@ def read_cup(int_ts=False):
 
         return tr_data, tr_targets, int_ts_data, int_ts_targets, cup_ts_data
 
-    # standardization / normalization
-    # tr_data = StandardScaler().fit_transform(tr_data)
-    # tr_targets = MinMaxScaler().fit_transform(tr_targets)
-
     return tr_data, tr_targets, cup_ts_data
 
 
@@ -125,6 +121,13 @@ def sets_from_folds(x_folds, y_folds, val_fold_index):
 
 
 def randomize_params(base_params, fb_dim, n_config=2):
+    """
+    Generates combination of random hyperparameters
+    :param base_params: parameters on which the random perturbation will be applied
+    :param fb_dim: full batch dimension (expressed as a number)
+    :param n_config: number of random configurations to be generated for each hyper-parameter
+    :return: combos of randomly generated hyper-parameters' values
+    """
     n_config -= 1
     rand_params = {}
     for k, v in base_params.items():
@@ -251,6 +254,14 @@ def list_of_combos(param_dict):
 
 
 def get_best_models(dataset, coarse=False, n_models=1, fn=None):
+    """
+    Search and select the best models based on the MEE metric and standard deviation
+    :param dataset: name of the dataset (used for reading the file containing the results)
+    :param coarse: indicates if best models result from a coarse or fine grid search (used for reading the file name)
+    :param n_models: number of best models to be returned
+    :param fn: file name for reading a specific file for the results (if different from the default)
+    :return: best models in term of MEE and standard deviation and their parameters
+    """
     file_name = ("coarse_gs_" if coarse else "fine_gs_") + "results_" + dataset + ".json"
     file_name = file_name if fn is None else fn
     with open("../results/" + file_name, 'r') as f:
@@ -308,7 +319,7 @@ def get_best_models(dataset, coarse=False, n_models=1, fn=None):
     return models, params
 
 
-def plot_curves(tr_loss, val_loss, tr_acc, val_acc, path=None, lr=None, momentum=None, lambd=None, **kwargs):
+def plot_curves(tr_loss, val_loss, tr_acc, val_acc, path=None, **kwargs):
     """ Plot the curves of training loss, training metric, validation loss, validation metric """
     figure, ax = plt.subplots(1, 2, figsize=(12, 4))
     ax[0].plot(range(len(tr_loss)), tr_loss, color='b', linestyle='dashed', label='development')
@@ -316,7 +327,6 @@ def plot_curves(tr_loss, val_loss, tr_acc, val_acc, path=None, lr=None, momentum
     ax[0].legend(loc='best', prop={'size': 9})
     ax[0].set_xlabel('Epochs', fontweight='bold')
     ax[0].set_ylabel('Loss (MSE)', fontweight='bold')
-    # ax[0].set_title(f"eta: {lr} - alpha: {momentum} - lambda: {lambd}")
     ax[0].grid()
     ax[0].set_ylim((0., 10.))
     ax[1].plot(range(len(tr_acc)), tr_acc, color='b', linestyle='dashed', label='development')
@@ -324,7 +334,6 @@ def plot_curves(tr_loss, val_loss, tr_acc, val_acc, path=None, lr=None, momentum
     ax[1].legend(loc='best', prop={'size': 9})
     ax[1].set_xlabel('Epochs', fontweight='bold')
     ax[1].set_ylabel('Metric (MEE)', fontweight='bold')
-    # ax[1].set_title(f"eta: {lr} - alpha: {momentum} - lambda: {lambd}")
     ax[1].set_ylim((0., 10.))
     ax[1].grid()
     if path is None:
