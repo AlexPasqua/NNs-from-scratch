@@ -25,10 +25,10 @@ class TestEnsembler(unittest.TestCase):
 
         # test fit
         # ens.fit_serial()
-        ens.fit_parallel()
+        # ens.fit_parallel()
 
         # test predict
-        ens.predict()
+        # ens.predict()
 
 
 if __name__ == '__main__':
