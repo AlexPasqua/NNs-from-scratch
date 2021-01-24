@@ -1,10 +1,8 @@
 import math
 from abc import ABC, abstractmethod
-import datetime
 import numpy as np
 import tqdm as tqdm
 from functions import losses, metrics, lr_decays, regs
-import matplotlib.pyplot as plt
 
 
 class Optimizer(ABC):
@@ -15,13 +13,24 @@ class Optimizer(ABC):
     Attributes:
         net: ('Network' object) Neural Network to which apply the algorithm
         loss: ('DerivableFunction' object) loss function
-        metr: ('Function' object) accuracy function
+        metric: ('Function' object) accuracy function
         lr: (float) learning rate
+        base_lr: (float) the initial learning rate
+        final_lr: (float) the final learning rate in case of linear decay (it's 1% of base_le)
+        lr_decay: (str) the type of learning rate decay
+        limit_step: (int) the number of the weight update where the linear decaying learning rate has to reach final_lr
+        decay_rate: (float) for exponential learning rate decay: the higher, the stronger the decay
+        decay_steps: (int) similar to limit_step but for the exponential decay case
+        staircase: (bool) if True, the exponentially decaying learning rate decays in a stair-like fashion
+        momentum: (float) momentum coefficient
+        lambd: (float) regularization coefficient
+        reg_type: (str) the type of regularization (either None, 'l1', 'l2')
     """
 
     @abstractmethod
     def __init__(self, net, loss, metr, lr, lr_decay, limit_step, decay_rate, decay_steps, staircase, momentum,
                  reg_type, lambd):
+        """ Constructor -> see attributes in the class description. It is an abstract constructor """
         # makes sure lr is a value between 0 and 1
         if lr <= 0 or lr > 1:
             raise ValueError('lr should be a value between 0 and 1, Got:{}'.format(lr))
@@ -42,6 +51,7 @@ class Optimizer(ABC):
 
     @property
     def lr_params(self):
+        """ Returns all the parameters related to the learning rate. Used for the decay """
         return {'lr': self.lr, 'base_lr': self.base_lr, 'final_lr': self.final_lr, 'lr_decay': self.lr_decay,
                 'limit_step': self.limit_step, 'decay_rate': self.decay_rate, 'decay_steps': self.decay_steps,
                 'staircase': self.staircase, 'curr_lr': self.lr}
@@ -60,10 +70,14 @@ class Optimizer(ABC):
 
 
 class StochasticGradientDescent(Optimizer, ABC):
-    """ Gradient Descent """
+    """
+    Stochastic Gradient Descent
+    Concrete implementation of the abstract class Optimizer
+    """
 
     def __init__(self, net, loss, metr, lr, momentum, reg_type, lambd, lr_decay=None, limit_step=None, decay_rate=None,
                  decay_steps=None, staircase=False):
+        """ Constructor -> see the attributes in the class description of Optimizer """
         super(StochasticGradientDescent, self).__init__(net, loss, metr, lr, lr_decay, limit_step, decay_rate,
                                                         decay_steps, staircase, momentum, reg_type, lambd)
         self.__type = 'sgd'
@@ -72,7 +86,7 @@ class StochasticGradientDescent(Optimizer, ABC):
     def type(self):
         return self.__type
 
-    def optimize(self, tr_x, tr_y, val_x, val_y, epochs, batch_size, disable_tqdm= True, **kwargs):
+    def optimize(self, tr_x, tr_y, val_x, val_y, epochs, batch_size, disable_tqdm=True, **kwargs):
         """
         :param tr_x: (numpy ndarray) input training set
         :param tr_y: (numpy ndarray) targets for each input training pattern
@@ -81,7 +95,7 @@ class StochasticGradientDescent(Optimizer, ABC):
         :param epochs: (int) number of training epochs
         :param batch_size: (int) number of patterns per single batch
         :param disable_tqdm: True to disable progress bar
-        :return:
+        :return: tr_error_values, tr_metric_values, val_error_values, val_metric_values
         """
         # add one dimension to the sets if they are one-dimensional
         tr_x = tr_x[np.newaxis, :] if len(tr_x.shape) < 2 else tr_x
@@ -96,15 +110,12 @@ class StochasticGradientDescent(Optimizer, ABC):
         momentum_net = net.get_empty_struct()
         step = 0
 
-        # learning rate results for plotting #TODO: DEBUG | remove later |
-        lr_plots = []
-
         # cycle through epochs
         for epoch in tqdm.tqdm(range(epochs), desc="Iterating over epochs", disable=disable_tqdm):
             epoch_tr_error = np.zeros(net.layers[-1].n_units)
             epoch_tr_metric = np.zeros(net.layers[-1].n_units)
-            epoch_val_error = np.zeros(net.layers[-1].n_units)
-            epoch_val_metric = np.zeros(net.layers[-1].n_units)
+            # epoch_val_error = np.zeros(net.layers[-1].n_units)
+            # epoch_val_metric = np.zeros(net.layers[-1].n_units)
 
             # shuffle the training set if using mini-batches (or stochastic)
             if batch_size != tr_x.shape[0]:
@@ -139,20 +150,16 @@ class StochasticGradientDescent(Optimizer, ABC):
                     #     regularization
                     # )
                     epoch_tr_metric = np.add(epoch_tr_metric, self.metr.func(predicted=net_outputs, target=target))
-                    dErr_dOut = self.loss.deriv(predicted=net_outputs, target=target)
+
                     # set the layers' gradients and add them into grad_net
                     # (emulate pass by reference of grad_net using return and reassign)
-
+                    dErr_dOut = self.loss.deriv(predicted=net_outputs, target=target)
                     grad_net = net.propagate_back(dErr_dOut, grad_net)
 
                 # learning rate decays
                 if self.lr_decay is not None:
                     step += 1
                     self.lr = lr_decays[self.lr_decay].func(curr_step=step, **self.lr_params)
-
-                # saves learning rate values #TODO: DEBUG | remove later |
-                # lr_plots.append(self.lr)
-                # print(lr)
 
                 # weights update
                 for layer_index in range(len(net.layers)):
@@ -169,7 +176,6 @@ class StochasticGradientDescent(Optimizer, ABC):
                     momentum_net[layer_index]['biases'] *= self.momentum
                     momentum_net[layer_index]['weights'] = np.add(momentum_net[layer_index]['weights'], delta_w)
                     momentum_net[layer_index]['biases'] = np.add(momentum_net[layer_index]['biases'], delta_b)
-
                     net.layers[layer_index].weights = np.subtract(
                         np.add(net.layers[layer_index].weights, momentum_net[layer_index]['weights']),
                         regs[self.reg_type].deriv(w=net.layers[layer_index].weights, lambd=self.lambd),
@@ -178,6 +184,7 @@ class StochasticGradientDescent(Optimizer, ABC):
                         net.layers[layer_index].biases,
                         momentum_net[layer_index]['biases']
                     )
+
             # validation
             if val_x is not None:
                 epoch_val_error, epoch_val_metric = net.evaluate(inp=val_x, targets=val_y, metr=self.metr.name, loss=self.loss.name)
@@ -188,12 +195,6 @@ class StochasticGradientDescent(Optimizer, ABC):
             tr_error_values.append(epoch_tr_error / len(tr_x))
             epoch_tr_metric = np.sum(epoch_tr_metric) / len(epoch_tr_metric)
             tr_metric_values.append(epoch_tr_metric / len(tr_x))
-
-        # plot learning rate graph #TODO: DEBUG | remove later |
-        # print(lr_plots[-1], '\n', self.final_lr)
-        # plt.plot(lr_plots)
-        # plt.grid()
-        # plt.show()
 
         return tr_error_values, tr_metric_values, val_error_values, val_metric_values
 
