@@ -12,6 +12,30 @@ from network import Network
 def cross_valid(net, dataset, loss, metr, lr, path=None, lr_decay=None, limit_step=None, decay_rate=None, decay_steps=None,
                 staircase=True, opt='sgd', momentum=0., epochs=1, batch_size=1, k_folds=5, reg_type='l2', lambd=0,
                 disable_tqdms=(True, True), interplot=True, verbose=False, **kwargs):
+    """
+    Performs a k-fold cross validation
+    :param net: the Network onto which execute the cross validation
+    :param dataset: name of the dataset to use
+    :param loss: name of the loss function to use ('squared')
+    :param metr: name of the metric function to use ('bin_class_acc' ot 'euclidean')
+    :param lr: learning rate
+    :param path: path where to save the plots (if interplot=True)
+    :param lr_decay: type of learning rate decay (either None, 'linear' or 'exponential')
+    :param limit_step: (int) limit step for the linearly decaying learning rate (in case see functions.py)
+    :param decay_rate: (float) decay rate for the exponentially decaying learning rate (in case see functions.py)
+    :param decay_steps: (int) like limit_step but for the exponentially decaying learning rate (in case see functions.py)
+    :param staircase: (bool) if True, with the exponential decay of the lr, it will decrease in a stair-like fashion
+    :param opt: optimizer name ('sgd' for now, open for more)
+    :param momentum: (float) momentum coefficient
+    :param epochs: (int) number of epochs
+    :param batch_size: (int/str) batch size (either 'full' or a number)
+    :param k_folds: number of folds for the k-fold cross validation
+    :param reg_type: type of regularization ('l1' / 'l2)
+    :param lambd: (float) regularization coefficient
+    :param disable_tqdms: couple of booleans -> disable progress bars
+    :param interplot: (bool) if True the plot of the CV will be saved to 'path'
+    :return: avg_val_err, std_val_err, avg_val_metric, std_val_metric
+    """
     # read the dataset
     if dataset not in ('monks-1.train', 'monks-2.train', 'monks-3.train', 'cup'):
         raise ValueError("Attribute dataset must be in {monks-1.train, monks-2.train, monks-3.train, cup}")
@@ -104,39 +128,28 @@ def cross_valid(net, dataset, loss, metr, lr, path=None, lr_decay=None, limit_st
     return avg_val_err, std_val_err, avg_val_metric, std_val_metric
 
 
-# def get_coarse_gs_params():
-#     """
-#     :return: dictionary of all the parameters to try in a grid search
-#     """
-#     return {'units_per_layer': ((4, 1),),
-#             'acts': (('leaky_relu', 'tanh'), ('leaky_relu', 'leaky_relu', 'tanh')),
-#             'init_type': ('uniform',),
-#             'limits': ((-0.2, 0.2), (-0.001, 0.001)),
-#             'momentum': (0.0, 0.6, 0.8),
-#             'batch_size': ('full',),
-#             'lr': (0.3, 0.5),
-#             'loss': ('squared',),
-#             'metric': ('bin_class_acc',),
-#             'epochs': (200,)}
-
-
 def grid_search(dataset, params, coarse=True, n_config=1):
     """
     Performs a grid search over a set of parameters to find the best combination of hyperparameters
     :param dataset: name of the dataset (monks-1, monks-2, monks-3, cup)
     :param params: dictionary with all the values of the params to try in the grid search
+    :param coarse: (bool) if True perform a gird search only on the values of 'params'
+    :param n_config: (int) number of config to generate for each param in case of NOT coarse grid search
     """
     models = []
     input_dim = 10 if dataset == "cup" else 17
 
+    # In case generate random combinations
     if not coarse:
         params = randomize_params(params, dataset, n_config)
 
+    # generate list of combinations
     param_combos = list_of_combos(params)
     print(f"Total number of trials: {len(param_combos)}")
     for combo in param_combos:
         models.append(Network(input_dim=input_dim, **combo))
 
+    # perform parallelized grid search
     results = Parallel(n_jobs=os.cpu_count(), verbose=50)(delayed(cross_valid)(
         net=models[i], dataset=dataset, k_folds=5, disable_tqdm=(True, True), interplot=False,
         **param_combos[i]) for i in range(len(param_combos)))
