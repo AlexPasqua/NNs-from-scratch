@@ -185,9 +185,7 @@ def binary_class_accuracy(predicted, target):
     Applies a threshold for computing classification accuracy.
     If the difference in absolute value between predicted - target is less than a specified threshold it considers it
     correctly classified (returns 1). Else returns 0
-    where:
-          the applied threshold is '0.3'
-
+    where: the applied threshold is '0.3'
     """
     predicted = predicted[0]
     target = target[0]

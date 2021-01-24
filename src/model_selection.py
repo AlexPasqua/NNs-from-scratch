@@ -29,6 +29,7 @@ def cross_valid(net, dataset, loss, metr, lr, path=None, lr_decay=None, limit_st
     tr_error_values, tr_metric_values = np.zeros(epochs), np.zeros(epochs)
     val_error_values, val_metric_values = np.zeros(epochs), np.zeros(epochs)
     val_metric_per_fold, val_error_per_fold = [], []
+    tr_error_per_fold, tr_metric_per_fold = [], []
 
     # CV cycle
     for i in tqdm.tqdm(range(k_folds), desc='Iterating over folds', disable=disable_tqdms[0]):
@@ -59,9 +60,13 @@ def cross_valid(net, dataset, loss, metr, lr, path=None, lr_decay=None, limit_st
         val_error_values += tr_history[2]
         val_metric_values += tr_history[3]
         try:
+            tr_error_per_fold.append(tr_history[0][-1])
+            tr_metric_per_fold.append(tr_history[1][-1])
             val_error_per_fold.append(tr_history[2][-1])
             val_metric_per_fold.append(tr_history[3][-1])
         except TypeError:
+            tr_error_per_fold.append(tr_history[0])
+            tr_metric_per_fold.append(tr_history[1])
             val_error_per_fold.append(tr_history[2])
             val_metric_per_fold.append(tr_history[3])
 
@@ -77,16 +82,23 @@ def cross_valid(net, dataset, loss, metr, lr, path=None, lr_decay=None, limit_st
     # results
     avg_val_err, std_val_err = np.mean(val_error_per_fold), np.std(val_error_per_fold)
     avg_val_metric, std_val_metric = np.mean(val_metric_per_fold), np.std(val_metric_per_fold)
+    avg_tr_err, std_tr_err = np.mean(tr_error_per_fold), np.std(tr_error_per_fold)
+    avg_tr_metr, std_tr_metr = np.mean(tr_metric_per_fold), np.std(tr_metric_per_fold)
 
     # print k-fold metrics
     if verbose:
-        print("\nValidation scores per fold:")
+        print("\nScores per fold:")
         for i in range(k_folds):
-            print(f"Fold {i + 1} - Loss: {val_error_per_fold[i]} - Metric: {val_metric_per_fold[i]}\n{'-' * 62}")
-        print('\nAverage validation scores for all folds:')
-        print("Loss: {} - std:(+/- {})\nMetric: {} - std:(+/- {})".format(avg_val_err, std_val_err,
-                                                                          avg_val_metric, std_val_metric))
-
+            print(f"Fold {i + 1}:\nVal Loss: {val_error_per_fold[i]} - Val Metric: {val_metric_per_fold[i]}\n"
+                  f"Train Loss: {tr_error_per_fold[i]} - Train Metric: {tr_metric_per_fold[i]}\n{'-' * 62}\n")
+        print('\nAverage scores for all folds:')
+        print("Val Loss: {} - std:(+/- {})\n"
+              "Train Loss: {} - std:(+/- {})\n"
+              "Val Metric: {} - std:(+/- {})\n"
+              "Train Metric: {} - std(+/- {}\n".format(avg_val_err, std_val_err,
+                                                       avg_tr_err, std_tr_err,
+                                                       avg_val_metric, std_val_metric,
+                                                       avg_tr_metr, std_tr_metr))
     if interplot:
         plot_curves(tr_error_values, val_error_values, tr_metric_values, val_metric_values, path, lr, momentum, lambd)
     return avg_val_err, std_val_err, avg_val_metric, std_val_metric

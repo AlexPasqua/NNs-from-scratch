@@ -33,12 +33,23 @@ class Ensembler:
         for model in self.models:
             model['model'].compile(**model['model_params'])
 
-    def fit_serial(self):
+    def fit_serial(self, whole=False):
+        final_res = []
         for model in self.models:
-            if model['model_params']['epochs'] > 5:
-                model['model_params']['epochs'] = 5
-            model['model'].fit(tr_x=self.tr_x, tr_y=self.tr_y, val_x=self.int_ts_x, val_y=self.int_ts_y,
-                               disable_tqdm=False, **model['model_params'])
+            if model['model_params']['epochs'] > 400:
+                model['model_params']['epochs'] = 400
+        if whole:
+            tr_x, tr_y, _ = read_cup(int_ts=False)
+            for model in self.models:
+                res = model['model'].fit(tr_x=tr_x, tr_y=tr_y, disable_tqdm=False, **model['model_params'])
+        else:
+            for model in self.models:
+                res = model['model'].fit(tr_x=self.tr_x, tr_y=self.tr_y, val_x=self.int_ts_x, val_y=self.int_ts_y,
+                                         disable_tqdm=False, **model['model_params'])
+                plot_curves(tr_loss=res[0], tr_acc=res[1], val_loss=res[2], val_acc=res[3])
+                final_res.append([res[1][-1], res[3][-1]])
+                print('\n', res[1][-1], '\t', res[3][-1], '\n')
+        return final_res
 
     def fit_parallel(self):
         for m in self.models:
@@ -60,7 +71,7 @@ class Ensembler:
         res = []
         for model in self.models:
             res.append(model['model'].evaluate(inp=self.int_ts_x, targets=self.int_ts_y, metr='euclidean',
-                                               loss='squared', disable_tqdm=False))
+                                               loss='squared', disable_tqdm=True))
         res = np.mean(res, axis=0)
         return res
 
@@ -74,20 +85,26 @@ if __name__ == '__main__':
         for i in range(len(best_models)):
             ens_models.append({'model': best_models[i], 'params': best_params[i]})
 
-    # writes models
-    dir_name = "../ensembler/"
-    paths = [dir_name + "model" + str(i) + ".json" for i in range(len(ens_models))]
-    for i in range(len(ens_models)):
-        ens_models[i]['model'].save_model(paths[i])
+    # # writes models
+    # dir_name = "../ensembler/"
+    # paths = [dir_name + "model" + str(i) + ".json" for i in range(len(ens_models))]
+    # for i in range(len(ens_models)):
+    #     ens_models[i]['model'].save_model(paths[i])
 
-    ens = Ensembler(models_filenames=paths, retrain=False)
-    ens.compile()
+    # ens = Ensembler(models_filenames=paths, retrain=False)
+    # ens.compile()
+
+    # # cross valid for each model
+    # for i in range(len(ens.models)):
+    #     cross_valid(net=ens.models[i]['model'], dataset="cup", interplot=True, path="ens_models_cv" + str(i),
+    #                 k_folds=5, verbose=True, disable_tqdms=(False, True), **ens.models[i]['model_params'])
+
     # res = ens.fit_parallel()
     # for r in range(len(res)):
     #     plot_curves(tr_loss=res[r][0], tr_acc=res[r][1], val_loss=res[r][2], val_acc=res[r][3],
     #                 path="ens_model" + str(r) + ".png")
 
-    ens.fit_serial()
+    # ens.fit_serial(whole=False)
 
     # writes models
     dir_name = "../ensembler/"
@@ -95,10 +112,17 @@ if __name__ == '__main__':
     for i in range(len(ens_models)):
         ens_models[i]['model'].save_model(paths[i])
 
-    evs = ens.evaluate()
-    print(f"Loss: {evs[0]}\tMetr: {evs[1]}")
+    # evs = ens.evaluate()
+    # print(f"Loss: {evs[0]}\tMetr: {evs[1]}")
 
-    preds = ens.predict()
-    with open("../cup_predictions.csv", "w") as f:
-        for i in range(len(preds)):
-            print(str(i + 1) + ',' + str(preds[i][0]) + ',' + str(preds[i][1]), file=f)
+    # retrain on the whole training set
+    ens = Ensembler(models_filenames=paths, retrain=False)
+    ens.compile()
+    final_res = ens.fit_serial(whole=False)
+    print("Average development MEE - average internal test MEE:")
+    print(np.mean(final_res, axis=0))
+
+    # preds = ens.predict()
+    # with open("../cup_predictions.csv", "w") as f:
+    #     for i in range(len(preds)):
+    #         print(str(i + 1) + ',' + str(preds[i][0]) + ',' + str(preds[i][1]), file=f)

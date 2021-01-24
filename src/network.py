@@ -112,9 +112,11 @@ class Network:
         """
         if momentum > 1. or momentum < 0.:
             raise ValueError(f"momentum must be a value between 0 and 1. Got: {momentum}")
-        self.__params = {'loss': loss, 'metr': metr, 'lr': lr, 'lr_decay': lr_decay, 'limit_step': limit_step,
-                               'decay_rate': decay_rate, 'decay_steps': decay_steps, 'staircase': staircase,
-                               'momentum': momentum, 'reg_type': reg_type, 'lambd': lambd}
+        self.__params = {**self.__params, **{'loss': loss, 'metr': metr, 'lr': lr, 'lr_decay': lr_decay,
+                                             'limit_step': limit_step,
+                                             'decay_rate': decay_rate, 'decay_steps': decay_steps,
+                                             'staircase': staircase, 'momentum': momentum, 'reg_type': reg_type,
+                                             'lambd': lambd}}
         self.__opt = optimizers[opt](net=self, loss=loss, metr=metr, lr=lr, lr_decay=lr_decay, limit_step=limit_step,
                                      decay_rate=decay_rate, decay_steps=decay_steps, staircase=staircase,
                                      momentum=momentum, reg_type=reg_type, lambd=lambd)
