@@ -25,7 +25,8 @@ class Function:
 
 class DerivableFunction(Function):
     """
-    Class representing a function that we need the derivative of
+    Class representing a function that we need the derivative of.
+    Subclass of Function.
     Attributes:
         deriv (function "pointer"): Represents the derivative of the function
     """
@@ -45,30 +46,22 @@ class DerivableFunction(Function):
 
 
 def identity(x):
-    """
-    Computes the identity function
-    """
+    """ identity (linear) activation function """
     return x
 
 
 def identity_deriv(x):
-    """
-    Computes the derivative of the identity function (i.e. 1)
-    """
+    """ Computes the derivative of the identity function (i.e. 1) """
     return 1.
 
 
 def relu(x):
-    """
-    Computes the ReLU activation function
-    """
+    """ Computes the ReLU activation function """
     return np.maximum(x, 0)
 
 
 def relu_deriv(x):
-    """
-    Computes the derivative of the ReLU activation function
-    """
+    """ Computes the derivative of the ReLU activation function """
     x = np.array(x)
     x[x <= 0] = 0
     x[x > 0] = 1
@@ -76,16 +69,12 @@ def relu_deriv(x):
 
 
 def leaky_relu(x):
-    """
-    Computes the leaky ReLU activation function
-    """
+    """ Computes the leaky ReLU activation function """
     return [i if i >= 0 else 0.01 * i for i in x]
 
 
 def leaky_relu_deriv(x):
-    """
-    Computes the derivative of the leaky ReLU activation function
-    """
+    """ Computes the derivative of the leaky ReLU activation function """
     x = np.array(x)
     x[x > 0] = 1.
     x[x <= 0] = 0.01
@@ -93,18 +82,14 @@ def leaky_relu_deriv(x):
 
 
 def sigmoid(x):
-    """
-    Computes the sigmoid activation function
-    """
+    """ Computes the sigmoid activation function """
     x = np.array(x)
     ones = [1.] * len(x)
     return np.divide(ones, np.add(ones, np.exp(-x)))
 
 
 def sigmoid_deriv(x):
-    """
-    Computes the derivative of the sigmoid activation function
-    """
+    """ Computes the derivative of the sigmoid activation function """
     return np.multiply(
         sigmoid(x),
         np.subtract([1.] * len(x), sigmoid(x))
@@ -112,16 +97,12 @@ def sigmoid_deriv(x):
 
 
 def tanh(x):
-    """
-    Computes the hyperbolic tangent function (TanH)
-    """
+    """ Computes the hyperbolic tangent function (TanH) """
     return np.tanh(x)
 
 
 def tanh_deriv(x):
-    """
-    Computes the derivative of the hyperbolic tangent function (TanH)
-    """
+    """ Computes the derivative of the hyperbolic tangent function (TanH) """
     return np.subtract(
         [1.] * len(x),
         np.power(np.tanh(x), 2)
@@ -161,10 +142,10 @@ def squared_loss_deriv(predicted, target):
 
 def binary_class_accuracy(predicted, target):
     """
-    Applies a threshold for computing classification accuracy.
+    Applies a threshold for computing classification accuracy (correct classification rate).
     If the difference in absolute value between predicted - target is less than a specified threshold it considers it
     correctly classified (returns 1). Else returns 0
-    where: the applied threshold is '0.3'
+    The threshold is 0.3
     """
     predicted = predicted[0]
     target = target[0]
@@ -178,30 +159,26 @@ def euclidean_loss(predicted, target):
     Computes the euclidean error between the target vector and the output predicted by the net
     :param predicted: ndarray of shape (n, m) – Predictions for the n examples
     :param target: ndarray of shape (n, m) – Ground truth for each of n examples
-    :return: loss in terms of euclidean error
+    :return: error in terms of euclidean error
     """
     return np.linalg.norm(np.subtract(predicted, target))
 
 
 #############################################
-#         Learning rate schedulers          #
+#         Learning rate schedules          #
 #############################################
 
 
 def linear_lr_decay(curr_lr, base_lr, final_lr, curr_step, limit_step, **kwargs):
     """
-    The linear_lr_decay, linearly decays the learning rate (base_lr) by a decay_rate until iteration tau (limit_step).
-    Then it stops decaying and uses a fix learning rate (final_lr)::
-    learning_rate =  (1 - decay_rate) * base_lr + decay_rate * final_lr
-    where:
-          decay_rate = curr_step / limit_step
-
+    The linear_lr_decay, linearly decays the learning rate (base_lr) by a decay_rate until iteration "limit_step".
+    Then it stops decaying and uses a fix learning rate (final_lr):
     :param curr_lr: current learning (decayed)
     :param base_lr: initial learning rate
     :param final_lr: final (fixed) learning rate
     :param curr_step: current iteration
     :param limit_step: corresponds to the number of step when the learning rate will stop decaying
-    :return: linearly decayed learning rate
+    :return: updated (decayed) learning rate
     """
     if curr_step < limit_step and curr_lr > final_lr:
         decay_rate = curr_step / limit_step
@@ -213,20 +190,13 @@ def linear_lr_decay(curr_lr, base_lr, final_lr, curr_step, limit_step, **kwargs)
 def exp_lr_decay(base_lr, decay_rate, curr_step, decay_steps, staircase=False, **kwargs):
     """
     The exp_lr_decay, decays exponentially the learning rate by `decay_rate` every `decay_steps`,
-    starting from a `base_lr`: learning_rate = base_lr * exp(-decay_rate * cur_stage)
-    where:
-        cur_stage = step / decay_steps          if staircase = False
-        cur_stage = floor(step / decay_steps)   if staircase = True
-
+    starting from a `base_lr`
     :param base_lr: The learning rate at the first step
     :param decay_rate: The amount to decay the learning rate at each new stage
     :param decay_steps: The length of each stage, in steps
-    :param staircase: If True, only adjusts the learning rate at the stage transitions,
-                      producing a step-like decay schedule.
-                      If False, adjusts the learning rate after each step,
-                      creating a smooth decay schedule.
-                      Default is True
-    :return: exponentially decayed learning rate
+    :param staircase: If True, only adjusts the learning rate at the stage transitions, producing a step-like decay
+    schedule. If False, adjusts the learning rate after each step, creating a smooth decay schedule. Default is True
+    :return: updated (decayed) learning rate
     """
     cur_stage = curr_step / decay_steps
     if staircase:
@@ -243,6 +213,8 @@ def exp_lr_decay(base_lr, decay_rate, curr_step, decay_steps, staircase=False, *
 def lasso_l1(w, lambd):
     """
     Computes Lasso regularization (L1) on the nets' weights
+    :param w: (list of matrices) the list of each layer's weights
+    :param lambd: (float) regularization coefficient
     """
     return lambd * np.sum(np.abs(w))
 
@@ -250,6 +222,8 @@ def lasso_l1(w, lambd):
 def lasso_l1_deriv(w, lambd):
     """
     Computes the derivative of the Lasso regularization (L1)
+    :param w: (list of matrices) the list of each layer's weights
+    :param lambd: (float) regularization coefficient
     """
     res = np.zeros(w.shape)
     for i in range(w.shape[0]):
@@ -266,6 +240,8 @@ def lasso_l1_deriv(w, lambd):
 def ridge_l2(w, lambd):
     """
     Computes Tikhonov regularization (L2) on the nets' weights
+    :param w: (list of matrices) the list of each layer's weights
+    :param lambd: (float) regularization coefficient
     """
     return lambd * np.sum(np.square(w))
 
@@ -273,6 +249,8 @@ def ridge_l2(w, lambd):
 def ridge_l2_deriv(w, lambd):
     """
     Computes the derivative of Tikhonov regularization (L1)
+    :param w: (list of matrices) the list of each layer's weights
+    :param lambd: (float) regularization coefficient
     """
     return 2 * lambd * w
 
