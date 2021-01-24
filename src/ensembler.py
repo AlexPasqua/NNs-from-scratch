@@ -23,7 +23,7 @@ class Ensembler:
             })
 
             if not retrain:
-                # reshape weights
+                # reshape weights and load them
                 for i in range(len(models_data['weights'])):
                     models_data['weights'][i] = np.array(
                         np.reshape(models_data['weights'][i], newshape=np.shape(models_data['weights'][i])))
@@ -85,40 +85,35 @@ if __name__ == '__main__':
         for i in range(len(best_models)):
             ens_models.append({'model': best_models[i], 'params': best_params[i]})
 
-    # # writes models
-    # dir_name = "../ensembler/"
-    # paths = [dir_name + "model" + str(i) + ".json" for i in range(len(ens_models))]
-    # for i in range(len(ens_models)):
-    #     ens_models[i]['model'].save_model(paths[i])
+    # write models on file
+    dir_name = "../ensembler/"
+    paths = [dir_name + "model" + str(i) + ".json" for i in range(len(ens_models))]
+    for i in range(len(ens_models)):
+        ens_models[i]['model'].save_model(paths[i])
 
-    # ens = Ensembler(models_filenames=paths, retrain=False)
-    # ens.compile()
-
-    # # cross valid for each model
-    # for i in range(len(ens.models)):
-    #     cross_valid(net=ens.models[i]['model'], dataset="cup", interplot=True, path="ens_models_cv" + str(i),
-    #                 k_folds=5, verbose=True, disable_tqdms=(False, True), **ens.models[i]['model_params'])
+    ens = Ensembler(models_filenames=paths, retrain=False)
+    ens.compile()
 
     # res = ens.fit_parallel()
     # for r in range(len(res)):
     #     plot_curves(tr_loss=res[r][0], tr_acc=res[r][1], val_loss=res[r][2], val_acc=res[r][3],
     #                 path="ens_model" + str(r) + ".png")
 
-    # ens.fit_serial(whole=False)
+    ens.fit_serial(whole=False)
 
-    # writes models
+    # writes models with updated weights
     dir_name = "../ensembler/"
     paths = [dir_name + "model" + str(i) + ".json" for i in range(len(ens_models))]
     for i in range(len(ens_models)):
         ens_models[i]['model'].save_model(paths[i])
 
-    # evs = ens.evaluate()
-    # print(f"Loss: {evs[0]}\tMetr: {evs[1]}")
+    evs = ens.evaluate()
+    print(f"Loss: {evs[0]}\tMetr: {evs[1]}")
 
     # retrain on the whole training set
     ens = Ensembler(models_filenames=paths, retrain=False)
     ens.compile()
-    final_res = ens.fit_serial(whole=False)
+    final_res = ens.fit_serial(whole=True)
     print("Average development MEE - average internal test MEE:")
     print(np.mean(final_res, axis=0))
 

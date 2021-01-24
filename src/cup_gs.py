@@ -1,4 +1,4 @@
-from utility import read_cup, get_best_models, plot_curves
+from utility import read_cup, get_best_models
 from model_selection import grid_search
 
 if __name__ == '__main__':
