@@ -7,13 +7,15 @@ class Layer:
     """
     Class that represent a layer of a neural network
     Attributes:
+        inp_dim: (int) layer's input dimension
+        n_units: (int) number of units
+        act: (str) name of the layer's activation function
+        init_type: (str) weights initialization type ('fixed' or 'uniform')
+        kwargs contains other attributes for the weights initialization
     """
 
     def __init__(self, inp_dim, n_units, act, init_type, **kwargs):
-        """
-        :param n_units: (integer) number of units in the layer
-        :param init_type: (string) type of weights initialization
-        """
+        """ Constructor -> see parameters in the class description """
         self.weights = weights_inits(init_type=init_type, n_weights=inp_dim, n_units=n_units, **kwargs)
         self.biases = weights_inits(init_type=init_type, n_weights=1, n_units=n_units, **kwargs)
         self.__inp_dim = inp_dim
@@ -53,9 +55,8 @@ class Layer:
         """
         Performs the forward pass on the current layer
         :param inp: (numpy ndarray) input vector
-        :return: the vector of the current layer's soutputs
+        :return: the vector of the current layer's outputs
         """
-
         self.__inputs = np.array(inp)
         self.__nets = np.matmul(inp, self.weights)
         self.__nets = np.add(self.__nets, self.biases)
@@ -66,8 +67,8 @@ class Layer:
         """
         Sets the layer's gradients
         :param upstream_delta: for hidden layers, delta = dot_prod(delta_next, w_next) * dOut_dNet
-            Multiply (dot product) already the delta for the current layer's weights in order to have it ready for the previous
-            layer (that does not have access to this layer's weights), that will execute this method in the
+            Multiply (dot product) already the delta for the current layer's weights in order to have it ready for the
+            previous layer (that does not have access to this layer's weights) that will execute this method in the
             next iteration of Network.propagate_back()
         :return new_upstream_delta: delta already multiplied (dot product) by the current layer's weights
         :return gradient_w: gradient wrt weights
