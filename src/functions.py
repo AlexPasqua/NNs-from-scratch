@@ -1,5 +1,4 @@
 import math
-
 import numpy as np
 
 
@@ -48,35 +47,27 @@ class DerivableFunction(Function):
 def identity(x):
     """
     Computes the identity function
-    :param x:  net -> input's weighted sum
-    :return: x
     """
     return x
 
 
 def identity_deriv(x):
     """
-    Computes the derivative of the identity function
-    :param x: net -> input's weighted sum
-    :return: derivative of identity of x (i.e. 1)
+    Computes the derivative of the identity function (i.e. 1)
     """
     return 1.
 
 
 def relu(x):
     """
-    Computes the ReLU function:
-    :param x: net -> input's weighted sum
-    :return: ReLU of x
+    Computes the ReLU activation function
     """
     return np.maximum(x, 0)
 
 
 def relu_deriv(x):
     """
-    Computes the derivative of the ReLU function:
-    :param x: net-> input's weighted sum
-    :return: derivative of the ReLU in x
+    Computes the derivative of the ReLU activation function
     """
     x = np.array(x)
     x[x <= 0] = 0
@@ -86,18 +77,14 @@ def relu_deriv(x):
 
 def leaky_relu(x):
     """
-    Computes the leaky ReLu activation function
-    :param x: input's weighted sum
-    :return: leaky ReLu of x
+    Computes the leaky ReLU activation function
     """
     return [i if i >= 0 else 0.01 * i for i in x]
 
 
 def leaky_relu_deriv(x):
     """
-    Computes the derivative of the leaky ReLu activation function
-    :param x: input's weighted sum
-    :return: derivative of the leaky ReLU in x
+    Computes the derivative of the leaky ReLU activation function
     """
     x = np.array(x)
     x[x > 0] = 1.
@@ -107,9 +94,7 @@ def leaky_relu_deriv(x):
 
 def sigmoid(x):
     """
-    Computes the sigmoid function of x
-    :param x: net -> input's weighted sum
-    :return: sigmoid of x
+    Computes the sigmoid activation function
     """
     x = np.array(x)
     ones = [1.] * len(x)
@@ -118,9 +103,7 @@ def sigmoid(x):
 
 def sigmoid_deriv(x):
     """
-    Computes the derivative of the sigmoid function
-    :param x: net -> input's weighted sum
-    :return: derivative of the sigmoid in x
+    Computes the derivative of the sigmoid activation function
     """
     return np.multiply(
         sigmoid(x),
@@ -130,18 +113,14 @@ def sigmoid_deriv(x):
 
 def tanh(x):
     """
-    Computes the hyperbolic tangent function (tanh) of x
-    :param x: net-> input's weighted sum
-    :return: Tanh of x
+    Computes the hyperbolic tangent function (TanH)
     """
     return np.tanh(x)
 
 
 def tanh_deriv(x):
     """
-    Computes the derivative of the hyperbolic tangent function (tanh)
-    :param x: net-> input's weighted sum
-    :return: Tanh derivative of x
+    Computes the derivative of the hyperbolic tangent function (TanH)
     """
     return np.subtract(
         [1.] * len(x),
@@ -156,9 +135,9 @@ def tanh_deriv(x):
 
 def squared_loss(predicted, target):
     """
-    Computes the squared error between the targ vector and the output pred by the net
+    Computes the squared error between the target vector and the output predicted by the net
     :param predicted: ndarray of shape (n, m) – Predictions for the n examples
-    :param target: ndarray of shape (n, m) – Ground truth w_vals for each of n examples
+    :param target: ndarray of shape (n, m) – Ground truth for each of n examples
     :return: loss in terms of squared error
     """
     return 0.5 * np.square(np.subtract(target, predicted))  # "0.5" is to make the gradient simpler
@@ -166,9 +145,9 @@ def squared_loss(predicted, target):
 
 def squared_loss_deriv(predicted, target):
     """
-    Computes the derivative of the squared error between the targ vector and the output pred by the net
+    Computes the derivative of the squared error between the target vector and the output predicted by the net
     :param predicted: ndarray of shape (n, m) – Predictions for the n examples
-    :param target: ndarray of shape (n, m) – Ground truth w_vals for each of n examples
+    :param target: ndarray of shape (n, m) – Ground truth for each of n examples
     :return: derivative of the squared error
     """
     # exponent 2 in the deriv becomes a multiplying constant and simplifies itself with the denominator of the func
@@ -196,9 +175,9 @@ def binary_class_accuracy(predicted, target):
 
 def euclidean_loss(predicted, target):
     """
-    Computes the euclidean error between the targ vector and the output pred by the net
+    Computes the euclidean error between the target vector and the output predicted by the net
     :param predicted: ndarray of shape (n, m) – Predictions for the n examples
-    :param target: ndarray of shape (n, m) – Ground truth w_vals for each of n examples
+    :param target: ndarray of shape (n, m) – Ground truth for each of n examples
     :return: loss in terms of euclidean error
     """
     return np.linalg.norm(np.subtract(predicted, target))
@@ -263,10 +242,16 @@ def exp_lr_decay(base_lr, decay_rate, curr_step, decay_steps, staircase=False, *
 
 
 def lasso_l1(w, lambd):
+    """
+    Computes Lasso regularization (L1) on the nets' weights
+    """
     return lambd * np.sum(np.abs(w))
 
 
 def lasso_l1_deriv(w, lambd):
+    """
+    Computes the derivative of the Lasso regularization (L1)
+    """
     res = np.zeros(w.shape)
     for i in range(w.shape[0]):
         for j in range(w.shape[1]):
@@ -282,9 +267,6 @@ def lasso_l1_deriv(w, lambd):
 def ridge_l2(w, lambd):
     """
     Computes Tikhonov regularization (L2) on the nets' weights
-    :param w: weights vector
-    :param lambd: regularization term
-    :return: regularized weights
     """
     return lambd * np.sum(np.square(w))
 
@@ -292,17 +274,15 @@ def ridge_l2(w, lambd):
 def ridge_l2_deriv(w, lambd):
     """
     Computes the derivative of Tikhonov regularization (L1)
-    :param w: connection's weight
-    :param lambd: regularization term
-    :return: derivative of L2 regularization
     """
     return 2 * lambd * w
 
 
 ###########################################################################
-#     Function objects and dictionaries to use them in other scripts      #
+#     Function objects and dictionaries (used in other scripts)           #
 ###########################################################################
 
+# activation functions
 Identity = DerivableFunction(identity, identity_deriv, 'identity')
 ReLU = DerivableFunction(relu, relu_deriv, 'ReLU')
 LeakyReLU = DerivableFunction(leaky_relu, leaky_relu_deriv, 'LeakyReLU')
@@ -316,11 +296,13 @@ act_funcs = {
     'tanh': Tanh,
 }
 
+# losses
 SquaredLoss = DerivableFunction(squared_loss, squared_loss_deriv, 'squared')
 losses = {
     'squared': SquaredLoss,
 }
 
+# metrics
 BinClassAcc = Function(binary_class_accuracy, 'bin_class_acc')
 Euclidean = Function(euclidean_loss, 'euclidean')
 metrics = {
@@ -328,6 +310,7 @@ metrics = {
     'euclidean': Euclidean
 }
 
+# learning rate schedulers
 LinearLRDecay = Function(linear_lr_decay, 'linear')
 ExponentialLRDecay = Function(exp_lr_decay, 'exponential')
 
@@ -336,6 +319,7 @@ lr_decays = {
     'exponential': ExponentialLRDecay
 }
 
+# regularizations
 l2_regularization = DerivableFunction(ridge_l2, ridge_l2_deriv, 'l2')
 l1_regularization = DerivableFunction(lasso_l1, lasso_l1_deriv, 'l1')
 regs = {
