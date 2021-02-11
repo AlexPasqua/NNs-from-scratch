@@ -57,7 +57,7 @@ class Layer:
         :param inp: (numpy ndarray) input vector
         :return: the vector of the current layer's outputs
         """
-        self.__inputs = np.array(inp)
+        self.__inputs = inp
         self.__nets = np.matmul(inp, self.weights)
         self.__nets = np.add(self.__nets, self.biases)
         self.__outputs = self.__act.func(self.__nets)

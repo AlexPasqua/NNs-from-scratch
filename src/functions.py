@@ -62,7 +62,6 @@ def relu(x):
 
 def relu_deriv(x):
     """ Computes the derivative of the ReLU activation function """
-    x = np.array(x)
     x[x <= 0] = 0
     x[x > 0] = 1
     return x
@@ -75,7 +74,6 @@ def leaky_relu(x):
 
 def leaky_relu_deriv(x):
     """ Computes the derivative of the leaky ReLU activation function """
-    x = np.array(x)
     x[x > 0] = 1.
     x[x <= 0] = 0.01
     return x
@@ -83,7 +81,6 @@ def leaky_relu_deriv(x):
 
 def sigmoid(x):
     """ Computes the sigmoid activation function """
-    x = np.array(x)
     ones = [1.] * len(x)
     return np.divide(ones, np.add(ones, np.exp(-x)))
 

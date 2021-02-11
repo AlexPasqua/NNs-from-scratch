@@ -89,7 +89,6 @@ class Network:
         :param inp: net's input vector/matrix
         :return: net's output vector/matrix
         """
-        inp = np.array(inp)
         x = inp
         for layer in self.__layers:
             x = layer.forward_pass(x)
