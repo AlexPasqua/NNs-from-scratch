@@ -60,4 +60,3 @@ jobs:
           python -m unittest unit_tests.test_network
           python -m unittest unit_tests.test_optimizers
           python -m unittest unit_tests.test_weights_initializations
-          python -m unittest unit_tests.test_ensembler
