@@ -52,8 +52,8 @@ class TestLossFunctions(unittest.TestCase):
 
 class TestMetrics(unittest.TestCase):
     def test_metrics(self):
-        self.assertEqual(1, metrics['bin_class_acc'].func(predicted=[1], target=[0.98]))
-        self.assertEqual(0, metrics['bin_class_acc'].func(predicted=[1], target=[0.098]))
+        self.assertEqual(1, metrics['bin_class_acc'].func(predicted=[1], target=[0.98])[0])
+        self.assertEqual(0, metrics['bin_class_acc'].func(predicted=[1], target=[0.098])[0])
         predicted = np.array(
             [[1, 0, 0, 1],
              [1, 1, 1, 1]]

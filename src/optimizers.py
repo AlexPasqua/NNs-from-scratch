@@ -150,6 +150,7 @@ class StochasticGradientDescent(Optimizer, ABC):
                     #     regularization
                     # )
                     epoch_tr_metric = np.add(epoch_tr_metric, self.metr.func(predicted=net_outputs, target=target))
+                    print(self.metr.func(predicted=net_outputs, target=target))
 
                     # set the layers' gradients and add them into grad_net
                     # (emulate pass by reference of grad_net using return and reassign)

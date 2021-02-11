@@ -147,8 +147,8 @@ def binary_class_accuracy(predicted, target):
     predicted = predicted[0]
     target = target[0]
     if np.abs(predicted - target) < 0.3:
-        return np.array([1])
-    return np.array([0])
+        return [1]
+    return [0]
 
 
 def euclidean_loss(predicted, target):
