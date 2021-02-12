@@ -81,8 +81,8 @@ if __name__ == '__main__':
     avg_tr_error, avg_tr_acc, avg_ts_error, avg_ts_acc = [], [], [], []
 
     # model selection monks
-    # cross_valid(net=model_monk1, dataset='monks-1.train', **params_monk1, k_folds=5, verbose=True, plot=True,
-    #             disable_tqdms=(True, False))
+    cross_valid(net=model_monk1, dataset='monks-1.train', **params_monk1, k_folds=5, verbose=True, plot=True,
+                disable_tqdms=(True, False))
 
     # # test prediction - 10 trials
     # for trials in range(10):

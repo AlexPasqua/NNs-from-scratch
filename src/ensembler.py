@@ -9,7 +9,22 @@ from model_selection import cross_valid
 
 
 class Ensembler:
+    """
+    Ensembler of neural networks
+    Attributes:
+        models (list of Network objects): constituent models of the ensemble
+        tr_x: training data (no targets)
+        tr_y: training targets
+        int_ts_x: internal test set's data (no targets)
+        int_ts_y: internal test set's targets
+    """
+
     def __init__(self, models_filenames: list, retrain: bool):
+        """
+        Constructor
+        :param models_filenames (list): list of the filenames where the constituent models are saved
+        :param retrain (bool): if False, the ensembler loads the weights saved in the files into the models
+        """
         self.models = []
         self.tr_x, self.tr_y, self.int_ts_x, self.int_ts_y, self.test_x = read_cup(int_ts=True)
 
@@ -34,14 +49,17 @@ class Ensembler:
             model['model'].compile(**model['model_params'])
 
     def fit_serial(self, whole=False):
+        """
+        Trains the models, one by one
+        :param whole: (bool) if true retrains the models on the entire training set, else only on the development set
+        :return: (list of lists) the results of the training and validation metric for each model
+        """
         final_res = []
-        for model in self.models:
-            if model['model_params']['epochs'] > 400:
-                model['model_params']['epochs'] = 400
         if whole:
             tr_x, tr_y, _ = read_cup(int_ts=False)
             for model in self.models:
                 res = model['model'].fit(tr_x=tr_x, tr_y=tr_y, disable_tqdm=False, **model['model_params'])
+                final_res.append([res[1][-1], res[3][-1]])
         else:
             for model in self.models:
                 res = model['model'].fit(tr_x=self.tr_x, tr_y=self.tr_y, val_x=self.int_ts_x, val_y=self.int_ts_y,
