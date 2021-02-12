@@ -11,7 +11,7 @@ from network import Network
 
 def cross_valid(net, dataset, loss, metr, lr, path=None, lr_decay=None, limit_step=None, decay_rate=None, decay_steps=None,
                 staircase=True, opt='sgd', momentum=0., epochs=1, batch_size=1, k_folds=5, reg_type='l2', lambd=0,
-                disable_tqdms=(True, True), interplot=True, verbose=False, **kwargs):
+                disable_tqdms=(True, True), plot=True, verbose=False, **kwargs):
     """
     Performs a k-fold cross validation
     :param net: the Network onto which execute the cross validation
@@ -33,7 +33,7 @@ def cross_valid(net, dataset, loss, metr, lr, path=None, lr_decay=None, limit_st
     :param reg_type: type of regularization ('l1' / 'l2)
     :param lambd: (float) regularization coefficient
     :param disable_tqdms: couple of booleans -> disable progress bars
-    :param interplot: (bool) if True the plot of the CV will be saved to 'path'
+    :param plot: (bool) if True the plot of the CV will be saved to 'path'
     :return: avg_val_err, std_val_err, avg_val_metric, std_val_metric
     """
     # read the dataset
@@ -123,7 +123,7 @@ def cross_valid(net, dataset, loss, metr, lr, path=None, lr_decay=None, limit_st
                                                        avg_tr_err, std_tr_err,
                                                        avg_val_metric, std_val_metric,
                                                        avg_tr_metr, std_tr_metr))
-    if interplot:
+    if plot:
         plot_curves(tr_error_values, val_error_values, tr_metric_values, val_metric_values, path, lr, momentum, lambd)
     return avg_val_err, std_val_err, avg_val_metric, std_val_metric
 

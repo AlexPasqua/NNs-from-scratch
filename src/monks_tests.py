@@ -81,25 +81,26 @@ if __name__ == '__main__':
     avg_tr_error, avg_tr_acc, avg_ts_error, avg_ts_acc = [], [], [], []
 
     # model selection monks
-    # cross_valid(net=model_monk1, dataset='monks-1.train', **params_monk1, k_folds=5, verbose=True, interplot=False)
+    # cross_valid(net=model_monk1, dataset='monks-1.train', **params_monk1, k_folds=5, verbose=True, plot=True,
+    #             disable_tqdms=(True, False))
 
-    # test prediction - 10 trials
-    for trials in range(10):
-        model_monk1.compile(**params_monk1)
-        tr_error_values, tr_acc_values, ts_error_values, ts_acc_values = model_monk1.fit(
-            tr_x=monk_train1,
-            tr_y=labels1,
-            val_x=monk_test1,
-            val_y=labels_ts1,
-            disable_tqdm=False,
-        )
-        avg_tr_error.append(tr_error_values[-1])
-        avg_tr_acc.append(tr_acc_values[-1])
-        avg_ts_error.append(ts_error_values[-1])
-        avg_ts_acc.append(ts_acc_values[-1])
+    # # test prediction - 10 trials
+    # for trials in range(10):
+    #     model_monk1.compile(**params_monk1)
+    #     tr_error_values, tr_acc_values, ts_error_values, ts_acc_values = model_monk1.fit(
+    #         tr_x=monk_train1,
+    #         tr_y=labels1,
+    #         val_x=monk_test1,
+    #         val_y=labels_ts1,
+    #         disable_tqdm=False,
+    #     )
+    #     avg_tr_error.append(tr_error_values[-1])
+    #     avg_tr_acc.append(tr_acc_values[-1])
+    #     avg_ts_error.append(ts_error_values[-1])
+    #     avg_ts_acc.append(ts_acc_values[-1])
 
-    # display average loss/accuracy training - test
-    print('Average predictions')
-    print(f"Train Loss: {np.mean(avg_tr_error)} - Test Loss: {np.mean(avg_ts_error)}\n"
-          f"Train Acc: {np.mean(avg_tr_acc)} - Test Acc: {np.mean(avg_ts_acc)}")
+    # # display average loss/accuracy training - test
+    # print('Average predictions')
+    # print(f"Train Loss: {np.mean(avg_tr_error)} - Test Loss: {np.mean(avg_ts_error)}\n"
+    #       f"Train Acc: {np.mean(avg_tr_acc)} - Test Acc: {np.mean(avg_ts_acc)}")
 
