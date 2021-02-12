@@ -86,11 +86,14 @@ class Ensembler:
         return res
 
     def evaluate(self):
-        res = []
+        net_outputs, res = [], []
         for model in self.models:
-            res.append(model['model'].evaluate(inp=self.int_ts_x, targets=self.int_ts_y, metr='euclidean',
-                                               loss='squared', disable_tqdm=True))
-        res = np.mean(res, axis=0)
+            net_outputs.append(model['model'].predict(inp=self.int_ts_x))
+        net_outputs = np.mean(net_outputs, axis=0)
+        # 'evaluate' is a method of Network. The index 0 in self.models is just because we need to pick a specific net,
+        # but the outputs we're evaluating are the average of the outputs of all models
+        res = self.models[0]['model'].evaluate(net_outputs=net_outputs, targets=self.int_ts_y, metr='euclidean',
+                                               loss='squared')
         return res
 
 
@@ -108,8 +111,8 @@ if __name__ == '__main__':
     dir_name = "../ensembler/"
     Path(dir_name).mkdir(exist_ok=True)
     paths = [dir_name + "model" + str(i) + ".json" for i in range(len(ens_models))]
-    # for i in range(len(ens_models)):
-    #     ens_models[i]['model'].save_model(paths[i])
+    for i in range(len(ens_models)):
+        ens_models[i]['model'].save_model(paths[i])
 
     ens = Ensembler(models_filenames=paths, retrain=False)
     ens.compile()
@@ -133,11 +136,11 @@ if __name__ == '__main__':
     print(f"Loss: {evs[0]}\tMetr: {evs[1]}")
 
     # retrain on the whole training set
-    ens = Ensembler(models_filenames=paths, retrain=False)
-    ens.compile()
-    final_res = ens.fit_serial(whole=True)
-    print("Average development MEE - average internal test MEE:")
-    print(np.mean(final_res, axis=0))
+    # ens = Ensembler(models_filenames=paths, retrain=False)
+    # ens.compile()
+    # final_res = ens.fit_serial(whole=True)
+    # print("Average development MEE - average internal test MEE:")
+    # print(np.mean(final_res, axis=0))
 
     # preds = ens.predict()
     # with open("../cup_predictions.csv", "w") as f:
