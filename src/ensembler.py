@@ -1,6 +1,7 @@
 import csv
 import json
 import numpy as np
+from pathlib import Path
 from joblib import Parallel, delayed
 import os
 from network import Network
@@ -57,16 +58,21 @@ class Ensembler:
             for model in self.models:
                 res = model['model'].fit(tr_x=tr_x, tr_y=tr_y, disable_tqdm=False, **model['model_params'])
                 final_res.append([res[1][-1], res[3][-1]])
+                print(f"\nTraining error: {res[0][-1]}\tTraining metric: {res[1][-1]}")
         else:
             for model in self.models:
                 res = model['model'].fit(tr_x=self.tr_x, tr_y=self.tr_y, val_x=self.int_ts_x, val_y=self.int_ts_y,
                                          disable_tqdm=False, **model['model_params'])
                 plot_curves(tr_loss=res[0], tr_acc=res[1], val_loss=res[2], val_acc=res[3])
                 final_res.append([res[1][-1], res[3][-1]])
-                print('\n', res[1][-1], '\t', res[3][-1], '\n')
+                print('\nTraining metric', res[1][-1], '\tValidation metric', res[3][-1], '\n')
         return final_res
 
     def fit_parallel(self):
+        """
+        Trains all the models in parallel
+        :return: list with the return value of each Network.fit (in case check network.py)
+        """
         res = Parallel(n_jobs=os.cpu_count())(delayed(m['model'].fit)(
             tr_x=self.tr_x, tr_y=self.tr_y, val_x=self.int_ts_x, val_y=self.int_ts_y,
             disable_tqdm=False, **m['model_params']) for m in self.models)
@@ -89,6 +95,7 @@ class Ensembler:
 
 
 if __name__ == '__main__':
+    # pick the best models from each specified file and save them in the apposite directory
     file_names_n_models = {"alex_local_fine_gs_results_cup.json": 2, "alex_cloud_fine_gs_results_cup.json": 3,
                            "gaetano_2_fine_gs_results_cup.json": 1, "gaetano_cloud_coarse_gs_results_cup.json": 1}
     ens_models = []
@@ -99,17 +106,20 @@ if __name__ == '__main__':
 
     # write models on file
     dir_name = "../ensembler/"
+    Path(dir_name).mkdir(exist_ok=True)
     paths = [dir_name + "model" + str(i) + ".json" for i in range(len(ens_models))]
-    for i in range(len(ens_models)):
-        ens_models[i]['model'].save_model(paths[i])
+    # for i in range(len(ens_models)):
+    #     ens_models[i]['model'].save_model(paths[i])
 
     ens = Ensembler(models_filenames=paths, retrain=False)
     ens.compile()
 
+    dir_name = "../plots/"
+    Path(dir_name).mkdir(exist_ok=True)
     # res = ens.fit_parallel()
     # for r in range(len(res)):
     #     plot_curves(tr_loss=res[r][0], tr_acc=res[r][1], val_loss=res[r][2], val_acc=res[r][3],
-    #                 path="ens_model" + str(r) + ".png")
+    #                 path=dir_name + "ens_model" + str(r) + ".png")
 
     ens.fit_serial(whole=False)
 
