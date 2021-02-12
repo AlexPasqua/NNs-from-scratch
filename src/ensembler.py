@@ -31,18 +31,15 @@ class Ensembler:
         for filename in models_filenames:
             with open(filename, 'r') as f:
                 models_data = json.load(f)
-
-            self.models.append({
-                'model': Network(**models_data['model_params']),
-                'model_params': models_data['model_params'],
-            })
-
+            self.models.append({'model': Network(**models_data['model_params']),
+                                'model_params': models_data['model_params']})
             if not retrain:
                 # reshape weights and load them
                 for i in range(len(models_data['weights'])):
                     models_data['weights'][i] = np.array(
                         np.reshape(models_data['weights'][i], newshape=np.shape(models_data['weights'][i])))
                     self.models[-1]['model'].weights = models_data['weights']
+            # TODO: else do training
 
     def compile(self):
         for model in self.models:
@@ -70,9 +67,6 @@ class Ensembler:
         return final_res
 
     def fit_parallel(self):
-        for m in self.models:
-            if m['model_params']['epochs'] > 400:
-                m['model_params']['epochs'] = 400
         res = Parallel(n_jobs=os.cpu_count())(delayed(m['model'].fit)(
             tr_x=self.tr_x, tr_y=self.tr_y, val_x=self.int_ts_x, val_y=self.int_ts_y,
             disable_tqdm=False, **m['model_params']) for m in self.models)
