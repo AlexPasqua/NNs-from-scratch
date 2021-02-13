@@ -26,7 +26,7 @@ def read_monk(name, rescale=False):
     labels = monk_dataset.pop('class')
 
     # 1-hot encoding (and transform dataframe to numpy array)
-    monk_dataset = OneHotEncoder().fit_transform(monk_dataset).toarray()
+    monk_dataset = OneHotEncoder().fit_transform(monk_dataset).toarray().astype(np.float32)
 
     # transform labels from pandas dataframe to numpy ndarray
     labels = labels.to_numpy()[:, np.newaxis]
@@ -67,8 +67,8 @@ def read_cup(int_ts=False):
         tr_targets = pd.read_csv(dev_set_path, sep=',', names=col_names, skiprows=range(7), usecols=range(11, 13))
         int_ts_data = pd.read_csv(int_ts_path,  sep=',', names=col_names, skiprows=range(7), usecols=range(1, 11))
         int_ts_targets = pd.read_csv(int_ts_path,  sep=',', names=col_names, skiprows=range(7), usecols=range(11, 13))
-        int_ts_data = int_ts_data.to_numpy()
-        int_ts_targets = int_ts_targets.to_numpy()
+        int_ts_data = int_ts_data.to_numpy(dtype=np.float32)
+        int_ts_targets = int_ts_targets.to_numpy(dtype=np.float32)
     else:
         tr_data = pd.read_csv(directory + file, sep=',', names=col_names, skiprows=range(7), usecols=range(1, 11))
         tr_targets = pd.read_csv(directory + file, sep=',', names=col_names, skiprows=range(7), usecols=range(11, 13))
@@ -76,9 +76,9 @@ def read_cup(int_ts=False):
     file = "ML-CUP20-TS.csv"
     cup_ts_data = pd.read_csv(directory + file, sep=',', names=col_names[: -2], skiprows=range(7), usecols=range(1, 11))
 
-    tr_data = tr_data.to_numpy()
-    tr_targets = tr_targets.to_numpy()
-    cup_ts_data = cup_ts_data.to_numpy()
+    tr_data = tr_data.to_numpy(dtype=np.float32)
+    tr_targets = tr_targets.to_numpy(dtype=np.float32)
+    cup_ts_data = cup_ts_data.to_numpy(dtype=np.float32)
 
     # shuffle the training dataset once
     indexes = list(range(tr_targets.shape[0]))
