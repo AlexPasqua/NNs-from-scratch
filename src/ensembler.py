@@ -102,9 +102,9 @@ if __name__ == '__main__':
     for i in range(len(ens_models)):
         ens_models[i]['model'].save_model(paths[i])
 
+    # create ensemble, compile and fit
     ens = Ensembler(models_filenames=paths, retrain=False)
     ens.compile()
-
     dir_name = "../plots/"
     Path(dir_name).mkdir(exist_ok=True)
     ens.fit_serial(whole=False)
@@ -119,13 +119,13 @@ if __name__ == '__main__':
     print(f"Loss: {evs[0]}\tMetr: {evs[1]}")
 
     # retrain on the whole training set
-    # ens = Ensembler(models_filenames=paths, retrain=False)
-    # ens.compile()
-    # final_res = ens.fit_serial(whole=True)
-    # print("Average development MEE - average internal test MEE:")
-    # print(np.mean(final_res, axis=0))
+    ens = Ensembler(models_filenames=paths, retrain=False)
+    ens.compile()
+    final_res = ens.fit_serial(whole=True)
+    print("Average development MEE - average internal test MEE:")
+    print(np.mean(final_res, axis=0))
 
-    # preds = ens.predict()
-    # with open("../cup_predictions.csv", "w") as f:
-    #     for i in range(len(preds)):
-    #         print(str(i + 1) + ',' + str(preds[i][0]) + ',' + str(preds[i][1]), file=f)
+    preds = ens.predict()
+    with open("../cup_predictions.csv", "w") as f:
+        for i in range(len(preds)):
+            print(str(i + 1) + ',' + str(preds[i][0]) + ',' + str(preds[i][1]), file=f)
