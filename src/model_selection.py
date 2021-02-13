@@ -126,7 +126,7 @@ def cross_valid(net, dataset, loss, metr, lr, path=None, lr_decay=None, limit_st
     if plot:
         ylim, lbltr, lblval = None, None, None
         if "monk" in dataset:
-            ylim, lbltr, lblval = ((0., 0.13), (0., 1.1)), "Training", "Validation"
+            ylim, lbltr, lblval = (0., 1.1), "Training", "Validation"
         plot_curves(tr_error_values, val_error_values, tr_metric_values, val_metric_values, path, ylim=ylim,
                     lbltr=lbltr, lblval=lblval)
     return avg_val_err, std_val_err, avg_val_metric, std_val_metric
