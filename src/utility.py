@@ -319,22 +319,33 @@ def get_best_models(dataset, coarse=False, n_models=1, fn=None):
     return models, params
 
 
-def plot_curves(tr_loss, val_loss, tr_acc, val_acc, path=None, *args):
-    """ Plot the curves of training loss, training metric, validation loss, validation metric """
+def plot_curves(tr_loss, val_loss, tr_metr, val_metr, path=None, ylim=((0., 10.), (0., 10.)), lbltr='development',
+                lblval='internal test', *args):
+    """
+    Plot the curves of training loss, training metric, validation loss, validation metric
+    :param tr_loss: vector with the training error values
+    :param val_loss: vector with the validation error values
+    :param tr_metr: vector with the training metric values
+    :param val_metr: vector with the validation metric values
+    :param path: if not None, path where to save the plot (otherwise it will be displayed)
+    :param ylim: value for "set_ylim" of pyplot
+    :param lbltr: label for the training curve
+    :param lblval: label for the validation curve
+    """
     figure, ax = plt.subplots(1, 2, figsize=(12, 4))
-    ax[0].plot(range(len(tr_loss)), tr_loss, color='b', linestyle='dashed', label='development')
-    ax[0].plot(range(len(val_loss)), val_loss, color='r', label='internal test')
+    ax[0].plot(range(len(tr_loss)), tr_loss, color='b', linestyle='dashed', label=lbltr)
+    ax[0].plot(range(len(val_loss)), val_loss, color='r', label=lblval)
     ax[0].legend(loc='best', prop={'size': 9})
     ax[0].set_xlabel('Epochs', fontweight='bold')
     ax[0].set_ylabel('Loss (MSE)', fontweight='bold')
     ax[0].grid()
-    ax[0].set_ylim((0., 10.))
-    ax[1].plot(range(len(tr_acc)), tr_acc, color='b', linestyle='dashed', label='development')
-    ax[1].plot(range(len(val_acc)), val_acc, color='r', label='internal test')
+    ax[0].set_ylim(ylim[0])
+    ax[1].plot(range(len(tr_metr)), tr_metr, color='b', linestyle='dashed', label=lbltr)
+    ax[1].plot(range(len(val_metr)), val_metr, color='r', label=lblval)
     ax[1].legend(loc='best', prop={'size': 9})
     ax[1].set_xlabel('Epochs', fontweight='bold')
     ax[1].set_ylabel('Metric (MEE)', fontweight='bold')
-    ax[1].set_ylim((0., 10.))
+    ax[1].set_ylim(ylim[1])
     ax[1].grid()
     if path is None:
         plt.show()

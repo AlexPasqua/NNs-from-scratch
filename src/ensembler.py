@@ -61,7 +61,7 @@ class Ensembler:
             for model in self.models:
                 res = model['model'].fit(tr_x=self.tr_x, tr_y=self.tr_y, val_x=self.int_ts_x, val_y=self.int_ts_y,
                                          disable_tqdm=False, **model['model_params'])
-                plot_curves(tr_loss=res[0], tr_acc=res[1], val_loss=res[2], val_acc=res[3])
+                plot_curves(tr_loss=res[0], tr_metr=res[1], val_loss=res[2], val_metr=res[3])
                 final_res.append([res[1][-1], res[3][-1]])
                 print('\nTraining metric', res[1][-1], '\tValidation metric', res[3][-1], '\n')
         return final_res
