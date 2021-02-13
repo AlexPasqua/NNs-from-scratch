@@ -15,29 +15,29 @@ For more detailed information check the [report](report.pdf)
 ### Directory structure (only main elements)
 ```
 ML-project
-  |-- src
-      |-- network.py
-      |-- layer.py
-      |-- functions.py
-      |-- optimizers.py
-      |-- model_selection.py
-      |-- weights_initializations.py
-      |-- demo.py
-  |-- datasets
-      |-- cup
-          |-- ML-CUP20-TR.csv
-          |-- ML-CUP20_TS.csv
-          |-- CUP-DEV-SET.csv
-          |-- CUP-INTERNAL-TEST.csv
-      |-- monks
-          |-- monks.names       # description file
-          |-- monks-x.train     # the 'x' is the number of the dataset (1, 2, 3)
-          |-- monks-x.test
-  |-- plots
-      |-- ensemble      # where the plots of the constituent models go
-      |-- monks         # where the plots of the monks are
-  |-- results           # json files with the results of grid searches
-  |-- ensemble_models   # json files with the constituent models of the ensemble
+  │── src
+  │    │── network.py
+  │    │── layer.py
+  │    │── functions.py
+  │    │── optimizers.py
+  │    │── model_selection.py
+  │    │── weights_initializations.py
+  │    └── demo.py
+  └── datasets
+  │    └── cup
+  │    │   │── ML-CUP20-TR.csv
+  │    │   │── ML-CUP20_TS.csv
+  │    │   │── CUP-DEV-SET.csv
+  │    │   └── CUP-INTERNAL-TEST.csv
+  │    └── monks
+  │        │── monks.names       # description file
+  │        │── monks-x.train     # the 'x' is the number of the dataset (1, 2, 3)
+  │        └── monks-x.test
+  └── plots
+  │   │── ensemble      # where the plots of the constituent models go
+  │   └── monks         # where the plots of the monks are
+  └── results           # json files with the results of grid searches
+  └── ensemble_models   # json files with the constituent models of the ensemble
 ```
 
 ## Quick start
