@@ -1,8 +1,6 @@
-import csv
 import json
 import numpy as np
 from pathlib import Path
-from joblib import Parallel, delayed
 import os
 from network import Network
 from utility import read_cup, get_best_models, plot_curves
@@ -68,16 +66,6 @@ class Ensembler:
                 print('\nTraining metric', res[1][-1], '\tValidation metric', res[3][-1], '\n')
         return final_res
 
-    def fit_parallel(self):
-        """
-        Trains all the models in parallel
-        :return: list with the return value of each Network.fit (in case check network.py)
-        """
-        res = Parallel(n_jobs=os.cpu_count())(delayed(m['model'].fit)(
-            tr_x=self.tr_x, tr_y=self.tr_y, val_x=self.int_ts_x, val_y=self.int_ts_y,
-            disable_tqdm=False, **m['model_params']) for m in self.models)
-        return res
-
     def predict(self):
         res = []
         for i in range(len(self.models)):
@@ -119,11 +107,6 @@ if __name__ == '__main__':
 
     dir_name = "../plots/"
     Path(dir_name).mkdir(exist_ok=True)
-    # res = ens.fit_parallel()
-    # for r in range(len(res)):
-    #     plot_curves(tr_loss=res[r][0], tr_acc=res[r][1], val_loss=res[r][2], val_acc=res[r][3],
-    #                 path=dir_name + "ens_model" + str(r) + ".png")
-
     ens.fit_serial(whole=False)
 
     # writes models with updated weights
