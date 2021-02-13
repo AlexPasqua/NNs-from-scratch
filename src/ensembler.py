@@ -96,7 +96,7 @@ if __name__ == '__main__':
             ens_models.append({'model': best_models[i], 'params': best_params[i]})
 
     # write models on file
-    dir_name = "../ensembler/"
+    dir_name = "../ensemble_models/"
     Path(dir_name).mkdir(exist_ok=True)
     paths = [dir_name + "model" + str(i) + ".json" for i in range(len(ens_models))]
     for i in range(len(ens_models)):
@@ -110,7 +110,7 @@ if __name__ == '__main__':
     ens.fit_serial(whole=False)
 
     # writes models with updated weights
-    dir_name = "../ensembler/"
+    dir_name = "../ensemble_models/"
     paths = [dir_name + "model" + str(i) + ".json" for i in range(len(ens_models))]
     for i in range(len(ens_models)):
         ens_models[i]['model'].save_model(paths[i])
