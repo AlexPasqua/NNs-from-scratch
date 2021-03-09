@@ -1,6 +1,9 @@
 # Neural networks from scratch
 ### Project for the Machine Learning course @ University of Pisa<br>
-<img width=250px src="https://cv-tricks.com/wp-content/uploads/2018/09/Neural-Network-Architecures.jpg" /> <img width=150px src="https://www.plan4res.eu/wp-content/uploads/2018/02/University-of-Pisa-Italy.png" />
+<div align="center">
+  <img width=250px src="https://cv-tricks.com/wp-content/uploads/2018/09/Neural-Network-Architecures.jpg">
+  <img width=150px src="https://www.plan4res.eu/wp-content/uploads/2018/02/University-of-Pisa-Italy.png">
+</div>
 
 ### Overview
 1. [Short description](#description)
