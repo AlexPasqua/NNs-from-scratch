@@ -14,7 +14,7 @@ if __name__ == '__main__':
                  'init_type': ('uniform',),
                  'limits': ((-0.001, 0.001),),
                  'momentum': (0.3, 0.5, 0.8),
-                 'batch_size': (20,),
+                 'batch_size': (100,),
                  'lr': (0.01, 0.001, 0.0001),
                  'lr_decay': (None, 'linear', 'exponential'),
                  'limit_step': (400,),
