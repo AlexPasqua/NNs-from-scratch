@@ -12,7 +12,7 @@ if __name__ == '__main__':
                           ('leaky_relu', 'leaky_relu', 'leaky_relu', 'identity'),
                           ('tanh', 'tanh', 'tanh', 'identity')),
                  'init_type': ('uniform',),
-                 'limits': ((-0.1, 0.1), (-0.001, 0.001)),
+                 'limits': ((-0.001, 0.001),),
                  'momentum': (0.3, 0.5, 0.8),
                  'batch_size': (20,),
                  'lr': (0.01, 0.001, 0.0001),
