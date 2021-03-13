@@ -19,7 +19,7 @@ def cross_valid(net, dataset, loss, metr, lr, path=None, lr_decay=None, limit_st
     :param loss: name of the loss function to use ('squared')
     :param metr: name of the metric function to use ('bin_class_acc' ot 'euclidean')
     :param lr: learning rate
-    :param path: path where to save the plots (if interplot=True)
+    :param path: path where to save the plots (if plot=True)
     :param lr_decay: type of learning rate decay (either None, 'linear' or 'exponential')
     :param limit_step: (int) limit step for the linearly decaying learning rate (in case see functions.py)
     :param decay_rate: (float) decay rate for the exponentially decaying learning rate (in case see functions.py)
@@ -155,7 +155,7 @@ def grid_search(dataset, params, coarse=True, n_config=1):
 
     # perform parallelized grid search
     results = Parallel(n_jobs=os.cpu_count(), verbose=50)(delayed(cross_valid)(
-        net=models[i], dataset=dataset, k_folds=5, disable_tqdm=(True, True), interplot=False,
+        net=models[i], dataset=dataset, k_folds=5, disable_tqdm=(True, True), plot=False,
         **param_combos[i]) for i in range(len(param_combos)))
 
     # do not save models with suppressed training
