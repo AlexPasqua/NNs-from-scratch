@@ -155,7 +155,7 @@ def grid_search(dataset, params, coarse=True, n_config=1):
 
     # perform parallelized grid search
     results = Parallel(n_jobs=os.cpu_count(), verbose=50)(delayed(cross_valid)(
-        net=models[i], dataset=dataset, k_folds=5, disable_tqdm=(True, True), interplot=False,
+        net=models[i], dataset=dataset, k_folds=5, disable_tqdm=(True, True), plot=False,
         **param_combos[i]) for i in range(len(param_combos)))
 
     # do not save models with suppressed training
